@@ -43,7 +43,7 @@ const handleApiError = (error) => {
 
 // Get API URL from environment variables
 const getApiUrl = () => {
-  const apiUrl = import.meta.env.VITE_API_URL || import.meta.env.VITE_APIURL;
+  const apiUrl = import.meta.env.VITE_API_URL;
   if (apiUrl) {
     return apiUrl.endsWith('/api/v1') ? apiUrl : `${apiUrl}/api/v1`;
   }
