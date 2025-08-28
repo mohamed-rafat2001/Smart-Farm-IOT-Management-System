@@ -42,7 +42,7 @@ const connectionOptions = {
 	keepAliveInitialDelay: 300000, // 5 minutes
 	useNewUrlParser: true,
 	useUnifiedTopology: true,
-	bufferCommands: false, // Disable command buffering when disconnected
+	bufferCommands: true, // Enable command buffering to prevent operation errors
 	autoIndex: process.env.MODE !== 'PRODUCTION', // Don't build indexes in production
 };
 
