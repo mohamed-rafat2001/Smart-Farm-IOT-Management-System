@@ -116,13 +116,13 @@ app.get("/api/v1/health", (req, res) => {
 let userRoute, authRouter, adminRouter, farmRouter;
 
 try {
-	userRoute = await import("./routers/userRoute.js");
+	userRoute = import("./routers/userRoute.js");
 	authRouter = await import("./routers/authRouter.js");
 	adminRouter = await import("./routers/adminRouter.js");
 	farmRouter = await import("./routers/farmRouter.js");
 
 	// routers
-	app.use("/api/v1/auth", authRouter.default);
+	app.use("/api/v1/auth", authRouter);
 	app.use("/api/v1/user", userRoute.default);
 	app.use("/api/v1/admin", adminRouter.default);
 	app.use("/api/v1/farm", farmRouter.default);
