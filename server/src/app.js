@@ -8,6 +8,12 @@ import xss from "xss-clean";
 import hpp from "hpp";
 import cookieParser from "cookie-parser";
 
+// Import routers
+import userRoute from "./routers/userRoute.js";
+import authRouter from "./routers/authRouter.js";
+import adminRouter from "./routers/adminRouter.js";
+import farmRouter from "./routers/farmRouter.js";
+
 // Load environment variables first
 dotenv.config();
 
@@ -143,12 +149,6 @@ export const initializeApp = async () => {
 			console.log("✅ Database connection established successfully");
 		}
 		
-		// Import routers directly
-		import userRoute from "./routers/userRoute.js";
-		import authRouter from "./routers/authRouter.js";
-		import adminRouter from "./routers/adminRouter.js";
-		import farmRouter from "./routers/farmRouter.js";
-
 		try {
 			// Register routes with explicit error handling for each one
 			console.log("🔄 Registering auth routes...");
