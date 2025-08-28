@@ -143,20 +143,25 @@ export const initializeApp = async () => {
 			console.log("✅ Database connection established successfully");
 		}
 		
-		// Initialize routers with error handling
-		let userRoute, authRouter, adminRouter, farmRouter;
+		// Import routers directly
+		import userRoute from "./routers/userRoute.js";
+		import authRouter from "./routers/authRouter.js";
+		import adminRouter from "./routers/adminRouter.js";
+		import farmRouter from "./routers/farmRouter.js";
 
 		try {
-			userRoute = await import("./routers/userRoute.js");
-			authRouter = await import("./routers/authRouter.js");
-			adminRouter = await import("./routers/adminRouter.js");
-			farmRouter = await import("./routers/farmRouter.js");
-
-			// routers
-			app.use("/api/v1/auth", authRouter.default);
-			app.use("/api/v1/user", userRoute.default);
-			app.use("/api/v1/admin", adminRouter.default);
-			app.use("/api/v1/farm", farmRouter.default);
+			// Register routes with explicit error handling for each one
+			console.log("🔄 Registering auth routes...");
+			app.use("/api/v1/auth", authRouter);
+			
+			console.log("🔄 Registering user routes...");
+			app.use("/api/v1/user", userRoute);
+			
+			console.log("🔄 Registering admin routes...");
+			app.use("/api/v1/admin", adminRouter);
+			
+			console.log("🔄 Registering farm routes...");
+			app.use("/api/v1/farm", farmRouter);
 
 			console.log("✅ All routers loaded successfully");
 		} catch (error) {

@@ -2,13 +2,9 @@ import api from '../utils/api';
 
 // create new response
 export const signUp = async (data) => {
-  try {
-    const response = await api.post('/auth/signup', data);
-    return response.data.data.user;
-  } catch (error) {
-    console.error("Signup error:", error);
-    throw error;
-  }
+  const response = await api.post('/auth/signUp', data);
+
+  return response.data.data.user;
 };
 
 // response login func
