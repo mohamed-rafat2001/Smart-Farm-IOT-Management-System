@@ -35,12 +35,7 @@ export default async function dbConnect() {
 		return;
 	}
 	try {
-		await mongoose.connect(dbUrl, {
-			maxPoolSize: 1,
-			serverSelectionTimeoutMS: 5000,
-			socketTimeoutMS: 45000,
-			bufferCommands: false,
-		});
+		await mongoose.connect(dbUrl);
 		isConnected = true;
 		console.log("✅ MongoDB connected successfully");
 	} catch (error) {
