@@ -40,9 +40,8 @@ const connectionOptions = {
 	connectTimeoutMS: 60000, // Increased to 60 seconds
 	keepAlive: true,
 	keepAliveInitialDelay: 300000, // 5 minutes
-	useNewUrlParser: true,
-	useUnifiedTopology: true,
-	bufferCommands: true, // Enable command buffering to prevent operation errors
+	bufferTimeoutMS: 30000, // Increase buffer timeout from default 10000ms to 30000ms
+	bufferCommands: true, // Enable command buffering
 	autoIndex: process.env.MODE !== 'PRODUCTION', // Don't build indexes in production
 };
 
