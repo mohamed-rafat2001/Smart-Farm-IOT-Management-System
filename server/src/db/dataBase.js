@@ -27,7 +27,7 @@ const getDbUrl = () => {
 	return dbUrl;
 };
 
-export default function dbConnect() {
+export default async function dbConnect() {
 	const dbUrl = getDbUrl();
 
 	if (!dbUrl) {
@@ -38,7 +38,7 @@ export default function dbConnect() {
 
 	console.log("🔄 Attempting to connect to MongoDB...");
 
-	mongoose
+	await mongoose
 		.connect(dbUrl, {
 			// MongoDB connection options for serverless environments
 			maxPoolSize: 1, // Limit connections for serverless
