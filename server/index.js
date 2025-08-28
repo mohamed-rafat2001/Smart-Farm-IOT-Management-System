@@ -29,10 +29,17 @@ const createErrorApp = (error) => {
 // Try to import and initialize the main app
 let app;
 try {
-	// Import the main app
-	const { app: mainApp } = await import("./src/app.js");
+	// Import the main app and its initialization function
+	const { app: mainApp, initializeApp } = await import("./src/app.js");
+	
+	// Initialize the app with database connection first
+	const initialized = await initializeApp();
+	
+	if (!initialized) {
+		console.warn("⚠️ Application initialized with limited functionality");
+	}
+	
 	app = mainApp;
-
 	console.log("✅ Server initialized successfully");
 } catch (error) {
 	console.error("❌ Failed to initialize main app:", error);

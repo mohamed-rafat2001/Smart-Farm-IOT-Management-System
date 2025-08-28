@@ -112,79 +112,108 @@ app.get("/api/v1/health", (req, res) => {
 	});
 });
 
-// Initialize routers with error handling
-let userRoute, authRouter, adminRouter, farmRouter;
-
-try {
-	userRoute = await import("./routers/userRoute.js");
-	authRouter = await import("./routers/authRouter.js");
-	adminRouter = await import("./routers/adminRouter.js");
-	farmRouter = await import("./routers/farmRouter.js");
-
-	// routers
-	app.use("/api/v1/auth", authRouter.default);
-	app.use("/api/v1/user", userRoute.default);
-	app.use("/api/v1/admin", adminRouter.default);
-	app.use("/api/v1/farm", farmRouter.default);
-
-	console.log("✅ All routers loaded successfully");
-} catch (error) {
-	console.error("❌ Failed to load routers:", error.message);
-
-	// Add a fallback route for when routers fail
-	app.use("/api/v1/*", (req, res) => {
-		res.status(503).json({
-			status: "error",
-			message: "API routes temporarily unavailable",
-			error: error.message,
-			timestamp: new Date().toISOString(),
-		});
+// Database connection status endpoint
+app.get("/api/v1/db-status", (req, res) => {
+	const mongoose = require('mongoose');
+	const connectionState = mongoose.connection.readyState;
+	const states = {
+		0: 'disconnected',
+		1: 'connected',
+		2: 'connecting',
+		3: 'disconnecting'
+	};
+	
+	res.status(200).json({
+		status: connectionState === 1 ? "success" : "warning",
+		connection: states[connectionState] || 'unknown',
+		timestamp: new Date().toISOString()
 	});
-}
+});
 
-// Error handling middleware
-try {
-	const appError = await import("./utils/appError.js");
-	const globalErrorHandler = await import("./controllers/errorController.js");
+// Initialize database connection first, then load routes
+export const initializeApp = async () => {
+	try {
+		// Import and initialize database connection
+		const dbConnect = await import("./db/dataBase.js");
+		const connected = await dbConnect.default();
+		
+		if (!connected) {
+			console.error("❌ Database connection failed, but continuing with limited functionality");
+		} else {
+			console.log("✅ Database connection established successfully");
+		}
+		
+		// Initialize routers with error handling
+		let userRoute, authRouter, adminRouter, farmRouter;
 
-	//handel unhandel route
-	app.all("*", (req, res, next) => {
-		next(
-			new appError.default(`can't find ${req.originalUrl} on this server.`, 404)
-		);
-	});
+		try {
+			userRoute = await import("./routers/userRoute.js");
+			authRouter = await import("./routers/authRouter.js");
+			adminRouter = await import("./routers/adminRouter.js");
+			farmRouter = await import("./routers/farmRouter.js");
 
-	//global error handler
-	app.use(globalErrorHandler.default);
+			// routers
+			app.use("/api/v1/auth", authRouter.default);
+			app.use("/api/v1/user", userRoute.default);
+			app.use("/api/v1/admin", adminRouter.default);
+			app.use("/api/v1/farm", farmRouter.default);
 
-	console.log("✅ Error handlers loaded successfully");
-} catch (error) {
-	console.error("❌ Failed to load error handlers:", error.message);
+			console.log("✅ All routers loaded successfully");
+		} catch (error) {
+			console.error("❌ Failed to load routers:", error.message);
 
-	// Fallback error handler
-	app.all("*", (req, res) => {
-		res.status(404).json({
-			status: "error",
-			message: `Route ${req.originalUrl} not found`,
-			timestamp: new Date().toISOString(),
-		});
-	});
+			// Add a fallback route for when routers fail
+			app.use("/api/v1/*", (req, res) => {
+				res.status(503).json({
+					status: "error",
+					message: "API routes temporarily unavailable",
+					error: error.message,
+					timestamp: new Date().toISOString(),
+				});
+			});
+		}
 
-	app.use((error, req, res, next) => {
-		res.status(500).json({
-			status: "error",
-			message: "Internal server error",
-			error: error.message,
-			timestamp: new Date().toISOString(),
-		});
-	});
-}
+		// Error handling middleware
+		try {
+			const appError = await import("./utils/appError.js");
+			const globalErrorHandler = await import("./controllers/errorController.js");
 
-// Initialize database connection with error handling
-try {
-	const dbConnect = await import("./db/dataBase.js");
-	await dbConnect.default();
-	console.log("✅ Database connection initiated and completed");
-} catch (error) {
-	console.error("❌ Failed to initialize database:", error.message);
-}
+			//handel unhandel route
+			app.all("*", (req, res, next) => {
+				next(
+					new appError.default(`can't find ${req.originalUrl} on this server.`, 404)
+				);
+			});
+
+			//global error handler
+			app.use(globalErrorHandler.default);
+
+			console.log("✅ Error handlers loaded successfully");
+		} catch (error) {
+			console.error("❌ Failed to load error handlers:", error.message);
+
+			// Fallback error handler
+			app.all("*", (req, res) => {
+				res.status(404).json({
+					status: "error",
+					message: `Route ${req.originalUrl} not found`,
+					timestamp: new Date().toISOString(),
+				});
+			});
+
+			app.use((error, req, res, next) => {
+				res.status(500).json({
+					status: "error",
+					message: "Internal server error",
+					error: error.message,
+					timestamp: new Date().toISOString(),
+				});
+			});
+		}
+		
+		return true;
+	} catch (error) {
+		console.error("❌ Failed to initialize application:", error.message);
+		return false;
+	}
+};
