@@ -97,16 +97,32 @@ mongoose.connection.on('reconnected', () => {
 
 // Main database connection function
 export default async function dbConnect() {
-	// If already connected, return immediately
-	if (isConnected && mongoose.connection.readyState === 1) {
-		return true;
-	}
-	
-	const dbUrl = getDbUrl();
-	if (!dbUrl) {
-		console.error("❌ Cannot connect to database: Invalid configuration");
+	try {
+		// If already connected, return immediately
+		if (isConnected && mongoose.connection.readyState === 1) {
+			console.log("✅ Using existing database connection");
+			return true;
+		}
+		
+		const dbUrl = getDbUrl();
+		if (!dbUrl) {
+			console.error("❌ Cannot connect to database: Invalid configuration");
+			return false;
+		}
+		
+		// Wait for connection to be established
+		const result = await connectWithRetry(dbUrl);
+		
+		// Verify connection is actually ready
+		if (result && mongoose.connection.readyState === 1) {
+			console.log("✅ Database connection verified");
+			return true;
+		} else {
+			console.error("❌ Database connection failed verification");
+			return false;
+		}
+	} catch (error) {
+		console.error("❌ Unexpected error during database connection:", error);
 		return false;
 	}
-	
-	return await connectWithRetry(dbUrl);
 }
