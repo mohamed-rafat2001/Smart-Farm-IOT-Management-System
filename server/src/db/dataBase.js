@@ -32,46 +32,18 @@ export default async function dbConnect() {
 	const dbUrl = getDbUrl();
 	if (!dbUrl) {
 		console.error("❌ Cannot connect to database: Invalid configuration");
-		console.log("💡 Set DB_URL environment variable to connect to MongoDB");
 		return;
 	}
-
-	console.log("🔄 Attempting to connect to MongoDB...");
-
-	await mongoose
-		.connect(dbUrl, {
-			// MongoDB connection options for serverless environments
-			maxPoolSize: 1, // Limit connections for serverless
+	try {
+		await mongoose.connect(dbUrl, {
+			maxPoolSize: 1,
 			serverSelectionTimeoutMS: 5000,
 			socketTimeoutMS: 45000,
 			bufferCommands: false,
-			// Removed bufferMaxEntries as it's deprecated
-		})
-		.then(() => {
-			console.log("✅ MongoDB connected successfully");
-		})
-		.catch((error) => {
-			console.error("❌ MongoDB connection failed:", error.message);
-
-			// Provide helpful error messages for common issues
-			if (error.message.includes("ENOTFOUND")) {
-				console.error(
-					"💡 Tip: Check your MongoDB Atlas connection string and ensure the cluster is accessible"
-				);
-				console.error(
-					"💡 Tip: Make sure your IP address is whitelisted in MongoDB Atlas"
-				);
-			} else if (error.message.includes("Authentication failed")) {
-				console.error(
-					"💡 Tip: Check your username and password in the connection string"
-				);
-			} else if (error.message.includes("ECONNREFUSED")) {
-				console.error("💡 Tip: Check if your MongoDB Atlas cluster is running");
-			}
-
-			// Don't crash the server, just log the error
-			console.log(
-				"⚠️ Server will continue running without database connection"
-			);
 		});
+		isConnected = true;
+		console.log("✅ MongoDB connected successfully");
+	} catch (error) {
+		console.error("❌ MongoDB connection failed:", error.message);
+	}
 }
