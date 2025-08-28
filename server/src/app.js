@@ -183,8 +183,8 @@ try {
 // Initialize database connection with error handling
 try {
 	const dbConnect = await import("./db/dataBase.js");
-	dbConnect.default();
-	console.log("✅ Database connection initiated");
+	await dbConnect.default();
+	console.log("✅ Database connection initiated and completed");
 } catch (error) {
 	console.error("❌ Failed to initialize database:", error.message);
 }
