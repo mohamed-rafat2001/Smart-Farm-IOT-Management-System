@@ -1,0 +1,41 @@
+@import 'tailwindcss';
+html {
+  scroll-behavior: smooth;
+}
+* {
+  /* margin: 0;
+  padding: 0; */
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+  transition-property: all;
+  duration: 300ms;
+  transition-timing-function: ease-in-out;
+  /* @apply ease transition-all duration-300; */
+}
+
+@layer components {
+  .nav-link {
+    transition-property: color;
+    transition-duration: 300ms;
+
+    &:hover {
+      color: #c9fa75;
+    }
+    &.active {
+      color: #c9fa75;
+    }
+  }
+  .switch-link {
+    transition-property: all;
+    transition-duration: 300ms;
+    cursor: pointer;
+
+    &:hover {
+      color: white;
+    }
+    &.active {
+      color: white;
+      border-bottom: 2px solid rgb(185, 185, 185);
+    }
+  }
+}
