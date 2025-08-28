@@ -12,6 +12,8 @@ import express from "express";
 const Route = express.Router();
 
 Route.post("/signUp", signUp);
+// Also add the lowercase version to handle both cases
+Route.post("/signup", signUp);
 Route.post("/login", login);
 Route.get("/logOut", logOut);
 Route.post("/forgotPassword", forgotPassord);
