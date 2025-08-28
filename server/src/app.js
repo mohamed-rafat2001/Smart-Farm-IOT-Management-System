@@ -102,39 +102,6 @@ try {
 	console.warn("⚠️ HPP protection failed:", error.message);
 }
 
-// Simple test endpoint for debugging
-app.get("/api/test", (req, res) => {
-	// Check if we have basic environment variables
-	const hasBasicConfig = process.env.DB_URL && process.env.JWTKEY;
-
-	res.status(200).json({
-		status: hasBasicConfig ? "success" : "warning",
-		message: hasBasicConfig
-			? "Server is working!"
-			: "Server is running but missing environment variables",
-		timestamp: new Date().toISOString(),
-		environment: process.env.MODE || "development",
-		envVars: {
-			hasDbUrl: !!process.env.DB_URL,
-			hasDbPassword: !!process.env.DB_PASSWORD,
-			hasJwtKey: !!process.env.JWTKEY,
-			hasClientUrl: !!process.env.CLIENT_URL,
-		},
-		serverInfo: {
-			hostname: process.env.VERCEL_URL || "localhost",
-			environment: process.env.MODE || "development",
-		},
-		nextSteps: hasBasicConfig
-			? null
-			: [
-					"Set DB_URL environment variable",
-					"Set JWTKEY environment variable",
-					"Set CLIENT_URL environment variable",
-					"Redeploy server",
-			  ],
-	});
-});
-
 // Health check endpoint for Vercel
 app.get("/api/v1/health", (req, res) => {
 	res.status(200).json({
@@ -155,7 +122,7 @@ try {
 	farmRouter = await import("./routers/farmRouter.js");
 
 	// routers
-	app.use("/api/v1/auth", authRouter.default);
+	app.use("/api/v1/auth", authRouter);
 	app.use("/api/v1/user", userRoute.default);
 	app.use("/api/v1/admin", adminRouter.default);
 	app.use("/api/v1/farm", farmRouter.default);
