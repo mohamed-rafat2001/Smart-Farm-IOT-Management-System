@@ -26,30 +26,88 @@ const getDbUrl = () => {
 	// If no placeholder, use the connection string as is
 	return dbUrl;
 };
+
+// Connection state tracking
 let isConnected = false;
+let connectionAttempts = 0;
+const MAX_RETRY_ATTEMPTS = 5;
+const RETRY_INTERVAL = 5000; // 5 seconds between retries
+
+// Mongoose connection options with increased timeouts
+const connectionOptions = {
+	serverSelectionTimeoutMS: 60000, // Increased to 60 seconds
+	socketTimeoutMS: 90000, // Increased to 90 seconds
+	connectTimeoutMS: 60000, // Increased to 60 seconds
+	keepAlive: true,
+	keepAliveInitialDelay: 300000, // 5 minutes
+	useNewUrlParser: true,
+	useUnifiedTopology: true,
+	bufferCommands: false, // Disable command buffering when disconnected
+	autoIndex: process.env.MODE !== 'PRODUCTION', // Don't build indexes in production
+};
+
+// Connect with retry logic
+const connectWithRetry = async (dbUrl) => {
+	try {
+		await mongoose.connect(dbUrl, connectionOptions);
+		isConnected = true;
+		connectionAttempts = 0;
+		console.log("✅ MongoDB connected successfully");
+		return true;
+	} catch (error) {
+		connectionAttempts++;
+		console.error(`❌ MongoDB connection attempt ${connectionAttempts} failed:`, error.message);
+		
+		// Log detailed error information
+		if (error.name === 'MongooseServerSelectionError') {
+			console.error("❌ Server selection timed out. Check network connectivity to MongoDB Atlas.");
+			console.error("❌ Verify IP whitelist settings in MongoDB Atlas.");
+		} else if (error.name === 'MongooseTimeoutError') {
+			console.error("❌ Connection timed out. Check database server availability.");
+		} else if (error.name === 'MongooseError' && error.message.includes('buffering timed out')) {
+			console.error("❌ Operation buffering timed out. Database may be overloaded or unreachable.");
+		}
+		
+		// Retry logic
+		if (connectionAttempts < MAX_RETRY_ATTEMPTS) {
+			console.log(`⏱️ Retrying connection in ${RETRY_INTERVAL/1000} seconds...`);
+			await new Promise(resolve => setTimeout(resolve, RETRY_INTERVAL));
+			return connectWithRetry(dbUrl);
+		} else {
+			console.error(`❌ Failed to connect after ${MAX_RETRY_ATTEMPTS} attempts. Giving up.`);
+			return false;
+		}
+	}
+};
+
+// Setup mongoose event listeners for connection monitoring
+mongoose.connection.on('disconnected', () => {
+	console.warn('⚠️ MongoDB disconnected');
+	isConnected = false;
+});
+
+mongoose.connection.on('error', (err) => {
+	console.error('❌ MongoDB connection error:', err);
+	isConnected = false;
+});
+
+mongoose.connection.on('reconnected', () => {
+	console.log('✅ MongoDB reconnected');
+	isConnected = true;
+});
+
+// Main database connection function
 export default async function dbConnect() {
-	if (isConnected) return;
+	// If already connected, return immediately
+	if (isConnected && mongoose.connection.readyState === 1) {
+		return true;
+	}
+	
 	const dbUrl = getDbUrl();
 	if (!dbUrl) {
 		console.error("❌ Cannot connect to database: Invalid configuration");
-		return;
+		return false;
 	}
-	try {
-		// Add connection options with increased timeouts and keepAlive
-		await mongoose.connect(dbUrl, {
-			serverSelectionTimeoutMS: 30000, // Increase from default 30s to 30s (can increase further if needed)
-			socketTimeoutMS: 45000, // Increase socket timeout
-			connectTimeoutMS: 30000, // Connection timeout
-			keepAlive: true,
-			keepAliveInitialDelay: 300000 // 5 minutes
-		});
-		isConnected = true;
-		console.log("✅ MongoDB connected successfully");
-	} catch (error) {
-		console.error("❌ MongoDB connection failed:", error.message);
-		// Log more detailed error information
-		if (error.name === 'MongooseServerSelectionError') {
-			console.error("❌ Server selection timed out. Check network connectivity to MongoDB Atlas.");
-		}
-	}
+	
+	return await connectWithRetry(dbUrl);
 }
