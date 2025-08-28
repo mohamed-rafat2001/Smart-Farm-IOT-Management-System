@@ -35,10 +35,21 @@ export default async function dbConnect() {
 		return;
 	}
 	try {
-		await mongoose.connect(dbUrl);
+		// Add connection options with increased timeouts and keepAlive
+		await mongoose.connect(dbUrl, {
+			serverSelectionTimeoutMS: 30000, // Increase from default 30s to 30s (can increase further if needed)
+			socketTimeoutMS: 45000, // Increase socket timeout
+			connectTimeoutMS: 30000, // Connection timeout
+			keepAlive: true,
+			keepAliveInitialDelay: 300000 // 5 minutes
+		});
 		isConnected = true;
 		console.log("✅ MongoDB connected successfully");
 	} catch (error) {
 		console.error("❌ MongoDB connection failed:", error.message);
+		// Log more detailed error information
+		if (error.name === 'MongooseServerSelectionError') {
+			console.error("❌ Server selection timed out. Check network connectivity to MongoDB Atlas.");
+		}
 	}
 }
