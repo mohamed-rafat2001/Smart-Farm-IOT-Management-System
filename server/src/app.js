@@ -122,7 +122,7 @@ try {
 	farmRouter = await import("./routers/farmRouter.js");
 
 	// routers
-	app.use("/api/v1/auth", authRouter);
+	app.use("/api/v1/auth", authRouter.default);
 	app.use("/api/v1/user", userRoute.default);
 	app.use("/api/v1/admin", adminRouter.default);
 	app.use("/api/v1/farm", farmRouter.default);
