@@ -15,5 +15,14 @@
 			"src": "/(.*)",
 			"dest": "index.js"
 		}
-	]
+	],
+	"error": {
+		"not_found": {
+			"status": 404,
+			"headers": {
+				"Content-Type": "application/json"
+			},
+			"body": "{\"status\":\"fail\",\"message\":\"can't find / on this server.\"}"
+		}
+	}
 }
