@@ -26,10 +26,10 @@ const getDbUrl = () => {
 	// If no placeholder, use the connection string as is
 	return dbUrl;
 };
-
+let isConnected = false;
 export default async function dbConnect() {
+	if (isConnected) return;
 	const dbUrl = getDbUrl();
-
 	if (!dbUrl) {
 		console.error("❌ Cannot connect to database: Invalid configuration");
 		console.log("💡 Set DB_URL environment variable to connect to MongoDB");
