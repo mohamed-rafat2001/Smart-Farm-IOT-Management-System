@@ -2,127 +2,35 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 dotenv.config();
 
-// Handle database connection with proper error handling
-const getDbUrl = () => {
-	const dbUrl = process.env.DB_URL;
-	const dbPassword = process.env.DB_PASSWORD;
-
-	if (!dbUrl) {
-		console.error("❌ DB_URL environment variable is not set");
-		return null;
-	}
-
-	// If the connection string contains <db_password> placeholder, replace it
-	if (dbUrl.includes("<db_password>")) {
-		if (!dbPassword) {
-			console.error(
-				"❌ DB_PASSWORD environment variable is required when using <db_password> placeholder"
-			);
-			return null;
-		}
-		return dbUrl.replace("<db_password>", dbPassword);
-	}
-
-	// If no placeholder, use the connection string as is
-	return dbUrl;
-};
-
-// Connection state tracking
-let isConnected = false;
-let connectionAttempts = 0;
-const MAX_RETRY_ATTEMPTS = 5;
-const RETRY_INTERVAL = 5000; // 5 seconds between retries
-
-// Mongoose connection options with increased timeouts
-const connectionOptions = {
-	serverSelectionTimeoutMS: 60000, // Increased to 60 seconds
-	socketTimeoutMS: 90000, // Increased to 90 seconds
-	connectTimeoutMS: 60000, // Increased to 60 seconds
-	keepAlive: true,
-	keepAliveInitialDelay: 300000, // 5 minutes
-	bufferTimeoutMS: 30000, // Increase buffer timeout from default 10000ms to 30000ms
-	bufferCommands: true, // Enable command buffering
-	autoIndex: process.env.MODE !== 'PRODUCTION', // Don't build indexes in production
-};
-
-// Connect with retry logic
-const connectWithRetry = async (dbUrl) => {
-	try {
-		await mongoose.connect(dbUrl, connectionOptions);
-		isConnected = true;
-		connectionAttempts = 0;
-		console.log("✅ MongoDB connected successfully");
-		return true;
-	} catch (error) {
-		connectionAttempts++;
-		console.error(`❌ MongoDB connection attempt ${connectionAttempts} failed:`, error.message);
-		
-		// Log detailed error information
-		if (error.name === 'MongooseServerSelectionError') {
-			console.error("❌ Server selection timed out. Check network connectivity to MongoDB Atlas.");
-			console.error("❌ Verify IP whitelist settings in MongoDB Atlas.");
-		} else if (error.name === 'MongooseTimeoutError') {
-			console.error("❌ Connection timed out. Check database server availability.");
-		} else if (error.name === 'MongooseError' && error.message.includes('buffering timed out')) {
-			console.error("❌ Operation buffering timed out. Database may be overloaded or unreachable.");
-		}
-		
-		// Retry logic
-		if (connectionAttempts < MAX_RETRY_ATTEMPTS) {
-			console.log(`⏱️ Retrying connection in ${RETRY_INTERVAL/1000} seconds...`);
-			await new Promise(resolve => setTimeout(resolve, RETRY_INTERVAL));
-			return connectWithRetry(dbUrl);
-		} else {
-			console.error(`❌ Failed to connect after ${MAX_RETRY_ATTEMPTS} attempts. Giving up.`);
-			return false;
-		}
-	}
-};
-
-// Setup mongoose event listeners for connection monitoring
-mongoose.connection.on('disconnected', () => {
-	console.warn('⚠️ MongoDB disconnected');
-	isConnected = false;
-});
-
-mongoose.connection.on('error', (err) => {
-	console.error('❌ MongoDB connection error:', err);
-	isConnected = false;
-});
-
-mongoose.connection.on('reconnected', () => {
-	console.log('✅ MongoDB reconnected');
-	isConnected = true;
-});
-
-// Main database connection function
+// Direct connection to MongoDB without complex logic
 export default async function dbConnect() {
-	try {
-		// If already connected, return immediately
-		if (isConnected && mongoose.connection.readyState === 1) {
-			console.log("✅ Using existing database connection");
-			return true;
-		}
-		
-		const dbUrl = getDbUrl();
-		if (!dbUrl) {
-			console.error("❌ Cannot connect to database: Invalid configuration");
-			return false;
-		}
-		
-		// Wait for connection to be established
-		const result = await connectWithRetry(dbUrl);
-		
-		// Verify connection is actually ready
-		if (result && mongoose.connection.readyState === 1) {
-			console.log("✅ Database connection verified");
-			return true;
-		} else {
-			console.error("❌ Database connection failed verification");
-			return false;
-		}
-	} catch (error) {
-		console.error("❌ Unexpected error during database connection:", error);
-		return false;
-	}
+    try {
+        // Simple connection string handling
+        let dbUrl = process.env.DB_URL;
+        const dbPassword = process.env.DB_PASSWORD;
+        
+        if (!dbUrl) {
+            console.error("❌ DB_URL environment variable is not set");
+            return false;
+        }
+        
+        // Replace password placeholder if needed
+        if (dbUrl.includes("<db_password>") && dbPassword) {
+            dbUrl = dbUrl.replace("<db_password>", dbPassword);
+        }
+        
+        // Simple connection options - only the essentials
+        await mongoose.connect(dbUrl, {
+            bufferCommands: true,
+            bufferTimeoutMS: 60000,
+            family: 4, // Force IPv4
+            maxPoolSize: 10
+        });
+        
+        console.log("✅ MongoDB connected successfully");
+        return true;
+    } catch (error) {
+        console.error("❌ MongoDB connection error:", error.message);
+        return false;
+    }
 }
