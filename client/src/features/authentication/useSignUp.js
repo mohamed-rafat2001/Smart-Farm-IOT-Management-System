@@ -13,6 +13,14 @@ export function useSignUp() {
   } = useMutation({
     mutationFn: signUp,
     onSuccess: (data) => {
+      // Save token to localStorage
+      if (data.token) {
+        localStorage.setItem('token', data.token);
+        console.log('✅ Token saved to localStorage after signup');
+      } else {
+        console.warn('⚠️ No token received from server after signup');
+      }
+      
       queryClient.setQueryData(['User'], data);
       navigate('/app/profile');
     },
@@ -22,7 +30,6 @@ export function useSignUp() {
     isSignUp,
     error,
     data,
-
     mutate,
   };
 }

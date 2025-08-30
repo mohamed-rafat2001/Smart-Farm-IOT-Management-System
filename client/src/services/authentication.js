@@ -3,15 +3,23 @@ import api from '../utils/api';
 // create new response
 export const signUp = async (data) => {
   const response = await api.post('/auth/signUp', data);
-
-  return response.data.data.user;
+  
+  // Return both user and token
+  return {
+    ...response.data.data.user,
+    token: response.data.data.token
+  };
 };
 
 // response login func
 export const login = async (data) => {
   const response = await api.post('/auth/login', data);
-
-  return response.data.data.user;
+  
+  // Return both user and token
+  return {
+    ...response.data.data.user,
+    token: response.data.data.token
+  };
 };
 // log out user
 export const logOut = async () => {
