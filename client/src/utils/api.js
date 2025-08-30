@@ -19,23 +19,25 @@ const handleApiError = (error) => {
     console.error('Response error headers:', error.response.headers);
 
     return {
-      status: error.response.data.status,
-      message: error.response.data.message,
+      status: error.response.status,
+      message: error.response.data?.message || 'Server error occurred',
+      error: error.response.data
     };
   } else if (error.request) {
     // The request was made but no response was received
-    console.error('Request error:', error.request);
+    console.error('Network error - no response received:', error.request);
 
     return {
-      message: 'No response from server',
-      status: 500,
+      message: 'Network error - unable to connect to server. Please check your internet connection.',
+      status: 503,
+      isNetworkError: true
     };
   } else {
     // Something happened in setting up the request that triggered an Error
     console.error('Error message:', error.message);
 
     return {
-      message: error.message || 'An error occurred',
+      message: error.message || 'An unexpected error occurred',
       status: 500,
     };
   }
