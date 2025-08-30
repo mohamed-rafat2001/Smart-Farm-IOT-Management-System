@@ -5,7 +5,7 @@ import ProfilePage from '../pages/ProfilePage.jsx';
 import FarmsPage from '../pages/FarmsPage.jsx';
 import FarmDashPage from '../pages/FarmDashPage.jsx';
 import AdminDashPage from '../pages/AdminDashPage.jsx';
-import SettingsPage from '../pages/settingsPage.jsx';
+import SettingsPage from '../pages/SettingsPage.jsx';
 
 import ProtectedLayout from '../ui/protectedLayout.jsx';
 import NotFoundPage from '../pages/NotFoundPage.jsx';

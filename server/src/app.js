@@ -205,21 +205,29 @@ export const initializeApp = async () => {
 		} catch (error) {
 			console.error("❌ Failed to load error handlers:", error.message);
 
-			// Fallback error handler
+			// Fallback error handler for unhandled routes
 			app.all("*", (req, res) => {
 				res.status(404).json({
 					status: "error",
 					message: `Route ${req.originalUrl} not found`,
 					timestamp: new Date().toISOString(),
+					environment: process.env.NODE_ENV || 'development',
+					server: 'vercel'
 				});
 			});
 
+			// Fallback global error handler
 			app.use((error, req, res, next) => {
-				res.status(500).json({
+				const statusCode = error.statusCode || 500;
+				res.status(statusCode).json({
 					status: "error",
-					message: "Internal server error",
-					error: error.message,
+					message: error.message || "Internal server error",
+					error: process.env.NODE_ENV === 'production' ? 'Something went wrong' : error.stack,
 					timestamp: new Date().toISOString(),
+					path: req.originalUrl,
+					method: req.method,
+					environment: process.env.NODE_ENV || 'development',
+					server: 'vercel'
 				});
 			});
 		}
