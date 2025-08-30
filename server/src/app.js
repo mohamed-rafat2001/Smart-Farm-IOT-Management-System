@@ -39,14 +39,17 @@ const corsOptions = {
 		process.env.CLIENT_URL,
 	].filter(Boolean),
 	credentials: true,
+	methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
 	allowedHeaders: [
 		"Content-Type",
 		"Authorization",
 		"Content-Length",
 		"X-Requested-With",
 	],
+	exposedHeaders: ["Content-Disposition"],
+	preflightContinue: false,
+	optionsSuccessStatus: 204,
 };
-
 app.use(cors(corsOptions));
 
 // Add Cache-Control headers to all responses
