@@ -2,17 +2,21 @@
 	"name": "server",
 	"version": "1.0.0",
 	"description": "",
-	"main": "server/index.js",
+	"main": "index.js",
 	"type": "module",
 	"scripts": {
-		"start": "node server/index.js",
-		"server": "nodemon server/index.js",
+		"start": "node index.js",
+		"dev": "nodemon index.js",
+		"build": "echo 'No build step required for Node.js server'",
+		"server": "nodemon index.js",
 		"client": "npm run dev --prefix client",
-		"dev": "concurrently \"npm run server\" \"npm run client\"",
-		"debug": "ndb server/index.js",
-		"generate-dsa-pdf": "node generate-dsa-pdf.js"
+		"dev:full": "concurrently \"npm run server\" \"npm run client\"",
+		"debug": "ndb index.js",
+		"generate-dsa-pdf": "node generate-dsa-pdf.js",
+		"vercel-build": "echo 'Server build completed'",
+		"test": "echo 'No tests specified'"
 	},
-	"keywords": [],
+	"keywords": []
 	"author": "",
 	"license": "ISC",
 	"dependencies": {

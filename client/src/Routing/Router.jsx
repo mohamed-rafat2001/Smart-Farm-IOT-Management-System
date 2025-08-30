@@ -1,11 +1,11 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 import HomePage from '../pages/HomePage.jsx';
 import AppLayout from '../ui/AppLayout.jsx';
-import ProfilePage from '../pages/ProfilePage.jsx';
-import FarmsPage from '../pages/FarmsPage.jsx';
+import ProfilePage from '../pages/profilePage.jsx';
+import FarmsPage from '../pages/farmsPage.jsx';
 import FarmDashPage from '../pages/FarmDashPage.jsx';
 import AdminDashPage from '../pages/AdminDashPage.jsx';
-import SettingsPage from '../pages/SettingsPage.jsx';
+import SettingsPage from '../pages/settingsPage.jsx';
 
 import ProtectedLayout from '../ui/protectedLayout.jsx';
 import NotFoundPage from '../pages/NotFoundPage.jsx';

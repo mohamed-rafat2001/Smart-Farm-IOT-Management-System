@@ -119,30 +119,38 @@ app.get("/api/v1/health", (req, res) => {
 });
 
 // Database connection status endpoint
-app.get("/api/v1/db-status", (req, res) => {
-	const mongoose = require('mongoose');
-	const connectionState = mongoose.connection.readyState;
-	const states = {
-		0: 'disconnected',
-		1: 'connected',
-		2: 'connecting',
-		3: 'disconnecting'
-	};
-	
-	res.status(200).json({
-		status: connectionState === 1 ? "success" : "warning",
-		connection: states[connectionState] || 'unknown',
-		timestamp: new Date().toISOString()
-	});
-});
-
-// Initialize database connection first, then load routes
-export const initializeApp = async () => {
+app.get("/api/v1/db-status", async (req, res) => {
 	try {
-		// Import and initialize database connection
 		const dbConnect = await import("./db/dataBase.js");
 		const connected = await dbConnect.default();
-		
+		res.status(200).json({
+			status: "success",
+			message: "Database connection status",
+			connected: connected,
+			timestamp: new Date().toISOString(),
+		});
+	} catch (error) {
+		res.status(500).json({
+			status: "error",
+			message: "Database connection failed",
+			error: error.message,
+			timestamp: new Date().toISOString(),
+		});
+	}
+});
+
+// Initialize application with error handling
+export const initializeApp = async () => {
+	try {
+		// Database connection with error handling
+		let connected = false;
+		try {
+			const dbConnect = await import("./db/dataBase.js");
+			connected = await dbConnect.default();
+		} catch (error) {
+			console.error("❌ Database connection failed:", error.message);
+		}
+
 		if (!connected) {
 			console.error("❌ Database connection failed, but continuing with limited functionality");
 		} else {
@@ -150,7 +158,7 @@ export const initializeApp = async () => {
 		}
 		
 		try {
-			// Register routes with explicit error handling for each one
+			// Register routes with static imports for production
 			console.log("🔄 Registering auth routes...");
 			app.use("/api/v1/auth", authRouter);
 			
@@ -168,17 +176,17 @@ export const initializeApp = async () => {
 			console.error("❌ Failed to load routers:", error.message);
 
 			// Add a fallback route for when routers fail
-			app.use("/api/v1/*", (req, res) => {
-				res.status(503).json({
+			app.all("/api/*", (req, res) => {
+				res.status(500).json({
 					status: "error",
-					message: "API routes temporarily unavailable",
+					message: "Router initialization failed",
 					error: error.message,
 					timestamp: new Date().toISOString(),
 				});
 			});
 		}
 
-		// Error handling middleware
+		// Error handlers with dynamic imports for better error handling
 		try {
 			const appError = await import("./utils/appError.js");
 			const globalErrorHandler = await import("./controllers/errorController.js");

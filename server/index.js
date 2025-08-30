@@ -1,76 +1,60 @@
-import express from "express";
-import dotenv from "dotenv";
+import { app, initializeApp } from "./src/app.js";
 
-// Load environment variables first
-dotenv.config();
-
-// Create a basic error handler app
-const createErrorApp = (error) => {
-	const app = express();
-	app.use(express.json());
-
-	app.get("*", (req, res) => {
-		res.status(500).json({
-			status: "error",
-			message: "Server initialization failed",
-			error: error.message,
-			timestamp: new Date().toISOString(),
-			env: {
-				hasDbUrl: !!process.env.DB_URL,
-				hasJwtKey: !!process.env.JWTKEY,
-				nodeEnv: process.env.MODE,
-			},
-		});
-	});
-
-	return app;
-};
-
-// Try to import and initialize the main app
-let app;
-try {
-	// Import the main app
-	const { app: mainApp } = await import("./src/app.js");
-	app = mainApp;
-
-	console.log("✅ Server initialized successfully");
-} catch (error) {
-	console.error("❌ Failed to initialize main app:", error);
-	app = createErrorApp(error);
-}
-
-// Global error handlers
 process.on("uncaughtException", (err) => {
-	console.error("❌ Uncaught Exception:", err);
-	// Don't exit in serverless environment
-	if (process.env.MODE !== "production") {
-		process.exit(1);
-	}
+	console.error("❌ Uncaught Exception:", err.message);
+	process.exit(1);
 });
 
 process.on("unhandledRejection", (err) => {
-	console.error("❌ Unhandled Rejection:", err);
-	// Don't exit in serverless environment
-	if (process.env.MODE !== "production") {
-		process.exit(1);
-	}
+	console.error("❌ Unhandled Rejection:", err.message);
+	process.exit(1);
 });
 
-const port = process.env.PORT || 3000;
-
-// Local development server
-if (process.env.MODE !== "production") {
-	const server = app.listen(port, () => {
-		console.log(`🚀 Server running on port ${port}`);
-	});
-
-	process.on("unhandledRejection", (err) => {
-		console.error("❌ Unhandled Rejection:", err);
-		server.close(() => {
-			process.exit(1);
+// Initialize the application
+const startServer = async () => {
+	try {
+		console.log("🚀 Starting Smart Farm Server...");
+		
+		// Initialize app with database and routes
+		const initialized = await initializeApp();
+		
+		if (!initialized) {
+			console.warn("⚠️ App initialization had issues, but continuing...");
+		}
+		
+		const port = process.env.PORT || 3000;
+		
+		// For Vercel, we export the app directly
+		if (process.env.VERCEL) {
+			console.log("✅ Running on Vercel - exporting app");
+			return app;
+		}
+		
+		// For local development, start the server
+		const server = app.listen(port, () => {
+			console.log(`✅ Smart Farm Server listening on port ${port}`);
+			console.log(`🌐 Environment: ${process.env.NODE_ENV || 'development'}`);
+			console.log(`📊 Health check: http://localhost:${port}/api/v1/health`);
 		});
-	});
-}
+		
+		// Graceful shutdown
+		process.on("SIGTERM", () => {
+			console.log("🛑 SIGTERM received, shutting down gracefully...");
+			server.close(() => {
+				console.log("✅ Server closed successfully");
+				process.exit(0);
+			});
+		});
+		
+		return server;
+	} catch (error) {
+		console.error("❌ Failed to start server:", error.message);
+		process.exit(1);
+	}
+};
 
-// Export for Vercel serverless functions
+// Start the server
+startServer();
+
+// Export app for Vercel
 export default app;

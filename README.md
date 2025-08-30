@@ -83,35 +83,22 @@ A comprehensive IoT management system for smart farming with real-time monitorin
 Create a `.env` file in the server directory:
 
 ```env
-# Server Configuration
-PORT=3000
-NODE_ENV=development
-MODE=DEV
-
-# Database Configuration
-DB_URL=mongodb+srv://username:<db_password>@cluster.mongodb.net/smartfarm?retryWrites=true&w=majority
-DB_PASSWORD=your_database_password
+# Database
+MONGODB_URI=mongodb://localhost:27017/smart-farm
+# or for production: mongodb+srv://username:password@cluster.mongodb.net/smart-farm
 
 # JWT Configuration
-JWTKEY=your-super-secret-jwt-key-here
-JWTEXPIRE=90d
-COOKIEEXPIRE=90
+JWT_SECRET=your-super-secret-jwt-key
+JWT_EXPIRES_IN=90d
 
-# Email Configuration
-EMAIL_SERVICE=gmail
-EMAIL_HOST=smtp.gmail.com
-EMAIL_PORT=587
-EMAIL_USERNAME=your_email@gmail.com
-EMAIL_PASSWORD=your_email_app_password
-EMAIL_FROM=your_email@gmail.com
-EMAIL_FROM_NAME=Smart Farm
+# Email Configuration (optional)
+EMAIL_FROM=noreply@smartfarm.com
+EMAIL_PASSWORD=your-email-password
 
-# Cloudinary Configuration (for image uploads)
-cloud_name=your_cloudinary_cloud_name
-api_key=your_cloudinary_api_key
-api_secret=your_cloudinary_api_secret
-secure=true
-upload_preset=your_upload_preset
+# Cloudinary Configuration (optional)
+CLOUDINARY_CLOUD_NAME=your-cloud-name
+CLOUDINARY_API_KEY=your-api-key
+CLOUDINARY_API_SECRET=your-api-secret
 ```
 
 #### Client Environment Variables
@@ -120,57 +107,14 @@ Create a `.env` file in the client directory:
 
 ```env
 # API Configuration
-VITE_API_URL=http://localhost:3000/api/v1
+VITE_APIURL=http://localhost:3000/api/v1
 
-# Socket Configuration (if using real-time features)
-VITE_SOCKET_URL=http://localhost:3000
+# Timeout Configuration (in milliseconds)
+VITE_API_TIMEOUT=30000
 
-# Maps API Key (if using maps features)
-VITE_MAPS_API_KEY=your_maps_api_key
-
-# Weather API Key (if using weather features)
-VITE_WEATHER_API_KEY=your_weather_api_key
-
-# App Configuration
-VITE_APP_NAME=Smart Farm
-VITE_APP_VERSION=1.0.0
+# Development Configuration
+VITE_NODE_ENV=development
 ```
-
-## 🚀 Deployment to Vercel
-
-This project is configured for deployment on Vercel with both client and server components.
-
-### Quick Deployment
-
-1. **Run the deployment script**:
-
-   ```bash
-   chmod +x deploy-vercel.sh
-   ./deploy-vercel.sh
-   ```
-
-2. **Follow the deployment guide**: See [VERCEL_DEPLOYMENT.md](./VERCEL_DEPLOYMENT.md) for detailed instructions.
-
-### Deployment Steps
-
-1. **Deploy Backend (Server)**:
-
-   - Go to [vercel.com](https://vercel.com)
-   - Create new project
-   - Import your GitHub repository
-   - Set root directory to `server`
-   - Configure environment variables
-   - Deploy
-
-2. **Deploy Frontend (Client)**:
-
-   - Create another Vercel project
-   - Import the same GitHub repository
-   - Set root directory to `client`
-   - Configure environment variables
-   - Deploy
-
-3. **Update CORS**: After both deployments, update the `CLIENT_URL` in your server environment variables.
 
 ## API Endpoints
 
@@ -208,9 +152,6 @@ smart-Farm/
 │   │   └── utils/         # Utility functions
 │   ├── index.js           # Server entry point
 │   └── package.json
-├── vercel.json            # Vercel configuration
-├── deploy-vercel.sh       # Deployment script
-├── VERCEL_DEPLOYMENT.md   # Deployment guide
 └── README.md
 ```
 

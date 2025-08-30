@@ -1,5 +1,5 @@
 import { Outlet, useLocation } from 'react-router-dom';
-import Sidebar from './Sidebar.jsx';
+import Sidebar from './SideBar.jsx';
 import { useState } from 'react';
 
 function AppLayout() {

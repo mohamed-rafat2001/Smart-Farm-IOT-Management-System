@@ -41,17 +41,8 @@ const handleApiError = (error) => {
   }
 };
 
-// Get API URL from environment variables
-const getApiUrl = () => {
-  const apiUrl = import.meta.env.VITE_API_URL;
-  if (apiUrl) {
-    return apiUrl.endsWith('/api/v1') ? apiUrl : `${apiUrl}/api/v1`;
-  }
-  return 'http://localhost:3000/api/v1';
-};
-
 const api = axios.create({
-  baseURL: getApiUrl(),
+  baseURL: import.meta.env.VITE_APIURL || 'http://localhost:3000/api/v1',
   withCredentials: true,
   timeout: 30000, // Increased from 10000ms to 30000ms
   headers: {
