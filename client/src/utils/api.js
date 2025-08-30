@@ -1,5 +1,9 @@
 import axios from 'axios';
 
+// Log the API URL being used
+const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000/api/v1';
+console.log('🔄 API URL being used:', apiUrl);
+
 const handleApiError = (error) => {
   // Handle timeout errors specifically
   if (error.code === 'ECONNABORTED' && error.message.includes('timeout')) {
@@ -26,7 +30,9 @@ const handleApiError = (error) => {
   } else if (error.request) {
     // The request was made but no response was received
     console.error('Network error - no response received:', error.request);
-
+    console.error('Request URL:', error.config?.url);
+    console.error('Request method:', error.config?.method);
+    
     return {
       message: 'Network error - unable to connect to server. Please check your internet connection.',
       status: 503,
