@@ -8,6 +8,9 @@ import xss from "xss-clean";
 import hpp from "hpp";
 import cookieParser from "cookie-parser";
 
+// Import custom middleware
+import { timeoutMiddleware, errorBoundaryMiddleware, asyncHandler } from "./middleware/timeoutMiddleware.js";
+
 // Import routers
 import userRoute from "./routers/userRoute.js";
 import authRouter from "./routers/authRouter.js";
@@ -45,6 +48,9 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
+
+// Add timeout middleware early in the chain
+app.use(timeoutMiddleware(30000)); // 30 second timeout
 
 // Security middleware with error handling
 try {
@@ -216,20 +222,8 @@ export const initializeApp = async () => {
 				});
 			});
 
-			// Fallback global error handler
-			app.use((error, req, res, next) => {
-				const statusCode = error.statusCode || 500;
-				res.status(statusCode).json({
-					status: "error",
-					message: error.message || "Internal server error",
-					error: process.env.NODE_ENV === 'production' ? 'Something went wrong' : error.stack,
-					timestamp: new Date().toISOString(),
-					path: req.originalUrl,
-					method: req.method,
-					environment: process.env.NODE_ENV || 'development',
-					server: 'vercel'
-				});
-			});
+			// Use the custom error boundary middleware as the final error handler
+			app.use(errorBoundaryMiddleware);
 		}
 		
 		return true;
