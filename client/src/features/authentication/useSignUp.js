@@ -33,3 +33,4 @@ export function useSignUp() {
     mutate,
   };
 }
+// i need you delete all locat storage from my client and server and only use cookies i already implemented
