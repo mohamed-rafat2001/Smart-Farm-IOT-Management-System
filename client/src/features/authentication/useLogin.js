@@ -13,6 +13,14 @@ function useLogin() {
   } = useMutation({
     mutationFn: login,
     onSuccess: (data) => {
+      // Save token to localStorage
+      if (data.token) {
+        localStorage.setItem('token', data.token);
+        console.log('✅ Token saved to localStorage');
+      } else {
+        console.warn('⚠️ No token received from server');
+      }
+      
       queryClient.setQueryData(['User'], data);
       navigate('/app/profile');
     },
