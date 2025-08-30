@@ -49,6 +49,16 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
+// Add Cache-Control headers to all responses
+app.use((req, res, next) => {
+  // Set Cache-Control header for API responses
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
+  res.setHeader('Surrogate-Control', 'no-store');
+  next();
+});
+
 // Add timeout middleware early in the chain
 app.use(timeoutMiddleware(30000)); // 30 second timeout
 
