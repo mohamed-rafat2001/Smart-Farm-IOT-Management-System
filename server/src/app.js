@@ -51,11 +51,9 @@ app.use(cors(corsOptions));
 
 // Add Cache-Control headers to all responses
 app.use((req, res, next) => {
-  // Set Cache-Control header for API responses
-  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
-  res.setHeader('Pragma', 'no-cache');
-  res.setHeader('Expires', '0');
-  res.setHeader('Surrogate-Control', 'no-store');
+  // Set Cache-Control header for API responses that allows client-side caching
+  // but ensures validation with the server
+  res.setHeader('Cache-Control', 'private, max-age=3600, stale-while-revalidate=86400');
   next();
 });
 
