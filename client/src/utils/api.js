@@ -66,7 +66,10 @@ api.interceptors.request.use(
     }
     const token = localStorage.getItem('token');
     if (token) {
-      config.headers.authorization = `Bearer ${token}`;
+      config.headers.Authorization = `Bearer ${token}`;
+      console.log('🔑 Adding auth token to request:', config.url);
+    } else {
+      console.warn('⚠️ No auth token found for request:', config.url);
     }
     return config;
   },
