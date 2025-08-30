@@ -176,6 +176,9 @@ export const initializeApp = async () => {
 			// Register routes with static imports for production
 			console.log("🔄 Registering auth routes...");
 			app.use("/api/v1/auth", (req, res, next) => {
+				// Set Cache-Control header explicitly for this route
+				res.setHeader('Cache-Control', 'private, max-age=3600, stale-while-revalidate=86400');
+				
 				// Add response interceptor to catch errors
 				const originalSend = res.send;
 				res.send = function(data) {
@@ -190,6 +193,9 @@ export const initializeApp = async () => {
 			
 			console.log("🔄 Registering user routes...");
 			app.use("/api/v1/user", (req, res, next) => {
+				// Set Cache-Control header explicitly for this route
+				res.setHeader('Cache-Control', 'private, max-age=3600, stale-while-revalidate=86400');
+				
 				// Add response interceptor to catch errors
 				const originalSend = res.send;
 				res.send = function(data) {
