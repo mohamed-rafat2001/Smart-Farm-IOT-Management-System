@@ -16,7 +16,7 @@
 		"vercel-build": "echo 'Server build completed'",
 		"test": "echo 'No tests specified'"
 	},
-	"keywords": []
+	"keywords": [],
 	"author": "",
 	"license": "ISC",
 	"dependencies": {
