@@ -164,18 +164,63 @@ export const initializeApp = async () => {
 		}
 		
 		try {
+			// Wrap all route handlers with asyncHandler to ensure errors are caught
 			// Register routes with static imports for production
 			console.log("🔄 Registering auth routes...");
-			app.use("/api/v1/auth", authRouter);
+			app.use("/api/v1/auth", (req, res, next) => {
+				// Add response interceptor to catch errors
+				const originalSend = res.send;
+				res.send = function(data) {
+					res.send = originalSend;
+					if (res.statusCode >= 400 && !res.headersSent) {
+						console.error(`Error in auth route: ${req.method} ${req.originalUrl}`, data);
+					}
+					return originalSend.call(this, data);
+				};
+				next();
+			}, authRouter);
 			
 			console.log("🔄 Registering user routes...");
-			app.use("/api/v1/user", userRoute);
+			app.use("/api/v1/user", (req, res, next) => {
+				// Add response interceptor to catch errors
+				const originalSend = res.send;
+				res.send = function(data) {
+					res.send = originalSend;
+					if (res.statusCode >= 400 && !res.headersSent) {
+						console.error(`Error in user route: ${req.method} ${req.originalUrl}`, data);
+					}
+					return originalSend.call(this, data);
+				};
+				next();
+			}, userRoute);
 			
 			console.log("🔄 Registering admin routes...");
-			app.use("/api/v1/admin", adminRouter);
+			app.use("/api/v1/admin", (req, res, next) => {
+				// Add response interceptor to catch errors
+				const originalSend = res.send;
+				res.send = function(data) {
+					res.send = originalSend;
+					if (res.statusCode >= 400 && !res.headersSent) {
+						console.error(`Error in admin route: ${req.method} ${req.originalUrl}`, data);
+					}
+					return originalSend.call(this, data);
+				};
+				next();
+			}, adminRouter);
 			
 			console.log("🔄 Registering farm routes...");
-			app.use("/api/v1/farm", farmRouter);
+			app.use("/api/v1/farm", (req, res, next) => {
+				// Add response interceptor to catch errors
+				const originalSend = res.send;
+				res.send = function(data) {
+					res.send = originalSend;
+					if (res.statusCode >= 400 && !res.headersSent) {
+						console.error(`Error in farm route: ${req.method} ${req.originalUrl}`, data);
+					}
+					return originalSend.call(this, data);
+				};
+				next();
+			}, farmRouter);
 
 			console.log("✅ All routers loaded successfully");
 		} catch (error) {
