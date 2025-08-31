@@ -4,9 +4,10 @@ function sendCookie(res, token) {
 			Date.now() + process.env.COOKIEEXPIRE * 24 * 60 * 60 * 1000
 		),
 		httpOnly: true,
+		sameSite: 'lax',
+		path: '/',
+		secure: process.env.NODE_ENV==="production",
 	};
-
-	if (process.env.MODE === "PRODUCTION") cookieOptions.secure = true;
 
 	res.cookie("token", token, cookieOptions);
 }

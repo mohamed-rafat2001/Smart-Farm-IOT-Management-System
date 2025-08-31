@@ -65,14 +65,8 @@ api.interceptors.request.use(
       delete config.headers['Content-Type'];
     }
     
-    // Get token from cookie for Authorization header
-    const cookies = document.cookie.split(';');
-    const tokenCookie = cookies.find(cookie => cookie.trim().startsWith('token='));
-    
-    if (tokenCookie) {
-      const token = tokenCookie.split('=')[1];
-      config.headers['Authorization'] = `Bearer ${token}`;
-    }
+    // Using withCredentials: true to automatically send cookies with requests
+    // No manual token handling needed
     
     return config;
   },
