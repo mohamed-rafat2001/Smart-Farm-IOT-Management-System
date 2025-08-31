@@ -13,6 +13,9 @@ function useLogin() {
   } = useMutation({
     mutationFn: login,
     onSuccess: (data) => {
+      // Clear any existing cache first
+      queryClient.clear();
+      
       // Save token to localStorage
       if (data.token) {
         localStorage.setItem('token', data.token);
@@ -21,7 +24,12 @@ function useLogin() {
         console.warn('⚠️ No token received from server');
       }
       
+      // Set fresh user data
       queryClient.setQueryData(['User'], data);
+      
+      // Initialize empty farm data for the user
+      queryClient.setQueryData(['userFarms'], []);
+      
       navigate('/app/profile');
     },
   });
