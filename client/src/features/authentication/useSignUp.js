@@ -13,6 +13,9 @@ export function useSignUp() {
   } = useMutation({
     mutationFn: signUp,
     onSuccess: (data) => {
+      // Clear any existing cache first to ensure no data from previous sessions remains
+      queryClient.clear();
+      
       // Save token to localStorage
       if (data.token) {
         localStorage.setItem('token', data.token);
@@ -21,7 +24,12 @@ export function useSignUp() {
         console.warn('⚠️ No token received from server after signup');
       }
       
+      // Set fresh user data
       queryClient.setQueryData(['User'], data);
+      
+      // Explicitly ensure userFarms cache is empty for new accounts
+      queryClient.setQueryData(['userFarms'], []);
+      
       navigate('/app/profile');
     },
   });
