@@ -66,7 +66,16 @@ api.interceptors.request.use(
     }
     
     // Using withCredentials: true to automatically send cookies with requests
-    // No manual token handling needed
+    // Also add Authorization header with token from cookies for APIs that expect it
+    const cookies = document.cookie.split(';');
+    const tokenCookie = cookies.find(cookie => cookie.trim().startsWith('token='));
+    
+    if (tokenCookie) {
+      const token = tokenCookie.split('=')[1];
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+    }
     
     return config;
   },
