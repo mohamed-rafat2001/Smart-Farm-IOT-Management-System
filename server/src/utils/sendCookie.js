@@ -4,9 +4,9 @@ function sendCookie(res, token) {
 			Date.now() + process.env.COOKIEEXPIRE * 24 * 60 * 60 * 1000
 		),
 		httpOnly: true,
-		sameSite: 'lax',
+		sameSite: 'none',
 		path: '/',
-		secure: process.env.NODE_ENV==="production",
+		secure: true,
 	};
 
 	res.cookie("token", token, cookieOptions);
