@@ -64,13 +64,8 @@ api.interceptors.request.use(
     if (config.data instanceof FormData) {
       delete config.headers['Content-Type'];
     }
-    const token = localStorage.getItem('token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-      console.log('🔑 Adding auth token to request:', config.url);
-    } else {
-      console.warn('⚠️ No auth token found for request:', config.url);
-    }
+    // No need to add token from localStorage since we're using cookies
+    // The withCredentials: true option will ensure cookies are sent with requests
     return config;
   },
   (error) => {
