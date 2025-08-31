@@ -5,7 +5,6 @@ import appError from "../utils/appError.js";
 import { deactivateDoc, updateDoc } from "./handlerFactory.js";
 import upload from "../utils/multer.js";
 import cloudinary from "../utils/cloudinary.js";
-import fs from "fs";
 
 //  @desc	get user profile
 // route   /api/v1/user
@@ -39,17 +38,18 @@ export const deleteMe = deactivateDoc(UserModel, "user");
 export const uploadSinglePhoto = upload.single("photo");
 
 // @desc	 upload user profile
-// route   /api/v1/user
-// method  post
+// route   /api/v1/user/userImg
+// method  patch
 // access  private/user
 export const uploadUserPhoto = catchAsync(async (req, res, next) => {
 	if (req.file) {
 		try {
+			// Create a dataURI from the buffer for Cloudinary upload
+			const dataURI = `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}`;
+			
 			// upload img in cloudinary
-			const startTime = Date.now();
-
 			const { public_id, secure_url } = await cloudinary.uploader.upload(
-				req.file.path,
+				dataURI,
 				{ folder: `AgriTech/users/id_${req.user._id}/profileImg` }
 			);
 
@@ -59,21 +59,13 @@ export const uploadUserPhoto = catchAsync(async (req, res, next) => {
 					await cloudinary.uploader.destroy(req.user.profileImg.public_id);
 				} catch (deleteError) {
 					// Continue with the process even if old image deletion fails
+					console.log("Failed to delete old image:", deleteError);
 				}
 			}
 
 			// Update user profile
 			req.user.profileImg = { public_id, secure_url };
 			await req.user.save({ validateBeforeSave: false });
-
-			// Clean up local file
-			if (req.file && req.file.path && fs.existsSync(req.file.path)) {
-				try {
-					fs.unlinkSync(req.file.path);
-				} catch (cleanupError) {
-					// Continue even if cleanup fails
-				}
-			}
 
 			// Ensure response is sent properly
 			const responseData = {
@@ -85,26 +77,52 @@ export const uploadUserPhoto = catchAsync(async (req, res, next) => {
 			// Send response
 			res.status(200).json(responseData);
 		} catch (error) {
-			// Clean up local file on error
-			if (req.file && req.file.path && fs.existsSync(req.file.path)) {
-				try {
-					fs.unlinkSync(req.file.path);
-				} catch (cleanupError) {
-					// Continue even if cleanup fails
-				}
-			}
-
-			// Send proper error response instead of throwing
-			return res.status(500).json({
-				status: "error",
-				message: error.message || "Image upload failed",
-				error: process.env.NODE_ENV === "development" ? error : {},
-			});
+			// Send proper error response
+			return next(new appError(error.message || "Image upload failed", 500));
 		}
 	} else {
-		return res.status(400).json({
-			status: "error",
-			message: "No file uploaded",
-		});
+		return next(new appError("No file uploaded", 400));
 	}
+});
+
+// @desc    get all users
+// route    /api/v1/user/admin
+// method   get
+// access   private/admin
+export const getAllUsers = catchAsync(async (req, res, next) => {
+	const users = await UserModel.find();
+	response(res, 200, users);
+});
+
+// @desc    get user by id
+// route    /api/v1/user/admin/:id
+// method   get
+// access   private/admin
+export const getUserById = catchAsync(async (req, res, next) => {
+	const user = await UserModel.findById(req.params.id);
+	if (!user) return next(new appError("user not found", 404));
+	response(res, 200, user);
+});
+
+// @desc    update user
+// route    /api/v1/user/admin/:id
+// method   patch
+// access   private/admin
+export const updateUser = catchAsync(async (req, res, next) => {
+	const user = await UserModel.findByIdAndUpdate(req.params.id, req.body, {
+		new: true,
+		runValidators: true,
+	});
+	if (!user) return next(new appError("user not found", 404));
+	response(res, 200, user);
+});
+
+// @desc    delete user
+// route    /api/v1/user/admin/:id
+// method   delete
+// access   private/admin
+export const deleteUser = catchAsync(async (req, res, next) => {
+	const user = await UserModel.findByIdAndDelete(req.params.id);
+	if (!user) return next(new appError("user not found", 404));
+	response(res, 204, null);
 });
