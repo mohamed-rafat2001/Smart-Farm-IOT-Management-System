@@ -16,14 +16,6 @@ function useLogin() {
       // Clear any existing cache first
       queryClient.clear();
       
-      // Save token to localStorage
-      if (data.token) {
-        localStorage.setItem('token', data.token);
-        console.log('✅ Token saved to localStorage');
-      } else {
-        console.warn('⚠️ No token received from server');
-      }
-      
       // Set fresh user data
       queryClient.setQueryData(['User'], data);
       
