@@ -27,8 +27,8 @@ function useLogin() {
       // Set fresh user data
       queryClient.setQueryData(['User'], data);
       
-      // Initialize empty farm data for the user
-      queryClient.setQueryData(['userFarms'], []);
+      // Initialize empty farm data for the user with proper structure and user-specific key
+      queryClient.setQueryData(['userFarms', data.user._id], { data: { docs: [] } });
       
       navigate('/app/profile');
     },
