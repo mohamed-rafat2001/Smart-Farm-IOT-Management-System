@@ -10,6 +10,7 @@ function useLogOut() {
 
     onSuccess: () => {
       queryClient.removeQueries({ queryKey: ['User'] });
+      queryClient.removeQueries({ queryKey: ['userFarms'] });
       queryClient.clear();
       navigate('/');
     },
