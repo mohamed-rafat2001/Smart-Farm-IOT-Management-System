@@ -6,7 +6,7 @@ function useGetUserFarms() {
   
   // Get the current user data from the cache
   const userData = queryClient.getQueryData(['User']);
-  
+  conso.log(userData)
   const {
     data: userFarm,
     isLoading,
