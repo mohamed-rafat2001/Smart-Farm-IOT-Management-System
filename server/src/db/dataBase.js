@@ -7,7 +7,10 @@ const dbUrl = process.env.DB_URL.replace(
 );
 export default function dbConnect() {
 	mongoose
-		.connect(dbUrl)
+		.connect(dbUrl, {
+			serverSelectionTimeoutMS: 5000, // Keep trying to send operations for 5 seconds
+			socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
+		})
 		.then(() => {
 			console.log("db is connbected");
 		})

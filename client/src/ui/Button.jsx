@@ -1,11 +1,8 @@
-import React from 'react';
 import { motion } from 'framer-motion';
 
 const Button = ({
   children,
   className = '',
-  color,
-  $backgroundcolor,
   variant = 'primary',
   size = 'medium',
   disabled = false,
