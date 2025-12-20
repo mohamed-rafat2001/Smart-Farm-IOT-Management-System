@@ -9,7 +9,7 @@ function ProtectedLayout({ requiredRole }) {
   // Show loading spinner while checking authentication
   if (isLoading) {
     return (
-      <div className="flex h-screen items-center justify-center">
+      <div className="flex h-screen items-center justify-center bg-[#1b2127]">
         <LoadingCircul />
       </div>
     );
@@ -17,13 +17,7 @@ function ProtectedLayout({ requiredRole }) {
 
   // Not authenticated? Redirect to login with current location
   if (!isAuthenticated) {
-    return (
-      <Navigate 
-        to="/login" 
-        state={{ from: location.pathname }} 
-        replace 
-      />
-    );
+    return <Navigate to="/login" state={{ from: location.pathname }} replace />;
   }
 
   // Authenticated but wrong role? Redirect to dashboard

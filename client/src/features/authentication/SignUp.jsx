@@ -14,38 +14,43 @@ function SignUp() {
   }
 
   const containerVariants = {
-    hidden: { opacity: 0, y: 20 },
+    hidden: { opacity: 0, y: 30 },
     visible: {
       opacity: 1,
       y: 0,
       transition: {
-        duration: 0.4,
+        duration: 0.6,
+        ease: [0.22, 1, 0.36, 1],
         staggerChildren: 0.1,
       },
     },
   };
 
   const itemVariants = {
-    hidden: { opacity: 0, x: -10 },
-    visible: { opacity: 1, x: 0 },
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.5, ease: 'easeOut' },
+    },
   };
 
-  const inputStyles = `w-full bg-transparent p-3 text-stone-200 placeholder:text-stone-500 focus:outline-none disabled:opacity-50`;
-  const containerStyles = `flex w-full items-center gap-x-4 rounded-xl border border-stone-700/50 bg-[#283039]/30 transition-all duration-200 focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-500/20 hover:border-stone-600`;
+  const inputStyles = `w-full bg-transparent px-4 py-4 text-sm font-medium text-white placeholder:text-stone-500 focus:outline-none disabled:opacity-50`;
+  const containerStyles = `group flex w-full items-center gap-x-2 rounded-2xl border border-stone-800/50 bg-[#1b2127]/50 transition-all duration-300 focus-within:border-blue-500/50 focus-within:bg-[#1b2127] focus-within:ring-4 focus-within:ring-blue-500/10 hover:border-stone-700 hover:bg-[#1b2127]/80`;
 
   return (
     <motion.form
       variants={containerVariants}
       initial="hidden"
       animate="visible"
-      className="flex flex-col gap-4 py-4"
+      className="flex flex-col gap-4 py-6"
       onSubmit={handleSubmit(Submit)}
     >
       <motion.div
         variants={itemVariants}
         className="flex flex-col gap-4 sm:flex-row"
       >
-        <div className="w-full space-y-1.5 sm:w-1/2">
+        <div className="w-full space-y-2 sm:w-1/2">
           <div className={containerStyles}>
             <input
               disabled={isSignUp}
@@ -55,18 +60,22 @@ function SignUp() {
               placeholder="First Name"
               {...register('firstName', {
                 required: 'First name is required',
-                minLength: { value: 2, message: 'Minimum length is 2' },
+                minLength: { value: 2, message: 'Min 2 characters' },
               })}
             />
           </div>
           {errors?.firstName && (
-            <p className="px-1 text-xs font-medium text-red-400">
+            <motion.p
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              className="px-4 text-[10px] font-black tracking-widest text-red-500 uppercase"
+            >
               {errors.firstName.message}
-            </p>
+            </motion.p>
           )}
         </div>
 
-        <div className="w-full space-y-1.5 sm:w-1/2">
+        <div className="w-full space-y-2 sm:w-1/2">
           <div className={containerStyles}>
             <input
               disabled={isSignUp}
@@ -76,28 +85,38 @@ function SignUp() {
               placeholder="Last Name"
               {...register('lastName', {
                 required: 'Last name is required',
-                minLength: { value: 2, message: 'Minimum length is 2' },
+                minLength: { value: 2, message: 'Min 2 characters' },
               })}
             />
           </div>
           {errors?.lastName && (
-            <p className="px-1 text-xs font-medium text-red-400">
+            <motion.p
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              className="px-4 text-[10px] font-black tracking-widest text-red-500 uppercase"
+            >
               {errors.lastName.message}
-            </p>
+            </motion.p>
           )}
         </div>
       </motion.div>
 
-      <motion.div variants={itemVariants} className="space-y-1.5">
+      <motion.div variants={itemVariants} className="space-y-2">
         <div className={containerStyles}>
-          <div className="pl-4 text-stone-500">
+          <div className="pl-4 text-stone-500 transition-colors group-focus-within:text-blue-500">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-5 w-5"
-              viewBox="0 0 512 512"
-              fill="currentColor"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
             >
-              <path d="M48 64C21.5 64 0 85.5 0 112c0 15.1 7.1 29.3 19.2 38.4L236.8 313.6c11.4 8.5 27 8.5 38.4 0L492.8 150.4c12.1-9.1 19.2-23.3 19.2-38.4c0-26.5-21.5-48-48-48L48 64zM0 176L0 384c0 35.3 28.7 64 64 64l384 0c35.3 0 64-28.7 64-64l0-208L294.4 339.2c-22.8 17.1-54 17.1-76.8 0L0 176z" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+              />
             </svg>
           </div>
           <input
@@ -110,22 +129,32 @@ function SignUp() {
           />
         </div>
         {errors?.email && (
-          <p className="px-1 text-xs font-medium text-red-400">
+          <motion.p
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="px-4 text-[10px] font-black tracking-widest text-red-500 uppercase"
+          >
             {errors.email.message}
-          </p>
+          </motion.p>
         )}
       </motion.div>
 
-      <motion.div variants={itemVariants} className="space-y-1.5">
+      <motion.div variants={itemVariants} className="space-y-2">
         <div className={containerStyles}>
-          <div className="pl-4 text-stone-500">
+          <div className="pl-4 text-stone-500 transition-colors group-focus-within:text-blue-500">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-5 w-5"
-              viewBox="0 0 512 512"
-              fill="currentColor"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
             >
-              <path d="M164.9 24.6c-7.7-18.6-28-28.5-47.4-23.2l-88 24C12.1 30.2 0 46 0 64C0 311.4 200.6 512 448 512c18 0 33.8-12.1 38.6-29.5l24-88c5.3-19.4-4.6-39.7-23.2-47.4l-96-40c-16.3-6.8-35.2-2.1-46.3 11.6L304.7 368C234.3 334.7 177.3 277.7 144 207.3L193.3 167c13.7-11.2 18.4-30 11.6-46.3l-40-96z" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+              />
             </svg>
           </div>
           <input
@@ -140,22 +169,32 @@ function SignUp() {
           />
         </div>
         {errors?.phoneNumber && (
-          <p className="px-1 text-xs font-medium text-red-400">
+          <motion.p
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="px-4 text-[10px] font-black tracking-widest text-red-500 uppercase"
+          >
             {errors.phoneNumber.message}
-          </p>
+          </motion.p>
         )}
       </motion.div>
 
-      <motion.div variants={itemVariants} className="space-y-1.5">
+      <motion.div variants={itemVariants} className="space-y-2">
         <div className={containerStyles}>
-          <div className="pl-4 text-stone-500">
+          <div className="pl-4 text-stone-500 transition-colors group-focus-within:text-blue-500">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-5 w-5"
-              viewBox="0 0 448 512"
-              fill="currentColor"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
             >
-              <path d="M144 144l0 48 160 0 0-48c0-44.2-35.8-80-80-80s-80 35.8-80 80zM80 192l0-48C80 64.5 144.5 0 224 0s144 64.5 144 144l0 48 16 0c35.3 0 64 28.7 64 64l0 192c0 35.3-28.7 64-64 64L64 512c-35.3 0-64-28.7-64-64L0 256c0-35.3 28.7-64 64-64l16 0z" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+              />
             </svg>
           </div>
           <input
@@ -168,28 +207,38 @@ function SignUp() {
               required: 'Password is required',
               minLength: {
                 value: 8,
-                message: 'Minimum length is 8 characters',
+                message: 'Min 8 characters',
               },
             })}
           />
         </div>
         {errors?.password && (
-          <p className="px-1 text-xs font-medium text-red-400">
+          <motion.p
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="px-4 text-[10px] font-black tracking-widest text-red-500 uppercase"
+          >
             {errors.password.message}
-          </p>
+          </motion.p>
         )}
       </motion.div>
 
-      <motion.div variants={itemVariants} className="space-y-1.5">
+      <motion.div variants={itemVariants} className="space-y-2">
         <div className={containerStyles}>
-          <div className="pl-4 text-stone-500">
+          <div className="pl-4 text-stone-500 transition-colors group-focus-within:text-blue-500">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-5 w-5"
-              viewBox="0 0 448 512"
-              fill="currentColor"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
             >
-              <path d="M144 144l0 48 160 0 0-48c0-44.2-35.8-80-80-80s-80 35.8-80 80zM80 192l0-48C80 64.5 144.5 0 224 0s144 64.5 144 144l0 48 16 0c35.3 0 64 28.7 64 64l0 192c0 35.3-28.7 64-64 64L64 512c-35.3 0-64-28.7-64-64L0 256c0-35.3 28.7-64 64-64l16 0z" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+              />
             </svg>
           </div>
           <input
@@ -199,65 +248,65 @@ function SignUp() {
             type="password"
             placeholder="Confirm Password"
             {...register('passwordConfirm', {
-              required: 'Please confirm your password',
+              required: 'Confirm your password',
               validate: (value) =>
-                value === getValues().password || 'Passwords do not match',
+                value === getValues().password || 'Passwords mismatch',
             })}
           />
         </div>
         {errors?.passwordConfirm && (
-          <p className="px-1 text-xs font-medium text-red-400">
+          <motion.p
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="px-4 text-[10px] font-black tracking-widest text-red-500 uppercase"
+          >
             {errors.passwordConfirm.message}
-          </p>
+          </motion.p>
         )}
       </motion.div>
 
-      <motion.div variants={itemVariants} className="mt-4 space-y-4">
+      <motion.div variants={itemVariants} className="mt-4 space-y-6">
         {error && (
-          <p className="rounded-lg border border-red-500/20 bg-red-500/10 p-3 text-center text-sm font-medium text-red-400">
-            {error.message}
-          </p>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="rounded-2xl border border-red-500/20 bg-red-500/5 p-4 text-center"
+          >
+            <p className="text-[10px] font-black tracking-widest text-red-500 uppercase">
+              {error.message}
+            </p>
+          </motion.div>
         )}
+
         <Button
           disabled={isSignUp}
-          className="w-full rounded-xl bg-blue-600 py-3.5 text-lg font-bold text-white shadow-lg shadow-blue-500/10 transition-all hover:scale-[1.01] hover:bg-blue-500 active:scale-[0.99] disabled:opacity-70 disabled:hover:scale-100"
+          className="w-full shadow-2xl shadow-blue-900/20"
         >
           {isSignUp ? (
-            <span className="flex items-center justify-center gap-2">
-              <svg className="h-5 w-5 animate-spin" viewBox="0 0 24 24">
-                <circle
-                  className="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  strokeWidth="4"
-                  fill="none"
-                />
-                <path
-                  className="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                />
-              </svg>
-              Creating account...
+            <span className="flex items-center justify-center gap-3">
+              <div className="h-4 w-4 animate-spin rounded-full border-2 border-white/20 border-t-white" />
+              Processing...
             </span>
           ) : (
             'Create Account'
           )}
         </Button>
 
-        <div className="flex justify-center gap-2 text-sm text-stone-400">
-          <span>Already have an account?</span>
-          <Link
-            to="/login"
-            className="font-bold text-blue-400 transition-colors hover:text-blue-300"
-          >
-            Sign In
-          </Link>
+        <div className="flex flex-col items-center gap-4">
+          <div className="h-px w-12 bg-stone-800" />
+          <p className="text-[10px] font-black tracking-[0.2em] text-stone-500 uppercase">
+            Already a member?{' '}
+            <Link
+              to="/login"
+              className="ml-2 text-blue-500 transition-colors hover:text-blue-400"
+            >
+              Sign In
+            </Link>
+          </p>
         </div>
       </motion.div>
     </motion.form>
   );
 }
+
 export default SignUp;

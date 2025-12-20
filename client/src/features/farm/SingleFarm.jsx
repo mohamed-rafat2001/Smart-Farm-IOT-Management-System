@@ -15,12 +15,14 @@ function SingleFarm() {
   }
 
   const containerVariants = {
-    hidden: { opacity: 0 },
+    hidden: { opacity: 0, y: 30 },
     visible: {
       opacity: 1,
+      y: 0,
       transition: {
+        duration: 0.6,
+        ease: [0.22, 1, 0.36, 1],
         staggerChildren: 0.1,
-        delayChildren: 0.1,
       },
     },
   };
@@ -31,14 +33,13 @@ function SingleFarm() {
       opacity: 1,
       y: 0,
       transition: {
-        type: 'spring',
-        stiffness: 100,
-        damping: 15,
+        duration: 0.5,
+        ease: [0.22, 1, 0.36, 1],
       },
     },
   };
 
-  const inputStyles = `w-full rounded-2xl border border-stone-800/50 bg-[#1b2127]/50 p-4 text-white placeholder-stone-600 transition-all duration-300 focus:border-blue-500/50 focus:bg-[#1b2127]/80 focus:outline-none focus:ring-4 focus:ring-blue-500/10 disabled:opacity-50 hover:border-stone-700 hover:bg-[#1b2127]/60`;
+  const inputStyles = `w-full rounded-2xl border border-stone-800/50 bg-[#1b2127]/50 p-4 text-sm font-medium text-white placeholder-stone-500 transition-all duration-300 focus:border-blue-500/50 focus:bg-[#1b2127]/80 focus:outline-none focus:ring-4 focus:ring-blue-500/10 disabled:opacity-50 hover:border-stone-700 hover:bg-[#1b2127]/60`;
 
   return (
     <motion.div
@@ -75,7 +76,7 @@ function SingleFarm() {
 
       <motion.form
         variants={itemVariants}
-        className="group relative max-w-3xl overflow-hidden rounded-[2.5rem] border border-stone-800/50 bg-[#283039]/30 p-10 shadow-2xl backdrop-blur-sm transition-all hover:border-stone-700/50"
+        className="group relative max-w-3xl overflow-hidden rounded-[2.5rem] border border-stone-800/50 bg-[#1b2127]/40 p-10 shadow-2xl backdrop-blur-md transition-all duration-500 hover:border-stone-700/50"
         onSubmit={handleSubmit(submit)}
       >
         <div className="space-y-8">
@@ -107,6 +108,7 @@ function SingleFarm() {
                 <motion.p
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
                   className="mt-2 flex items-center gap-1.5 text-xs font-bold text-red-400"
                 >
                   <svg
@@ -156,6 +158,7 @@ function SingleFarm() {
                 <motion.p
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
                   className="mt-2 flex items-center gap-1.5 text-xs font-bold text-red-400"
                 >
                   <svg
@@ -205,6 +208,7 @@ function SingleFarm() {
                 <motion.p
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
                   className="mt-2 flex items-center gap-1.5 text-xs font-bold text-red-400"
                 >
                   <svg

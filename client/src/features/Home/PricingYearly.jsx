@@ -6,27 +6,31 @@ const containerVariants = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.1,
+      staggerChildren: 0.15,
+      delayChildren: 0.2,
     },
   },
 };
 
 const itemVariants = {
-  hidden: { y: 20, opacity: 0 },
+  hidden: { y: 30, opacity: 0 },
   visible: {
     y: 0,
     opacity: 1,
-    transition: { duration: 0.5 },
+    transition: {
+      duration: 0.8,
+      ease: [0.22, 1, 0.36, 1],
+    },
   },
 };
 
 function PricingYearly() {
   return (
-    <motion.div 
+    <motion.div
       variants={containerVariants}
       initial="hidden"
       animate="visible"
-      className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto px-4"
+      className="mx-auto grid max-w-7xl grid-cols-1 gap-8 px-4 sm:grid-cols-2 lg:grid-cols-3"
     >
       <motion.div variants={itemVariants}>
         <PricingCard
@@ -38,7 +42,7 @@ function PricingYearly() {
             'Real-time soil data',
             'Basic weather alerts',
             '1-year data history',
-            'Mobile app access'
+            'Mobile app access',
           ]}
         />
       </motion.div>
@@ -56,7 +60,7 @@ function PricingYearly() {
             'Unlimited data history',
             'Priority email support',
             'Custom sensor integration',
-            'Save $89 yearly'
+            'Save $89 yearly',
           ]}
         />
       </motion.div>
@@ -73,7 +77,7 @@ function PricingYearly() {
             'Priority 24/7 support',
             'Custom dashboard builds',
             'Bulk sensor discounts',
-            'Save $389 yearly'
+            'Save $389 yearly',
           ]}
         />
       </motion.div>

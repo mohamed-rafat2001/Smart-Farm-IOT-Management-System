@@ -2,26 +2,26 @@ import { motion } from 'framer-motion';
 
 const Insights = () => {
   const containerVariants = {
-    hidden: { opacity: 0 },
+    hidden: { opacity: 0, y: 30 },
     visible: {
       opacity: 1,
+      y: 0,
       transition: {
-        staggerChildren: 0.15,
-        delayChildren: 0.1,
+        duration: 0.6,
+        ease: [0.22, 1, 0.36, 1],
+        staggerChildren: 0.1,
       },
     },
   };
 
   const itemVariants = {
-    hidden: { opacity: 0, y: 30, scale: 0.95 },
+    hidden: { opacity: 0, y: 20 },
     visible: {
       opacity: 1,
       y: 0,
-      scale: 1,
       transition: {
-        type: 'spring',
-        stiffness: 100,
-        damping: 15,
+        duration: 0.5,
+        ease: [0.22, 1, 0.36, 1],
       },
     },
   };
@@ -97,8 +97,8 @@ const Insights = () => {
           <motion.div
             key={index}
             variants={itemVariants}
-            whileHover={{ y: -12, scale: 1.02 }}
-            className="group relative overflow-hidden rounded-[2.5rem] border border-stone-800/50 bg-[#283039]/30 p-8 shadow-2xl backdrop-blur-sm transition-all hover:border-stone-700/50"
+            whileHover={{ y: -8, scale: 1.01 }}
+            className="group relative overflow-hidden rounded-[2.5rem] border border-stone-800/50 bg-[#1b2127]/40 p-8 shadow-2xl backdrop-blur-md transition-all duration-500 hover:border-stone-700/50"
           >
             <div
               className={`absolute -top-8 -right-8 h-24 w-24 rounded-full bg-${stat.color}-500/5 blur-2xl transition-all group-hover:bg-${stat.color}-500/10`}
@@ -145,7 +145,7 @@ const Insights = () => {
       <motion.div
         variants={itemVariants}
         whileHover={{ y: -8 }}
-        className="relative overflow-hidden rounded-[3rem] border border-stone-800/50 bg-[#283039]/20 p-12 text-center backdrop-blur-md"
+        className="relative overflow-hidden rounded-[3rem] border border-stone-800/50 bg-[#1b2127]/40 p-12 text-center shadow-2xl backdrop-blur-md transition-all duration-500 hover:border-stone-700/50"
       >
         <div className="absolute inset-0 -z-10 bg-gradient-to-b from-blue-600/5 to-transparent" />
 

@@ -14,43 +14,54 @@ function Login() {
   }
 
   const containerVariants = {
-    hidden: { opacity: 0, y: 20 },
+    hidden: { opacity: 0, y: 30 },
     visible: {
       opacity: 1,
       y: 0,
       transition: {
-        duration: 0.4,
+        duration: 0.6,
+        ease: [0.22, 1, 0.36, 1],
         staggerChildren: 0.1,
       },
     },
   };
 
   const itemVariants = {
-    hidden: { opacity: 0, x: -10 },
-    visible: { opacity: 1, x: 0 },
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.5, ease: 'easeOut' },
+    },
   };
 
-  const inputStyles = `w-full bg-transparent p-3 text-stone-200 placeholder:text-stone-500 focus:outline-none disabled:opacity-50`;
-  const containerStyles = `flex w-full items-center gap-x-4 rounded-xl border border-stone-700/50 bg-[#283039]/30 transition-all duration-200 focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-500/20 hover:border-stone-600`;
+  const inputStyles = `w-full bg-transparent px-4 py-4 text-sm font-medium text-white placeholder:text-stone-500 focus:outline-none disabled:opacity-50`;
+  const containerStyles = `group flex w-full items-center gap-x-2 rounded-2xl border border-stone-800/50 bg-[#1b2127]/50 transition-all duration-300 focus-within:border-blue-500/50 focus-within:bg-[#1b2127] focus-within:ring-4 focus-within:ring-blue-500/10 hover:border-stone-700 hover:bg-[#1b2127]/80`;
 
   return (
     <motion.form
       variants={containerVariants}
       initial="hidden"
       animate="visible"
-      className="flex flex-col gap-6 py-6"
+      className="flex flex-col gap-6 py-8"
       onSubmit={handleSubmit(Submit)}
     >
-      <motion.div variants={itemVariants} className="space-y-1.5">
+      <motion.div variants={itemVariants} className="space-y-2">
         <div className={containerStyles}>
-          <div className="pl-4 text-stone-500">
+          <div className="pl-4 text-stone-500 transition-colors group-focus-within:text-blue-500">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-5 w-5"
-              viewBox="0 0 512 512"
-              fill="currentColor"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
             >
-              <path d="M48 64C21.5 64 0 85.5 0 112c0 15.1 7.1 29.3 19.2 38.4L236.8 313.6c11.4 8.5 27 8.5 38.4 0L492.8 150.4c12.1-9.1 19.2-23.3 19.2-38.4c0-26.5-21.5-48-48-48L48 64zM0 176L0 384c0 35.3 28.7 64 64 64l384 0c35.3 0 64-28.7 64-64l0-208L294.4 339.2c-22.8 17.1-54 17.1-76.8 0L0 176z" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+              />
             </svg>
           </div>
           <input
@@ -58,27 +69,37 @@ function Login() {
             className={inputStyles}
             id="email"
             type="email"
-            placeholder="Enter your email"
+            placeholder="Email Address"
             {...register('email', { required: 'Email is required' })}
           />
         </div>
         {errors?.email && (
-          <p className="px-1 text-xs font-medium text-red-400">
+          <motion.p
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="px-4 text-[10px] font-black tracking-widest text-red-500 uppercase"
+          >
             {errors.email.message}
-          </p>
+          </motion.p>
         )}
       </motion.div>
 
-      <motion.div variants={itemVariants} className="space-y-1.5">
+      <motion.div variants={itemVariants} className="space-y-2">
         <div className={containerStyles}>
-          <div className="pl-4 text-stone-500">
+          <div className="pl-4 text-stone-500 transition-colors group-focus-within:text-blue-500">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-5 w-5"
-              viewBox="0 0 448 512"
-              fill="currentColor"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
             >
-              <path d="M144 144l0 48 160 0 0-48c0-44.2-35.8-80-80-80s-80 35.8-80 80zM80 192l0-48C80 64.5 144.5 0 224 0s144 64.5 144 144l0 48 16 0c35.3 0 64 28.7 64 64l0 192c0 35.3-28.7 64-64 64L64 512c-35.3 0-64-28.7-64-64L0 256c0-35.3 28.7-64 64-64l16 0z" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+              />
             </svg>
           </div>
           <input
@@ -86,56 +107,69 @@ function Login() {
             className={inputStyles}
             id="password"
             type="password"
-            placeholder="Enter your password"
+            placeholder="Password"
             {...register('password', { required: 'Password is required' })}
           />
         </div>
-        <div className="flex items-center justify-between px-1">
+        <div className="flex items-center justify-between px-2">
           {errors?.password ? (
-            <p className="text-xs font-medium text-red-400">
+            <motion.p
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              className="text-[10px] font-black tracking-widest text-red-500 uppercase"
+            >
               {errors.password.message}
-            </p>
+            </motion.p>
           ) : (
             <div />
           )}
           <Link
             to="/forgot-password"
-            className="text-xs font-medium text-stone-400 transition-colors hover:text-blue-400"
+            className="text-[10px] font-black tracking-widest text-stone-500 uppercase transition-all hover:text-blue-400"
           >
             Forgot Password?
           </Link>
         </div>
       </motion.div>
 
-      <motion.div variants={itemVariants} className="mt-2 space-y-4">
+      <motion.div variants={itemVariants} className="mt-4 space-y-6">
         {error && (
-          <p className="rounded-lg bg-red-500/10 p-3 text-center text-sm font-medium text-red-400 border border-red-500/20">
-            {error.message}
-          </p>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="rounded-2xl border border-red-500/20 bg-red-500/5 p-4 text-center"
+          >
+            <p className="text-[10px] font-black tracking-widest text-red-500 uppercase">
+              {error.message}
+            </p>
+          </motion.div>
         )}
+
         <Button
           disabled={isLogin}
-          className="w-full rounded-xl py-3.5 text-lg font-bold shadow-lg shadow-blue-500/10 transition-all hover:scale-[1.01] active:scale-[0.99] bg-blue-600 text-white hover:bg-blue-500 disabled:opacity-70 disabled:hover:scale-100"
+          className="w-full shadow-2xl shadow-blue-900/20"
         >
           {isLogin ? (
-            <span className="flex items-center justify-center gap-2">
-              <svg className="h-5 w-5 animate-spin" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-              </svg>
-              Signing in...
+            <span className="flex items-center justify-center gap-3">
+              <div className="h-4 w-4 animate-spin rounded-full border-2 border-white/20 border-t-white" />
+              Authenticating...
             </span>
-          ) : 'Sign In'}
+          ) : (
+            'Sign In'
+          )}
         </Button>
 
-        <div className="flex justify-center gap-2 text-sm text-stone-400">
-          <span>Don't have an account?</span>
-          <Link
-            to="/signup"
-            className="font-bold text-blue-400 transition-colors hover:text-blue-300"
-          >
-            Sign Up
-          </Link>
+        <div className="flex flex-col items-center gap-4">
+          <div className="h-px w-12 bg-stone-800" />
+          <p className="text-[10px] font-black tracking-[0.2em] text-stone-500 uppercase">
+            New to Smart Farm?{' '}
+            <Link
+              to="/signup"
+              className="ml-2 text-blue-500 transition-colors hover:text-blue-400"
+            >
+              Create Account
+            </Link>
+          </p>
         </div>
       </motion.div>
     </motion.form>
