@@ -6,14 +6,14 @@ import UpdatePassword from './UpdatePassword';
 function ProfileContent() {
   const [Default, setDefault] = useState(true);
   return (
-    <div className="mt-8">
-      <div className="mb-8 flex flex-wrap gap-2 border-b border-stone-700/50 pb-px">
+    <div className="mt-12">
+      <div className="mb-10 flex flex-wrap gap-4 border-b border-stone-700/50 pb-px">
         <button
           type="button"
-          className={`relative px-6 py-3 text-sm font-semibold transition-all ${
+          className={`relative px-8 py-4 text-sm font-bold uppercase tracking-wider transition-all duration-300 ${
             Default
               ? 'text-blue-500'
-              : 'rounded-t-xl text-stone-400 hover:bg-stone-800/50 hover:text-white'
+              : 'rounded-t-2xl text-stone-400 hover:bg-stone-800/30 hover:text-stone-200'
           }`}
           onClick={() => setDefault(true)}
         >
@@ -21,16 +21,16 @@ function ProfileContent() {
           {Default && (
             <motion.div
               layoutId="activeTab"
-              className="absolute right-0 bottom-0 left-0 h-0.5 bg-blue-500"
+              className="absolute right-0 bottom-0 left-0 h-1 rounded-t-full bg-blue-500 shadow-[0_-4px_10px_rgba(59,130,246,0.3)]"
             />
           )}
         </button>
         <button
           type="button"
-          className={`relative px-6 py-3 text-sm font-semibold transition-all ${
+          className={`relative px-8 py-4 text-sm font-bold uppercase tracking-wider transition-all duration-300 ${
             !Default
               ? 'text-blue-500'
-              : 'rounded-t-xl text-stone-400 hover:bg-stone-800/50 hover:text-white'
+              : 'rounded-t-2xl text-stone-400 hover:bg-stone-800/30 hover:text-stone-200'
           }`}
           onClick={() => setDefault(false)}
         >
@@ -38,21 +38,24 @@ function ProfileContent() {
           {!Default && (
             <motion.div
               layoutId="activeTab"
-              className="absolute right-0 bottom-0 left-0 h-0.5 bg-blue-500"
+              className="absolute right-0 bottom-0 left-0 h-1 rounded-t-full bg-blue-500 shadow-[0_-4px_10px_rgba(59,130,246,0.3)]"
             />
           )}
         </button>
       </div>
 
-      <motion.div
-        key={Default ? 'personal' : 'password'}
-        initial={{ opacity: 0, x: 20 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.3 }}
-        className="rounded-2xl border border-stone-700 bg-[#1b2127] p-6 shadow-xl lg:p-8"
-      >
-        {Default ? <PersonalDetails /> : <UpdatePassword />}
-      </motion.div>
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={Default ? 'personal' : 'password'}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -20 }}
+          transition={{ duration: 0.4, ease: "circOut" }}
+          className="rounded-[3rem] border border-stone-700/50 bg-[#283039]/30 p-8 shadow-2xl backdrop-blur-md lg:p-12"
+        >
+          {Default ? <PersonalDetails /> : <UpdatePassword />}
+        </motion.div>
+      </AnimatePresence>
     </div>
   );
 }

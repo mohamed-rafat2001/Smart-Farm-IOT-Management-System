@@ -21,8 +21,8 @@ const itemVariants = {
   },
 };
 
-const inputStyles = `w-full bg-[#1b2127]/50 border border-stone-700/50 rounded-xl px-4 py-3 text-white placeholder:text-stone-500 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200 hover:border-stone-600`;
-const labelStyles = `text-sm font-medium text-stone-300 ml-1`;
+const inputStyles = `w-full bg-[#1b2127]/80 border border-stone-700/50 rounded-2xl px-5 py-4 text-white placeholder:text-stone-500 focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all duration-300 hover:border-stone-600`;
+const labelStyles = `text-base font-semibold text-stone-300 ml-2`;
 
 function ContactWithUs() {
   return (
@@ -30,44 +30,44 @@ function ContactWithUs() {
       initial="hidden"
       animate="visible"
       variants={containerVariants}
-      className="space-y-20"
+      className="space-y-24"
     >
       <motion.div variants={itemVariants}>
         <HeroSection
           image={contactImage}
-          bigText="Contact Us"
+          bigText="Get in Touch with Our Team"
           smallText="We're here to help! Reach out to us with any questions, feedback, or support requests."
         />
       </motion.div>
 
       {/* Contact Content Section */}
-      <section className="px-6 pb-20">
-        <div className="mx-auto max-w-6xl">
-          <div className="grid grid-cols-1 items-start gap-16 lg:grid-cols-2">
+      <section className="px-6 pb-24">
+        <div className="mx-auto max-w-7xl">
+          <div className="grid grid-cols-1 items-start gap-20 lg:grid-cols-2">
             {/* Contact Form */}
             <motion.div
               variants={itemVariants}
-              className="relative overflow-hidden rounded-[2.5rem] border border-stone-700/50 bg-[#283039]/30 p-8 shadow-2xl sm:p-10"
+              className="relative overflow-hidden rounded-[3rem] border border-stone-700/50 bg-[#283039]/30 p-10 shadow-2xl backdrop-blur-sm sm:p-14"
             >
-              <div className="absolute top-0 right-0 -mt-32 -mr-32 h-64 w-64 rounded-full bg-blue-600/5 blur-[100px]" />
+              <div className="absolute top-0 right-0 -mt-32 -mr-32 h-80 w-80 rounded-full bg-blue-600/10 blur-[100px]" />
 
-              <div className="relative z-10 space-y-8">
-                <div className="space-y-4">
-                  <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
-                    Get in Touch
+              <div className="relative z-10 space-y-10">
+                <div className="space-y-5">
+                  <h2 className="text-4xl font-bold tracking-tight text-white sm:text-5xl">
+                    Send a Message
                   </h2>
-                  <p className="text-lg leading-relaxed text-stone-400">
-                    Fill out the form below and we'll get back to you as soon as
-                    possible.
+                  <p className="text-xl leading-relaxed text-stone-400">
+                    Fill out the form below and we'll get back to you within 24
+                    hours.
                   </p>
                 </div>
 
                 <form
-                  className="space-y-6"
+                  className="space-y-8"
                   onSubmit={(e) => e.preventDefault()}
                 >
-                  <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-                    <div className="space-y-2">
+                  <div className="grid grid-cols-1 gap-8 sm:grid-cols-2">
+                    <div className="space-y-3">
                       <label htmlFor="firstName" className={labelStyles}>
                         First Name
                       </label>
@@ -78,7 +78,7 @@ function ContactWithUs() {
                         placeholder="John"
                       />
                     </div>
-                    <div className="space-y-2">
+                    <div className="space-y-3">
                       <label htmlFor="lastName" className={labelStyles}>
                         Last Name
                       </label>
@@ -91,7 +91,7 @@ function ContactWithUs() {
                     </div>
                   </div>
 
-                  <div className="space-y-2">
+                  <div className="space-y-3">
                     <label htmlFor="email" className={labelStyles}>
                       Email Address
                     </label>
@@ -103,14 +103,14 @@ function ContactWithUs() {
                     />
                   </div>
 
-                  <div className="space-y-2">
+                  <div className="space-y-3">
                     <label htmlFor="subject" className={labelStyles}>
                       Subject
                     </label>
                     <div className="relative">
                       <select
                         id="subject"
-                        className={`${inputStyles} appearance-none pr-10`}
+                        className={`${inputStyles} appearance-none pr-12`}
                       >
                         <option value="">Select a subject</option>
                         <option value="general">General Inquiry</option>
@@ -119,9 +119,9 @@ function ContactWithUs() {
                         <option value="partnership">Partnership</option>
                         <option value="feedback">Feedback</option>
                       </select>
-                      <div className="pointer-events-none absolute top-1/2 right-4 -translate-y-1/2 text-stone-500">
+                      <div className="pointer-events-none absolute top-1/2 right-5 -translate-y-1/2 text-stone-500">
                         <svg
-                          className="h-5 w-5"
+                          className="h-6 w-6"
                           fill="none"
                           viewBox="0 0 24 24"
                           stroke="currentColor"
@@ -137,23 +137,23 @@ function ContactWithUs() {
                     </div>
                   </div>
 
-                  <div className="space-y-2">
+                  <div className="space-y-3">
                     <label htmlFor="message" className={labelStyles}>
                       Message
                     </label>
                     <textarea
                       id="message"
-                      rows="4"
+                      rows="5"
                       className={`${inputStyles} resize-none`}
                       placeholder="How can we help you?"
                     ></textarea>
                   </div>
 
                   <motion.button
-                    whileHover={{ scale: 1.01 }}
-                    whileTap={{ scale: 0.99 }}
+                    whileHover={{ scale: 1.02, y: -2 }}
+                    whileTap={{ scale: 0.98 }}
                     type="submit"
-                    className="w-full rounded-xl bg-blue-600 py-4 font-bold text-white shadow-xl shadow-blue-500/20 transition-all hover:bg-blue-500 hover:shadow-blue-500/40"
+                    className="w-full rounded-2xl bg-blue-600 py-5 text-lg font-bold text-white shadow-2xl shadow-blue-500/30 transition-all duration-300 hover:bg-blue-500 hover:shadow-blue-500/50"
                   >
                     Send Message
                   </motion.button>
@@ -162,20 +162,20 @@ function ContactWithUs() {
             </motion.div>
 
             {/* Contact Details */}
-            <motion.div variants={itemVariants} className="space-y-12 lg:pt-10">
-              <div className="space-y-8">
-                <h2 className="text-3xl font-bold tracking-tight text-white">
-                  Other Ways to Connect
+            <motion.div variants={itemVariants} className="space-y-16 lg:pt-12">
+              <div className="space-y-10">
+                <h2 className="text-4xl font-bold tracking-tight text-white sm:text-5xl">
+                  Connect With Us
                 </h2>
 
-                <div className="space-y-6">
+                <div className="space-y-8">
                   {[
                     {
                       title: 'Email Us',
                       info: 'support@agritech.com',
                       icon: (
                         <svg
-                          className="h-6 w-6"
+                          className="h-7 w-7"
                           fill="none"
                           viewBox="0 0 24 24"
                           stroke="currentColor"
@@ -195,7 +195,7 @@ function ContactWithUs() {
                       info: '+1 (555) 123-4567',
                       icon: (
                         <svg
-                          className="h-6 w-6"
+                          className="h-7 w-7"
                           fill="none"
                           viewBox="0 0 24 24"
                           stroke="currentColor"
@@ -212,10 +212,10 @@ function ContactWithUs() {
                     },
                     {
                       title: 'Office',
-                      info: '123 Tech Street, Suite 100, Innovation City',
+                      info: '123 Tech Street, Innovation City',
                       icon: (
                         <svg
-                          className="h-6 w-6"
+                          className="h-7 w-7"
                           fill="none"
                           viewBox="0 0 24 24"
                           stroke="currentColor"
@@ -237,39 +237,39 @@ function ContactWithUs() {
                       color: 'orange',
                     },
                   ].map((item, i) => (
-                    <div key={i} className="group flex items-start gap-6">
+                    <div key={i} className="group flex items-start gap-8">
                       <div
-                        className={`flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-2xl bg-${item.color}-500/10 text-${item.color}-500 transition-all duration-300 group-hover:bg-${item.color}-500 group-hover:scale-110 group-hover:text-white group-hover:shadow-lg group-hover:shadow-${item.color}-500/20`}
+                        className={`flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-[1.25rem] bg-${item.color}-500/10 text-${item.color}-400 border border-${item.color}-500/20 transition-all duration-500 group-hover:bg-${item.color}-500 group-hover:scale-110 group-hover:text-white group-hover:shadow-2xl group-hover:shadow-${item.color}-500/30`}
                       >
                         {item.icon}
                       </div>
-                      <div className="pt-1">
-                        <h4 className="text-lg font-bold text-white transition-colors group-hover:text-blue-400">
+                      <div className="pt-2">
+                        <h4 className="text-xl font-bold text-white transition-colors duration-300 group-hover:text-blue-400">
                           {item.title}
                         </h4>
-                        <p className="text-stone-400">{item.info}</p>
+                        <p className="text-lg text-stone-400">{item.info}</p>
                       </div>
                     </div>
                   ))}
                 </div>
               </div>
 
-              <div className="group relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-blue-600 to-blue-700 p-8 text-white shadow-2xl shadow-blue-500/20">
-                <div className="absolute top-0 right-0 -mt-16 -mr-16 h-32 w-32 rounded-full bg-white/10 blur-2xl transition-transform duration-500 group-hover:scale-150" />
-                <h3 className="relative z-10 mb-4 text-2xl font-bold">
+              <div className="group relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-blue-600 to-blue-800 p-10 text-white shadow-2xl shadow-blue-600/20">
+                <div className="absolute top-0 right-0 -mt-20 -mr-20 h-48 w-48 rounded-full bg-white/10 blur-3xl transition-transform duration-700 group-hover:scale-150" />
+                <h3 className="relative z-10 mb-5 text-3xl font-bold">
                   Need Immediate Help?
                 </h3>
-                <p className="relative z-10 mb-6 leading-relaxed text-blue-100">
+                <p className="relative z-10 mb-8 text-lg leading-relaxed text-blue-100">
                   Check out our documentation or FAQ section for quick answers
                   to common questions.
                 </p>
                 <motion.button
-                  whileHover={{ x: 5 }}
-                  className="relative z-10 flex items-center gap-2 rounded-xl border border-white/20 bg-white/20 px-6 py-3 font-semibold backdrop-blur-md transition-all hover:bg-white/30"
+                  whileHover={{ x: 10 }}
+                  className="relative z-10 flex items-center gap-3 rounded-2xl border border-white/20 bg-white/10 px-8 py-4 text-lg font-bold backdrop-blur-md transition-all duration-300 hover:bg-white/20"
                 >
                   Visit Help Center
                   <svg
-                    className="h-5 w-5"
+                    className="h-6 w-6"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"

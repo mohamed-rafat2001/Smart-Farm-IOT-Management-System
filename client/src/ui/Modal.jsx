@@ -15,36 +15,38 @@ const Modal = ({ isOpen, onClose, children }) => {
             left: 0,
             width: '100%',
             height: '100%',
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            backgroundColor: 'rgba(0, 0, 0, 0.7)',
+            backdropFilter: 'blur(8px)',
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
             zIndex: 1000,
-            padding: '1rem',
+            padding: '1.5rem',
           }}
           onClick={onClose}
         >
           <Motion.div
             className="modal"
-            initial={{ scale: 0.8, opacity: 0, y: 20 }}
+            initial={{ scale: 0.9, opacity: 0, y: 30 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
-            exit={{ scale: 0.8, opacity: 0, y: 20 }}
+            exit={{ scale: 0.9, opacity: 0, y: 30 }}
             transition={{
               type: 'spring',
-              damping: 25,
-              stiffness: 300,
+              damping: 30,
+              stiffness: 400,
             }}
             style={{
-              background: '#1b2127',
-              padding: '1rem',
-              borderRadius: '12px',
-              width: '50%',
-              maxWidth: '95vw',
+              background: '#283039',
+              padding: '2.5rem',
+              borderRadius: '2.5rem',
+              width: '100%',
+              maxWidth: '32rem',
               maxHeight: '90vh',
-              border: '1px solid #374151',
+              border: '1px solid rgba(120, 113, 108, 0.3)',
               boxShadow:
-                '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+                '0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05)',
               overflow: 'auto',
+              position: 'relative',
             }}
             onClick={(e) => e.stopPropagation()}
           >
