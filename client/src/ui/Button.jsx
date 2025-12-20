@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 
 const Button = ({
   children,
@@ -9,6 +10,8 @@ const Button = ({
   size = 'medium',
   disabled = false,
   fullWidth = false,
+  whileHover,
+  whileTap,
   ...props
 }) => {
   // Base button classes
@@ -17,7 +20,6 @@ const Button = ({
     transition-all duration-500 ease-out
     focus:outline-none focus:ring-4 focus:ring-offset-0
     disabled:opacity-50 disabled:cursor-not-allowed
-    active:scale-95
     ${fullWidth ? 'w-full' : ''}
   `;
 
@@ -63,26 +65,26 @@ const Button = ({
     `,
   };
 
-  // Custom color support (for backward compatibility)
-  const customColorClasses = color ? `text-[${color}]` : '';
-  const customBgClasses = $backgroundcolor ? `bg-[${$backgroundcolor}]` : '';
-
   // Combine all classes
   const combinedClasses = `
     ${baseClasses}
     ${sizeClasses[size]}
     ${variantClasses[variant]}
-    ${customColorClasses}
-    ${customBgClasses}
     ${className}
   `
     .replace(/\s+/g, ' ')
     .trim();
 
   return (
-    <button className={combinedClasses} disabled={disabled} {...props}>
+    <motion.button
+      whileHover={whileHover || { scale: 1.02, y: -2 }}
+      whileTap={whileTap || { scale: 0.98 }}
+      className={combinedClasses}
+      disabled={disabled}
+      {...props}
+    >
       {children}
-    </button>
+    </motion.button>
   );
 };
 
