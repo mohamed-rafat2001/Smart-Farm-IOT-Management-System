@@ -3,10 +3,10 @@ import { userFarms } from '../../services/farm';
 
 function useGetUserFarms() {
   const queryClient = useQueryClient();
-  
+
   // Get the current user data from the cache
   const userData = queryClient.getQueryData(['User']);
-  conso.log(userData)
+
   const {
     data: userFarm,
     isLoading,
@@ -20,8 +20,10 @@ function useGetUserFarms() {
     keepPreviousData: false,
     // Reset the query when user changes
     onError: () => {
-      queryClient.setQueryData(['userFarms', userData?._id], { data: { docs: [] } });
-    }
+      queryClient.setQueryData(['userFarms', userData?._id], {
+        data: { docs: [] },
+      });
+    },
   });
 
   return { userFarm: userFarm?.data, isLoading, error };

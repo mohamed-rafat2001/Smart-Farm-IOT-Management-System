@@ -264,8 +264,5 @@ function Devices() {
     </motion.div>
   );
 }
-    </motion.div>
-  );
-}
 
 export default Devices;
