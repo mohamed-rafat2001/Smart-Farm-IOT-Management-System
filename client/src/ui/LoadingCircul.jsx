@@ -1,6 +1,6 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion as Motion } from 'framer-motion';
 
 function LoadingCircul() {
   const dotVariants = {
@@ -18,13 +18,13 @@ function LoadingCircul() {
 
   return (
     <div className="flex flex-col items-center gap-8">
-      <motion.div
+      <Motion.div
         className="flex items-center gap-4"
         initial="initial"
         animate="jump"
       >
         {[0, 1, 2].map((i) => (
-          <motion.div
+          <Motion.div
             key={i}
             className="h-4 w-4 rounded-full bg-blue-500 shadow-[0_0_15px_rgba(59,130,246,0.5)]"
             variants={dotVariants}
@@ -33,15 +33,15 @@ function LoadingCircul() {
             }}
           />
         ))}
-      </motion.div>
-      <motion.p
+      </Motion.div>
+      <Motion.p
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1, repeat: Infinity, repeatType: 'reverse' }}
         className="text-[10px] font-black tracking-[0.4em] text-stone-500 uppercase"
       >
         Initializing System
-      </motion.p>
+      </Motion.p>
     </div>
   );
 }
