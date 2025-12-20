@@ -52,7 +52,7 @@ const handleApiError = (error) => {
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3000/api/v1',
   withCredentials: true,
-  timeout: 30000, // Increased from 10000ms to 30000ms
+  timeout: 60000, // Increased from 30000ms to 60000ms
   headers: {
     'Content-Type': 'application/json',
   },

@@ -1,7 +1,6 @@
 'use client';
 
-//eslint-disable-next-line no-unused-vars
-import { motion } from 'motion/react';
+import { motion } from 'framer-motion';
 
 function LoadingCircul() {
   const dotVariants = {

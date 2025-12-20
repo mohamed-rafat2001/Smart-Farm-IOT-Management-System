@@ -4,7 +4,7 @@ import Button from '../../ui/Button';
 import useCreateFarm from './useCreateFarm';
 
 function CreateFarm() {
-  const { create, error, isCreated, farm } = useCreateFarm();
+  const { create, isCreated } = useCreateFarm();
   const { register, handleSubmit, formState, reset } = useForm();
   const { errors } = formState;
 

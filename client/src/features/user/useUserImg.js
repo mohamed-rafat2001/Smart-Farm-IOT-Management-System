@@ -16,7 +16,7 @@ function useUserImg() {
       const data = await userImg(formData);
       return data;
     },
-    onSuccess: (data) => {
+    onSuccess: () => {
       // Invalidate and refetch user data
       queryClient.invalidateQueries({
         queryKey: ['User'],

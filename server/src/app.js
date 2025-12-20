@@ -74,7 +74,7 @@ app.use((req, res, next) => {
 });
 
 // Add timeout middleware early in the chain
-app.use(timeoutMiddleware(30000)); // 30 second timeout
+app.use(timeoutMiddleware(60000)); // 60 second timeout
 
 // Security middleware with error handling
 try {
