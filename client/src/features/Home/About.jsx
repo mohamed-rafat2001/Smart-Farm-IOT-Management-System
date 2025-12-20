@@ -39,26 +39,26 @@ function About() {
 
       {/* About Content Section */}
       <section className="px-6 pb-20">
-        <div className="mx-auto max-w-5xl space-y-24">
+        <div className="mx-auto max-w-5xl space-y-32">
           {/* Mission Statement */}
           <motion.div
             variants={itemVariants}
-            className="flex flex-col items-center gap-12 md:flex-row"
+            className="flex flex-col items-center gap-16 md:flex-row"
           >
-            <div className="space-y-6 text-left md:w-1/2">
-              <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl md:text-5xl">
+            <div className="space-y-8 text-left md:w-1/2">
+              <h2 className="text-4xl font-bold tracking-tight text-white sm:text-5xl">
                 Our Mission
               </h2>
-              <p className="text-lg leading-relaxed text-stone-400">
+              <p className="text-xl leading-relaxed text-stone-400">
                 To revolutionize agriculture through cutting-edge technology,
                 making farming more efficient, sustainable, and profitable for
                 farmers worldwide.
               </p>
-              <div className="h-1.5 w-20 rounded-full bg-blue-600" />
+              <div className="h-2 w-24 rounded-full bg-gradient-to-r from-blue-600 to-blue-400" />
             </div>
-            <div className="relative overflow-hidden rounded-[2rem] border border-stone-700/50 bg-[#283039]/30 p-10 md:w-1/2">
-              <div className="absolute top-0 right-0 h-32 w-32 bg-blue-600/10 blur-3xl" />
-              <p className="relative z-10 text-xl text-stone-300 italic">
+            <div className="group relative overflow-hidden rounded-[2.5rem] border border-stone-700/50 bg-[#283039]/30 p-12 backdrop-blur-sm transition-all duration-500 hover:border-blue-500/30 md:w-1/2">
+              <div className="absolute top-0 right-0 h-40 w-40 bg-blue-600/10 blur-[80px] transition-all duration-500 group-hover:bg-blue-600/20" />
+              <p className="relative z-10 text-2xl leading-relaxed text-stone-300 italic">
                 "We believe that technology should serve the earth, not just
                 exploit it."
               </p>
@@ -68,46 +68,46 @@ function About() {
           {/* Vision Statement */}
           <motion.div
             variants={itemVariants}
-            className="flex flex-col items-center gap-12 md:flex-row-reverse"
+            className="flex flex-col items-center gap-16 md:flex-row-reverse"
           >
-            <div className="space-y-6 text-left md:w-1/2">
-              <h3 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
+            <div className="space-y-8 text-left md:w-1/2">
+              <h3 className="text-4xl font-bold tracking-tight text-white sm:text-5xl">
                 Our Vision
               </h3>
-              <p className="text-lg leading-relaxed text-stone-400">
+              <p className="text-xl leading-relaxed text-stone-400">
                 A world where every farmer has access to intelligent farming
                 solutions that maximize yield while preserving our environment
                 for future generations.
               </p>
-              <div className="h-1.5 w-20 rounded-full bg-green-600" />
+              <div className="h-2 w-24 rounded-full bg-gradient-to-r from-green-600 to-green-400" />
             </div>
-            <div className="relative overflow-hidden rounded-[2rem] border border-stone-700/50 bg-[#283039]/30 p-10 md:w-1/2">
-              <div className="absolute bottom-0 left-0 h-32 w-32 bg-green-600/10 blur-3xl" />
-              <p className="relative z-10 text-xl text-stone-300 italic">
+            <div className="group relative overflow-hidden rounded-[2.5rem] border border-stone-700/50 bg-[#283039]/30 p-12 backdrop-blur-sm transition-all duration-500 hover:border-green-500/30 md:w-1/2">
+              <div className="absolute bottom-0 left-0 h-40 w-40 bg-green-600/10 blur-[80px] transition-all duration-500 group-hover:bg-green-600/20" />
+              <p className="relative z-10 text-2xl leading-relaxed text-stone-300 italic">
                 "Sustainable growth is the only growth that matters."
               </p>
             </div>
           </motion.div>
 
           {/* Values */}
-          <motion.div variants={itemVariants} className="space-y-12">
-            <div className="space-y-4 text-center">
-              <h3 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
+          <motion.div variants={itemVariants} className="space-y-16">
+            <div className="space-y-6 text-center">
+              <h3 className="text-4xl font-bold tracking-tight text-white sm:text-5xl">
                 Our Values
               </h3>
-              <p className="mx-auto max-w-2xl text-lg text-stone-400">
+              <p className="mx-auto max-w-2xl text-xl text-stone-400">
                 The core principles that guide everything we do at AgriTech.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-3">
               {[
                 {
                   title: 'Innovation',
                   desc: 'Pushing boundaries in agricultural technology through continuous research and development.',
                   icon: (
                     <svg
-                      className="h-8 w-8 text-blue-500"
+                      className="h-8 w-8 text-blue-400"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -127,7 +127,7 @@ function About() {
                   desc: 'Protecting our planet and resources while feeding the growing global population.',
                   icon: (
                     <svg
-                      className="h-8 w-8 text-green-500"
+                      className="h-8 w-8 text-green-400"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -147,7 +147,7 @@ function About() {
                   desc: 'Supporting farmers in their journey to success and building strong agricultural networks.',
                   icon: (
                     <svg
-                      className="h-8 w-8 text-orange-500"
+                      className="h-8 w-8 text-orange-400"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -165,18 +165,18 @@ function About() {
               ].map((value, index) => (
                 <motion.div
                   key={index}
-                  whileHover={{ y: -5 }}
-                  className="rounded-3xl border border-stone-700/50 bg-[#283039]/30 p-8 text-left transition-all hover:border-blue-500/50 hover:bg-[#283039]/50"
+                  whileHover={{ y: -10, scale: 1.02 }}
+                  className="rounded-[2.5rem] border border-stone-700/50 bg-[#283039]/30 p-10 text-left backdrop-blur-sm transition-all duration-300 hover:border-blue-500/50 hover:bg-[#283039]/50"
                 >
                   <div
-                    className={`h-16 w-16 rounded-2xl bg-${value.color}-500/10 mb-6 flex items-center justify-center`}
+                    className={`h-16 w-16 rounded-2xl bg-${value.color}-500/10 mb-8 flex items-center justify-center border border-${value.color}-500/20`}
                   >
                     {value.icon}
                   </div>
-                  <h4 className="mb-3 text-xl font-bold text-white">
+                  <h4 className="mb-4 text-2xl font-bold text-white">
                     {value.title}
                   </h4>
-                  <p className="leading-relaxed text-stone-400">{value.desc}</p>
+                  <p className="text-lg leading-relaxed text-stone-400">{value.desc}</p>
                 </motion.div>
               ))}
             </div>
