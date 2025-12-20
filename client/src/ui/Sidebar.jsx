@@ -63,59 +63,78 @@ function Sidebar({ onClose }) {
   ];
 
   return (
-    <aside className="flex h-full flex-col bg-[#283039] text-stone-400">
+    <aside className="flex h-full flex-col bg-[#1b2127]/95 text-stone-400 backdrop-blur-xl border-r border-stone-800/50">
       {/* Brand Section */}
-      <div className="flex h-20 items-center gap-3 border-b border-stone-700 px-6">
-        <motion.img
-          whileHover={{ rotate: 360 }}
-          transition={{ duration: 0.5 }}
-          src={Logo}
-          alt="Logo"
-          className="h-10 w-10 rounded-xl object-cover"
-        />
+      <div className="flex h-24 items-center gap-4 border-b border-stone-800/50 px-8">
+        <div className="relative">
+          <motion.img
+            whileHover={{ rotate: 360, scale: 1.1 }}
+            transition={{ duration: 0.6, ease: "anticipate" }}
+            src={Logo}
+            alt="Logo"
+            className="h-12 w-12 rounded-2xl object-cover ring-2 ring-blue-500/20 shadow-2xl shadow-blue-500/10"
+          />
+          <div className="absolute -bottom-1 -right-1 h-4 w-4 rounded-full border-2 border-[#1b2127] bg-green-500" />
+        </div>
         <div className="flex flex-col">
-          <span className="text-sm font-bold tracking-wider text-white">
-            SMART FARM
+          <span className="text-base font-black tracking-tighter text-white">
+            SMART<span className="text-blue-500">FARM</span>
           </span>
-          <span className="text-[10px] font-semibold tracking-widest text-stone-500 uppercase">
+          <span className="text-[10px] font-bold tracking-[0.2em] text-stone-500 uppercase">
             Management
           </span>
         </div>
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-6">
+      <nav className="flex-1 space-y-2 overflow-y-auto px-4 py-8 custom-scrollbar">
+        <div className="mb-4 px-4 text-[10px] font-bold uppercase tracking-widest text-stone-600">
+          Main Menu
+        </div>
         {navItems.map((item) => (
           <NavLink
             key={item.to}
             to={item.to}
             onClick={handleNavClick}
             className={({ isActive }) =>
-              `group flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all duration-200 ${
+              `group relative flex items-center gap-4 rounded-2xl px-5 py-4 text-sm font-bold transition-all duration-300 ${
                 isActive
-                  ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20'
-                  : 'text-stone-400 hover:bg-stone-700/50 hover:text-white'
+                  ? 'bg-blue-600/10 text-blue-500 shadow-sm'
+                  : 'text-stone-400 hover:bg-stone-800/50 hover:text-white'
               }`
             }
           >
-            <span className="flex-shrink-0 transition-transform group-hover:scale-110">
-              {item.icon}
-            </span>
-            <span>{item.label}</span>
+            {({ isActive }) => (
+              <>
+                <span className={`transition-colors duration-300 ${isActive ? 'text-blue-500' : 'text-stone-500 group-hover:text-blue-400'}`}>
+                  {item.icon}
+                </span>
+                <span>{item.label}</span>
+                {isActive && (
+                  <motion.div
+                    layoutId="sidebar-active-pill"
+                    className="absolute left-0 h-8 w-1 rounded-r-full bg-blue-500"
+                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                  />
+                )}
+              </>
+            )}
           </NavLink>
         ))}
       </nav>
 
-      {/* Logout Section */}
-      <div className="border-t border-stone-700 p-4">
+      {/* Footer / Logout */}
+      <div className="border-t border-stone-800/50 p-4">
         <button
           onClick={handleLogOut}
           disabled={isLogOut}
-          className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-stone-400 transition-all hover:bg-red-500/10 hover:text-red-500 disabled:opacity-50"
+          className="group flex w-full items-center gap-4 rounded-2xl px-5 py-4 text-sm font-bold text-stone-400 transition-all duration-300 hover:bg-red-500/10 hover:text-red-400"
         >
-          <svg className="h-5 w-5" viewBox="0 0 512 512" fill="currentColor">
-            <path d="M160 96c17.7 0 32-14.3 32-32s-14.3-32-32-32H96C43 32 0 75 0 128V384c0 53 43 96 96 96h64c17.7 0 32-14.3 32-32s-14.3-32-32-32H96c-17.7 0-32-14.3-32-32V128c0-17.7 14.3-32 32-32h64zM490.7 233.4c12.5 12.5 12.5 32.8 0 45.3l-128 128c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L402.7 288H192c-17.7 0-32-14.3-32-32s14.3-32 32-32h210.7l-85.3-85.3c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l128 128z" />
-          </svg>
+          <span className="text-stone-500 transition-colors duration-300 group-hover:text-red-400">
+            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+            </svg>
+          </span>
           <span>{isLogOut ? 'Logging out...' : 'Logout'}</span>
         </button>
       </div>

@@ -18,65 +18,101 @@ function Header() {
   ];
 
   return (
-    <header className="sticky top-0 z-50 border-b border-stone-700 bg-[#1b2127]/80 px-4 py-4 backdrop-blur-md md:px-8">
+    <header className="sticky top-0 z-50 border-b border-stone-800/50 bg-[#1b2127]/80 px-6 py-4 backdrop-blur-xl md:px-12">
       <div className="mx-auto flex max-w-7xl items-center justify-between">
         {/* Logo Section */}
         <Link
           to="/home"
-          className="group flex items-center gap-x-3 transition-transform hover:scale-105"
+          className="group flex items-center gap-x-4 transition-transform hover:scale-105"
         >
-          <motion.img
-            whileHover={{ rotate: 360 }}
-            transition={{ duration: 0.5 }}
-            src={Logo}
-            alt="Smart Farm Logo"
-            className="h-10 w-10 rounded-xl border border-stone-600 object-cover"
-            loading="eager"
-            fetchpriority="high"
-            decoding="async"
-          />
-          <h1 className="text-lg font-bold tracking-tighter text-white sm:text-xl">
-            SMART FARM
-          </h1>
+          <div className="relative">
+            <motion.img
+              whileHover={{ rotate: 360, scale: 1.1 }}
+              transition={{ duration: 0.6, ease: 'anticipate' }}
+              src={Logo}
+              alt="Smart Farm Logo"
+              className="h-11 w-11 rounded-2xl border border-stone-700/50 object-cover shadow-xl ring-2 shadow-blue-500/5 ring-blue-500/10"
+              loading="eager"
+              fetchpriority="high"
+              decoding="async"
+            />
+            <div className="absolute -right-1 -bottom-1 h-3.5 w-3.5 rounded-full border-2 border-[#1b2127] bg-green-500" />
+          </div>
+          <div className="flex flex-col">
+            <h1 className="text-xl font-black tracking-tighter text-white">
+              SMART<span className="text-blue-500">FARM</span>
+            </h1>
+            <span className="text-[9px] leading-none font-bold tracking-[0.2em] text-stone-500 uppercase">
+              Eco-System
+            </span>
+          </div>
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden items-center space-x-8 md:flex">
+        <nav className="hidden items-center space-x-10 md:flex">
           {menuLinks.map((link) => (
             <NavLink
               key={link.to}
               to={link.to}
               className={({ isActive }) =>
-                `text-sm font-medium tracking-wide transition-colors hover:text-blue-500 ${
-                  isActive ? 'text-blue-500' : 'text-stone-300'
+                `relative text-sm font-bold tracking-wide transition-all duration-300 hover:text-blue-400 ${
+                  isActive ? 'text-blue-500' : 'text-stone-400'
                 }`
               }
             >
-              {link.label}
+              {({ isActive }) => (
+                <>
+                  <span>{link.label}</span>
+                  {isActive && (
+                    <motion.div
+                      layoutId="header-nav-underline"
+                      className="absolute -bottom-2 left-0 h-0.5 w-full rounded-full bg-blue-500"
+                      transition={{
+                        type: 'spring',
+                        stiffness: 380,
+                        damping: 30,
+                      }}
+                    />
+                  )}
+                </>
+              )}
             </NavLink>
           ))}
         </nav>
 
         {/* Desktop Auth Buttons */}
-        <div className="hidden items-center space-x-4 md:flex">
+        <div className="hidden items-center space-x-6 md:flex">
           <Link
             to="/login"
-            className="text-sm font-medium text-stone-300 transition-colors hover:text-white"
+            className="text-sm font-bold text-stone-400 transition-all duration-300 hover:text-white"
           >
-            Login
+            Sign In
           </Link>
           <Link
             to="/signUp"
-            className="rounded-full bg-blue-600 px-6 py-2 text-sm font-semibold text-white transition-all hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-500/25 active:scale-95"
+            className="group relative flex items-center gap-2 overflow-hidden rounded-2xl bg-blue-600 px-8 py-3 text-sm font-black text-white shadow-xl shadow-blue-600/20 transition-all hover:scale-[1.05] hover:bg-blue-500 active:scale-95"
           >
-            Sign up
+            <span>Get Started</span>
+            <svg
+              className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M14 5l7 7m0 0l-7 7m7-7H3"
+              />
+            </svg>
           </Link>
         </div>
 
         {/* Mobile Menu Button */}
         <button
           onClick={toggleMobileMenu}
-          className="rounded-lg p-2 text-stone-400 transition-colors hover:bg-stone-800 hover:text-white md:hidden"
+          className="group rounded-2xl bg-stone-800/50 p-3 text-stone-400 transition-all duration-300 hover:bg-stone-700 hover:text-white md:hidden"
           aria-label="Toggle menu"
         >
           <svg
@@ -104,62 +140,50 @@ function Header() {
         </button>
       </div>
 
-      {/* Mobile Menu Overlay */}
+      {/* Mobile Menu */}
       <AnimatePresence>
         {isMobileMenuOpen && (
-          <>
-            {/* Backdrop */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm md:hidden"
-            />
-
-            {/* Menu Content */}
-            <motion.div
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              className="absolute top-full right-0 left-0 z-50 border-b border-stone-700 bg-[#1b2127] p-4 shadow-xl md:hidden"
-            >
-              <nav className="space-y-1">
-                {menuLinks.map((link) => (
-                  <NavLink
-                    key={link.to}
-                    to={link.to}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className={({ isActive }) =>
-                      `flex items-center rounded-xl px-4 py-3 text-base font-medium transition-all ${
-                        isActive
-                          ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20'
-                          : 'text-stone-300 hover:bg-stone-800 hover:text-white'
-                      }`
-                    }
-                  >
-                    {link.label}
-                  </NavLink>
-                ))}
-                <div className="mt-6 grid grid-cols-2 gap-4">
-                  <Link
-                    to="/login"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="flex items-center justify-center rounded-xl bg-stone-800 py-3 text-sm font-semibold text-white transition-all hover:bg-stone-700 active:scale-95"
-                  >
-                    Login
-                  </Link>
-                  <Link
-                    to="/signUp"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="flex items-center justify-center rounded-xl bg-blue-600 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-600/25 transition-all hover:bg-blue-700 active:scale-95"
-                  >
-                    Sign up
-                  </Link>
-                </div>
-              </nav>
-            </motion.div>
-          </>
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="overflow-hidden md:hidden"
+          >
+            <div className="flex flex-col space-y-4 pt-6 pb-6">
+              {menuLinks.map((link) => (
+                <NavLink
+                  key={link.to}
+                  to={link.to}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className={({ isActive }) =>
+                    `rounded-2xl px-4 py-4 text-base font-bold transition-all ${
+                      isActive
+                        ? 'bg-blue-600/10 text-blue-500'
+                        : 'text-stone-400 hover:bg-stone-800/50 hover:text-white'
+                    }`
+                  }
+                >
+                  {link.label}
+                </NavLink>
+              ))}
+              <div className="grid grid-cols-2 gap-4 pt-4">
+                <Link
+                  to="/login"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="flex items-center justify-center rounded-2xl bg-stone-800/50 py-4 text-sm font-bold text-stone-300 transition-all hover:bg-stone-700 hover:text-white"
+                >
+                  Login
+                </Link>
+                <Link
+                  to="/signUp"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="flex items-center justify-center rounded-2xl bg-blue-600 py-4 text-sm font-bold text-white shadow-lg shadow-blue-600/20 transition-all hover:bg-blue-500"
+                >
+                  Sign Up
+                </Link>
+              </div>
+            </div>
+          </motion.div>
         )}
       </AnimatePresence>
     </header>

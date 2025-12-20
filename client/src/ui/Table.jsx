@@ -4,7 +4,7 @@ function Table({ head, children, className = '' }) {
   return (
     <div className={`custom-scrollbar w-full overflow-x-auto ${className}`}>
       <table className="w-full min-w-full table-auto border-separate border-spacing-0">
-        <thead className="sticky top-0 z-10 bg-[#283039]">
+        <thead className="sticky top-0 z-10 bg-[#1b2127]/95 backdrop-blur-md">
           <tr>
             {head.map((el, index) => {
               const isObject = typeof el === 'object';
@@ -13,7 +13,7 @@ function Table({ head, children, className = '' }) {
 
               return (
                 <th
-                  className={`border-b border-stone-700 p-4 text-start text-xs font-bold tracking-wider text-[#c9fa75] uppercase sm:p-5 sm:text-sm ${index === 0 ? 'rounded-tl-xl' : ''} ${index === head.length - 1 ? 'rounded-tr-xl text-center' : ''} ${headerClassName} `}
+                  className={`border-b border-stone-800/50 p-6 text-start text-xs font-black tracking-[0.2em] text-stone-500 uppercase sm:text-sm ${index === 0 ? 'rounded-tl-[2rem]' : ''} ${index === head.length - 1 ? 'rounded-tr-[2rem] text-center' : ''} ${headerClassName} `}
                   key={index}
                 >
                   {label}
@@ -25,8 +25,8 @@ function Table({ head, children, className = '' }) {
         <motion.tbody
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.3 }}
-          className="divide-y divide-stone-700/50"
+          transition={{ duration: 0.5 }}
+          className="divide-y divide-stone-800/50"
         >
           {children}
         </motion.tbody>
