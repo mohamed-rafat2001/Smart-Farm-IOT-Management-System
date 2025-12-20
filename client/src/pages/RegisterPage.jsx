@@ -13,7 +13,13 @@ function RegisterPage() {
         {/* buttons */}
         <div className="my-7 flex flex-col justify-between gap-y-4 @4xl:flex-row @4xl:gap-x-4">
           <button className="flex w-[100%] cursor-pointer items-center justify-evenly rounded-md bg-[#191919] p-3 text-lg text-stone-400 @4xl:w-1/2">
-            <img src={googleIcon} alt="google icon" className="w-8" />
+            <img
+              src={googleIcon}
+              alt="google icon"
+              className="w-8"
+              loading="eager"
+              decoding="async"
+            />
 
             <h1>Sign in via Google </h1>
           </button>

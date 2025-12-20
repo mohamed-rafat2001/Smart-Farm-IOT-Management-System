@@ -55,6 +55,7 @@ function HeroSection({ image, bigText, smallText }) {
             onLoad={() => setImageLoaded(true)}
             onError={() => setImageError(true)}
             loading="eager"
+            fetchpriority="high"
             decoding="async"
           />
         )}

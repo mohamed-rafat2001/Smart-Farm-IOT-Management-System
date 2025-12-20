@@ -12,16 +12,19 @@ function Header() {
   return (
     <header className="@container flex items-center justify-between border-b-1 border-stone-700 px-5 py-5">
       <div className="flex w-[20%] items-center gap-x-3 font-bold">
-        <img 
-          src={Logo} 
-          alt="Smart Farm Logo" 
-          className="h-[20%] w-[20%] rounded-full object-cover" 
+        <img
+          src={Logo}
+          alt="Smart Farm Logo"
+          className="h-[20%] w-[20%] rounded-full object-cover"
+          loading="eager"
+          fetchpriority="high"
+          decoding="async"
         />
         <h1 className="text-white">SMART FARM</h1>
       </div>
 
       {/* Desktop Navigation - Hidden on mobile */}
-      <nav className="hidden md:flex w-[50%] justify-evenly tracking-widest">
+      <nav className="hidden w-[50%] justify-evenly tracking-widest md:flex">
         <NavLink to="/home" className="nav-link">
           Home
         </NavLink>
@@ -37,7 +40,7 @@ function Header() {
       </nav>
 
       {/* Desktop Auth Buttons - Hidden on mobile */}
-      <div className="hidden md:flex w-[20%] items-center justify-evenly tracking-widest">
+      <div className="hidden w-[20%] items-center justify-evenly tracking-widest md:flex">
         <Link to="/login" className="nav-link">
           Login
         </Link>
@@ -53,19 +56,29 @@ function Header() {
       <div className="md:hidden">
         <button
           onClick={toggleMobileMenu}
-          className="rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:bg-gray-700 focus:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+          className="rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:bg-gray-700 focus:text-white focus:ring-2 focus:ring-white focus:outline-none focus:ring-inset"
           aria-expanded="false"
           aria-label="Toggle mobile menu"
         >
-          <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+          <svg
+            className="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M4 6h16M4 12h16M4 18h16"
+            />
           </svg>
         </button>
       </div>
 
       {/* Mobile Menu - Responsive */}
       <div className={`md:hidden ${isMobileMenuOpen ? 'block' : 'hidden'}`}>
-        <div className="border-t border-gray-700 bg-gray-800 px-2 pt-2 pb-3 space-y-1">
+        <div className="space-y-1 border-t border-gray-700 bg-gray-800 px-2 pt-2 pb-3">
           {/* Mobile Navigation Links */}
           <NavLink
             to="/home"

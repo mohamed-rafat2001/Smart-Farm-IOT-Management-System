@@ -27,6 +27,8 @@ const CurrentImageModal = ({ isOpen, onClose, imageUrl, userName }) => {
             src={imageUrl}
             alt={`${userName}'s profile`}
             className="max-h-96 max-w-full rounded-lg object-contain shadow-lg"
+            loading="eager"
+            decoding="async"
           />
         </div>
 

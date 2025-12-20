@@ -126,6 +126,8 @@ function ProfileHeader() {
           }`}
           alt="Profile"
           onClick={handleImageClick}
+          loading="eager"
+          decoding="async"
         />
 
         {/* Loading indicator overlay */}

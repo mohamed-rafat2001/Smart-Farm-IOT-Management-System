@@ -26,6 +26,8 @@ function Sidebar({ onClose }) {
             src={Logo}
             alt="Smart Farm Logo"
             className="h-12 w-12 rounded-full border-2 border-stone-600 object-cover sm:h-16 sm:w-16 lg:h-14 lg:w-14"
+            loading="eager"
+            decoding="async"
           />
         </div>
         <div className="text-center lg:text-left">
