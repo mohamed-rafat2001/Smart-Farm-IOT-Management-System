@@ -54,28 +54,32 @@ function Devices() {
       initial="hidden"
       animate="visible"
       variants={containerVariants}
-      className="space-y-8 pb-10"
+      className="relative space-y-12 pb-10"
     >
+      {/* Decorative Gradients */}
+      <div className="absolute -right-24 -top-24 -z-10 h-96 w-96 rounded-full bg-blue-600/5 blur-[120px]" />
+      <div className="absolute -left-24 bottom-24 -z-10 h-96 w-96 rounded-full bg-purple-600/5 blur-[120px]" />
+
       <motion.div
         variants={itemVariants}
-        className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end"
+        className="flex flex-col justify-between gap-6 sm:flex-row sm:items-end"
       >
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight text-white">
-            Connected Devices
+        <div className="space-y-4">
+          <h1 className="text-4xl font-black tracking-tight text-white">
+            Connected Devices<span className="text-blue-500">.</span>
           </h1>
-          <p className="mt-1 text-stone-400">
-            Manage and monitor your farm's IoT infrastructure.
+          <p className="max-w-2xl text-lg leading-relaxed text-stone-400">
+            Manage and monitor your farm's IoT infrastructure. Real-time status updates and manual control overrides.
           </p>
         </div>
         {selectedFarm && (
           <motion.div
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            className="flex items-center gap-2 rounded-xl border border-blue-500/20 bg-blue-600/10 px-4 py-2"
+            initial={{ scale: 0.9, opacity: 0, x: 20 }}
+            animate={{ scale: 1, opacity: 1, x: 0 }}
+            className="flex items-center gap-3 rounded-2xl border border-blue-500/20 bg-blue-600/10 px-6 py-3 backdrop-blur-md"
           >
-            <div className="h-2 w-2 animate-pulse rounded-full bg-blue-500" />
-            <span className="text-sm font-bold text-blue-400">
+            <div className="h-2.5 w-2.5 animate-pulse rounded-full bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.5)]" />
+            <span className="text-sm font-black uppercase tracking-widest text-blue-400">
               {selectedFarm.name}
             </span>
           </motion.div>
@@ -84,19 +88,19 @@ function Devices() {
 
       <motion.div
         variants={itemVariants}
-        className="rounded-[2rem] border border-stone-700/50 bg-[#283039]/30 p-8 shadow-2xl backdrop-blur-sm"
+        className="max-w-md rounded-[2.5rem] border border-stone-800/50 bg-[#283039]/30 p-8 shadow-2xl backdrop-blur-sm"
       >
         <SelectFarm onFarmSelect={setSelectedFarm} />
       </motion.div>
 
-      <motion.div variants={itemVariants} className="space-y-6">
-        <div className="ml-1 flex items-center gap-2">
-          <div className="h-6 w-1.5 rounded-full bg-blue-600" />
-          <h2 className="text-xl font-bold text-white">Device List</h2>
+      <motion.div variants={itemVariants} className="space-y-8">
+        <div className="ml-2 flex items-center gap-4">
+          <div className="h-8 w-2 rounded-full bg-blue-600 shadow-[0_0_15px_rgba(37,99,235,0.4)]" />
+          <h2 className="text-2xl font-black text-white">Device List</h2>
         </div>
 
         {isGetDevices ? (
-          <div className="flex min-h-[300px] items-center justify-center rounded-[2rem] border border-stone-700/50 bg-[#283039]/20">
+          <div className="flex min-h-[400px] items-center justify-center rounded-[3rem] border border-stone-800/50 bg-[#283039]/20 backdrop-blur-sm">
             <LoadingCircul />
           </div>
         ) : (
@@ -104,32 +108,37 @@ function Devices() {
             {Devices ? (
               <motion.div
                 key="devices-table"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                className="overflow-hidden rounded-[2rem] border border-stone-700/50 bg-[#283039]/30 shadow-2xl"
+                initial={{ opacity: 0, scale: 0.98 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.98 }}
+                className="overflow-hidden rounded-[2.5rem] border border-stone-800/50 bg-[#1b2127]/40 shadow-2xl backdrop-blur-sm"
               >
                 <Table head={['Device', 'Control Mode']}>
                   {devicesList?.map((el, index) => (
                     <React.Fragment key={index}>
                       <tr
-                        className={`group cursor-pointer transition-all duration-300 ${
+                        className={`group cursor-pointer transition-all duration-500 ${
                           expandedRows.has(index)
-                            ? 'bg-blue-600/5'
-                            : 'border-b border-stone-700/30 hover:bg-stone-800/30'
+                            ? 'bg-blue-600/10'
+                            : 'border-b border-stone-800/30 hover:bg-white/5'
                         }`}
                         onClick={() => toggleRow(index)}
                       >
-                        <td className="p-5 sm:p-6">
-                          <div className="flex items-center gap-4">
-                            <motion.span
+                        <td className="p-6 sm:p-8">
+                          <div className="flex items-center gap-6">
+                            <motion.div
                               animate={{
                                 rotate: expandedRows.has(index) ? 90 : 0,
+                                scale: expandedRows.has(index) ? 1.2 : 1,
                               }}
-                              className={`transition-colors duration-300 ${expandedRows.has(index) ? 'text-blue-500' : 'text-stone-500 group-hover:text-stone-300'}`}
+                              className={`flex h-10 w-10 items-center justify-center rounded-xl transition-all duration-300 ${
+                                expandedRows.has(index) 
+                                  ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20' 
+                                  : 'bg-stone-800/50 text-stone-500 group-hover:bg-stone-700 group-hover:text-stone-300'
+                              }`}
                             >
                               <svg
-                                className="h-4 w-4"
+                                className="h-5 w-5"
                                 fill="none"
                                 viewBox="0 0 24 24"
                                 stroke="currentColor"
@@ -141,21 +150,31 @@ function Devices() {
                                   d="M9 5l7 7-7 7"
                                 />
                               </svg>
-                            </motion.span>
-                            <span
-                              className={`font-semibold transition-colors duration-300 ${expandedRows.has(index) ? 'text-white' : 'text-stone-300 group-hover:text-white'}`}
-                            >
-                              {el.name}
-                            </span>
+                            </motion.div>
+                            <div className="space-y-1">
+                              <span
+                                className={`text-lg font-black transition-colors duration-300 ${
+                                  expandedRows.has(index) ? 'text-white' : 'text-stone-300 group-hover:text-white'
+                                }`}
+                              >
+                                {el.name}
+                              </span>
+                              <div className="flex items-center gap-2">
+                                <div className={`h-1.5 w-1.5 rounded-full ${el?.Status === 'online' ? 'bg-green-500' : 'bg-stone-600'}`} />
+                                <span className="text-xs font-bold uppercase tracking-widest text-stone-500">
+                                  {el?.Status || 'active'}
+                                </span>
+                              </div>
+                            </div>
                           </div>
                         </td>
-                        <td className="p-5 text-center sm:p-6">
+                        <td className="p-6 text-center sm:p-8">
                           <button
-                            className={`inline-flex items-center rounded-xl px-4 py-2 text-xs font-bold transition-all duration-300 ${
+                            className={`group relative inline-flex items-center gap-3 overflow-hidden rounded-2xl px-6 py-3 text-xs font-black tracking-widest transition-all duration-500 ${
                               el?.Auto_change
-                                ? 'border border-green-500/20 bg-green-500/10 text-green-500'
-                                : 'border border-orange-500/20 bg-orange-500/10 text-orange-500'
-                            } shadow-sm hover:scale-105 active:scale-95 disabled:opacity-50`}
+                                ? 'bg-green-500/10 text-green-500 hover:bg-green-500 hover:text-white'
+                                : 'bg-orange-500/10 text-orange-500 hover:bg-orange-500 hover:text-white'
+                            } shadow-sm active:scale-95 disabled:opacity-50`}
                             onClick={(e) => {
                               e.stopPropagation();
                               updateData({
@@ -166,7 +185,11 @@ function Devices() {
                             disabled={isUpdating}
                           >
                             <span
-                              className={`mr-2 h-2 w-2 rounded-full ${el?.Auto_change ? 'bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.5)]' : 'bg-orange-500 shadow-[0_0_8px_rgba(249,115,22,0.5)]'}`}
+                              className={`h-2.5 w-2.5 rounded-full transition-colors duration-300 ${
+                                el?.Auto_change 
+                                  ? 'bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.5)] group-hover:bg-white' 
+                                  : 'bg-orange-500 shadow-[0_0_8px_rgba(249,115,22,0.5)] group-hover:bg-white'
+                              }`}
                             />
                             {el?.Auto_change ? 'AUTOMATIC' : 'MANUAL'}
                           </button>
@@ -178,13 +201,14 @@ function Devices() {
                             initial={{ opacity: 0, height: 0 }}
                             animate={{ opacity: 1, height: 'auto' }}
                             exit={{ opacity: 0, height: 0 }}
-                            className="border-b border-stone-700/30 bg-blue-600/5"
+                            className="bg-blue-600/[0.03]"
                           >
                             <td colSpan="2" className="p-0">
                               <motion.div
-                                initial={{ y: -10 }}
-                                animate={{ y: 0 }}
-                                className="p-6 sm:p-8"
+                                initial={{ y: -20, opacity: 0 }}
+                                animate={{ y: 0, opacity: 1 }}
+                                transition={{ duration: 0.4, ease: "easeOut" }}
+                                className="p-8 sm:p-12"
                               >
                                 <DevicesDropdown
                                   el={el}
@@ -203,33 +227,43 @@ function Devices() {
             ) : (
               <motion.div
                 key="no-devices"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="flex flex-col items-center justify-center rounded-[2rem] border border-dashed border-stone-700/50 bg-[#283039]/20 py-20"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="relative flex flex-col items-center justify-center overflow-hidden rounded-[3rem] border border-dashed border-stone-800/50 bg-[#283039]/20 py-24 text-center backdrop-blur-sm"
               >
-                <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-stone-800/50">
-                  <svg
-                    className="h-8 w-8 text-stone-500"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"
-                    />
-                  </svg>
+                <div className="absolute -right-24 -top-24 h-64 w-64 rounded-full bg-stone-800/10 blur-[80px]" />
+                
+                <div className="relative z-10 space-y-6">
+                  <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-[2rem] bg-stone-800/50 text-stone-600">
+                    <svg
+                      className="h-12 w-12"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={1.5}
+                        d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"
+                      />
+                    </svg>
+                  </div>
+                  <div className="space-y-2">
+                    <h3 className="text-xl font-black text-stone-300">No Devices Found</h3>
+                    <p className="mx-auto max-w-xs font-bold text-stone-500">
+                      Please select a farm to view connected devices and their current status.
+                    </p>
+                  </div>
                 </div>
-                <p className="font-medium text-stone-400">
-                  Please select a farm to view connected devices.
-                </p>
               </motion.div>
             )}
           </AnimatePresence>
         )}
       </motion.div>
+    </motion.div>
+  );
+}
     </motion.div>
   );
 }
