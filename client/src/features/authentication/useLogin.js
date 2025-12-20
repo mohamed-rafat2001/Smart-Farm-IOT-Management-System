@@ -1,10 +1,12 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { login } from '../../services/authentication';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 function useLogin() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
+  const location = useLocation();
+
   const {
     isLoading: isLogin,
     data,
@@ -22,7 +24,9 @@ function useLogin() {
       // Initialize empty farm data for the user
       queryClient.setQueryData(['userFarms'], { data: { docs: [] } });
       
-      navigate('/app/profile');
+      // Redirect to the page they were trying to access, or profile as default
+      const from = location.state?.from || '/app/profile';
+      navigate(from, { replace: true });
     },
   });
   return { isLogin, data, error, loginUser };

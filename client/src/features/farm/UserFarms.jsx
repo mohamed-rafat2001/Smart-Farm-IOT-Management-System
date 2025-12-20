@@ -18,50 +18,111 @@ function UserFarms() {
   }
   return (
     <div className="relative">
-      <h1 className="text-gray-500">
-        Overview of your farm's list and add new farms
-      </h1>
-      <div className={`${addFarm ? 'blur-sm' : ''} `}>
-        <div className="text-end">
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold text-white">Your Farms</h1>
+        <p className="text-stone-400">
+          Overview of your farm's list and add new farms
+        </p>
+      </div>
+
+      <div
+        className={`${addFarm ? 'pointer-events-none blur-sm' : ''} transition-all duration-300`}
+      >
+        <div className="mb-6 flex justify-end">
           <Button
             color="#c9fa75"
-            className="rounded-full bg-[#283039] font-bold"
+            className="rounded-xl bg-[#283039] px-6 py-3 font-bold shadow-lg transition-all hover:scale-105 active:scale-95"
             onClick={() => {
               setAddFarm(true);
             }}
           >
-            Add Farm
+            <span className="flex items-center gap-2">
+              <svg
+                className="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 4v16m8-8H4"
+                />
+              </svg>
+              Add Farm
+            </span>
           </Button>
         </div>
+
         {userFarm?.docs && (
-          <div className="w-full overflow-x-auto">
-            <Table head={['Farm Name', 'Location', 'Url', 'Status']}>
+          <div className="overflow-hidden rounded-xl border border-stone-700 bg-[#1b2127] shadow-xl">
+            <Table
+              head={[
+                'Farm Name',
+                'Location',
+                { label: 'Url', className: 'hidden md:table-cell' },
+                'Status',
+              ]}
+            >
               {userFarm.docs.map((el) => (
                 <tr
                   onClick={() => {
                     handelEvent(el._id);
                   }}
                   key={el._id}
-                  className="group cursor-pointer border-1 border-stone-700 bg-[#121416] hover:bg-[#283039]"
+                  className="group cursor-pointer border-b border-stone-700 bg-transparent transition-colors hover:bg-stone-800/50"
                 >
-                  <td className="border-b-1 border-gray-700 p-5">{el.name}</td>
-                  <td className="border-b-1 border-gray-700 p-5">
-                    {el.location}
+                  <td className="p-4 font-semibold text-white sm:p-5">
+                    {el.name}
                   </td>
-                  <td className="max-w-32 overflow-x-hidden border-b-1 border-gray-700 p-5 text-ellipsis">
+                  <td className="p-4 text-stone-400 sm:p-5">
+                    <div className="flex items-center gap-2">
+                      <svg
+                        className="h-4 w-4 text-blue-500/70"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                        />
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                        />
+                      </svg>
+                      <span className="max-w-[100px] truncate sm:max-w-none">
+                        {el.location}
+                      </span>
+                    </div>
+                  </td>
+                  <td className="hidden max-w-[150px] overflow-hidden p-4 text-ellipsis whitespace-nowrap text-stone-500 sm:p-5 md:table-cell">
                     {el.firebaseUrl}
                   </td>
 
-                  <td className="w-50 border-b-1 border-gray-700 p-5 text-center text-white">
+                  <td className="p-4 text-center sm:p-5">
                     <button
                       disabled={isDeactivate}
-                      className="cursor-pointer rounded-full bg-[#283039] px-10 py-2 font-bold group-hover:bg-black group-hover:text-[#c9fa75]"
+                      className={`inline-flex items-center rounded-full px-4 py-1 text-xs font-bold transition-all sm:text-sm ${
+                        el.active
+                          ? 'border border-green-500/20 bg-green-500/10 text-green-500'
+                          : 'border border-red-500/20 bg-red-500/10 text-red-500'
+                      } hover:scale-105 active:scale-95`}
                       onClick={(e) => {
                         e.stopPropagation();
                         handelActiveButton(el._id);
                       }}
                     >
-                      {el.active ? 'Active' : 'Not Active'}
+                      <span
+                        className={`mr-1.5 h-1.5 w-1.5 rounded-full sm:h-2 sm:w-2 ${el.active ? 'bg-green-500' : 'bg-red-500'}`}
+                      />
+                      {el.active ? 'Active' : 'Inactive'}
                     </button>
                   </td>
                 </tr>
@@ -71,29 +132,46 @@ function UserFarms() {
         )}
       </div>
 
+      {/* Responsive Modal */}
       <div
-        className={`absolute top-[5%] left-[17%] z-50 w-[65%] transform rounded-xl bg-[#272727] px-7 py-5 transition-all duration-400 ease-in-out ${
-          addFarm
-            ? 'scale-100 opacity-100'
-            : 'pointer-events-none scale-95 opacity-0'
+        className={`fixed inset-0 z-50 flex items-center justify-center p-4 transition-all duration-300 ${
+          addFarm ? 'visible opacity-100' : 'invisible opacity-0'
         }`}
       >
-        <div className="text-end">
-          <button
-            className="w-6 cursor-pointer"
-            onClick={() => {
-              setAddFarm(false);
-            }}
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
-              <path
-                fill="red"
-                d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"
-              />
-            </svg>
-          </button>
+        <div
+          className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+          onClick={() => setAddFarm(false)}
+        />
+        <div
+          className={`relative w-full max-w-2xl transform rounded-2xl border border-stone-700 bg-[#1b2127] p-6 shadow-2xl transition-all duration-300 ${
+            addFarm ? 'scale-100' : 'scale-95'
+          }`}
+        >
+          <div className="mb-4 flex items-center justify-between">
+            <h2 className="text-xl font-bold text-white">Create New Farm</h2>
+            <button
+              className="rounded-lg p-2 text-stone-400 transition-colors hover:bg-stone-800 hover:text-white"
+              onClick={() => {
+                setAddFarm(false);
+              }}
+            >
+              <svg
+                className="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          </div>
+          <CreateFarm />
         </div>
-        <CreateFarm />
       </div>
     </div>
   );

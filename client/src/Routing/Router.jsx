@@ -8,6 +8,7 @@ import AdminDashPage from '../pages/AdminDashPage.jsx';
 import SettingsPage from '../pages/SettingsPage.jsx';
 
 import ProtectedLayout from '../ui/protectedLayout.jsx';
+import GuestLayout from '../ui/GuestLayout.jsx';
 import NotFoundPage from '../pages/NotFoundPage.jsx';
 
 import AboutPage from '../pages/AboutPage.jsx';
@@ -45,15 +46,20 @@ export const Router = createBrowserRouter([
         element: <ContactPage />,
       },
       {
-        element: <RegisterPage />,
+        element: <GuestLayout />,
         children: [
           {
-            path: '/login',
-            element: <Login />,
-          },
-          {
-            path: '/signup',
-            element: <SignUp />,
+            element: <RegisterPage />,
+            children: [
+              {
+                path: '/login',
+                element: <Login />,
+              },
+              {
+                path: '/signup',
+                element: <SignUp />,
+              },
+            ],
           },
         ],
       },
@@ -95,10 +101,14 @@ export const Router = createBrowserRouter([
             path: '/app/insights',
             element: <InsightsPage />,
           },
-
           {
-            path: '/app/adminDashboard',
-            element: <AdminDashPage />,
+            element: <ProtectedLayout requiredRole="admin" />,
+            children: [
+              {
+                path: '/app/adminDashboard',
+                element: <AdminDashPage />,
+              },
+            ],
           },
           {
             path: '/app/settings',

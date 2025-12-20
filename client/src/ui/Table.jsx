@@ -1,22 +1,35 @@
-function Table({ head, children }) {
+import { motion } from 'framer-motion';
+
+function Table({ head, children, className = '' }) {
   return (
-    <div className="mt-5 w-full overflow-x-auto">
-      <table className="w-full table-auto border-separate border-spacing-0 rounded-lg border border-stone-700 min-w-full">
-        <thead className="bg-[#283039]">
+    <div className={`custom-scrollbar w-full overflow-x-auto ${className}`}>
+      <table className="w-full min-w-full table-auto border-separate border-spacing-0">
+        <thead className="sticky top-0 z-10 bg-[#283039]">
           <tr>
-            {head.map((el, index) => (
-              <th
-                className="border-b border-stone-700 p-3 text-start text-sm font-medium text-[#c9fa75] first:rounded-tl-lg last:rounded-tr-lg last:text-center sm:p-5 sm:text-base lg:text-xl"
-                key={index}
-              >
-                {el}
-              </th>
-            ))}
+            {head.map((el, index) => {
+              const isObject = typeof el === 'object';
+              const label = isObject ? el.label : el;
+              const headerClassName = isObject ? el.className : '';
+
+              return (
+                <th
+                  className={`border-b border-stone-700 p-4 text-start text-xs font-bold tracking-wider text-[#c9fa75] uppercase sm:p-5 sm:text-sm ${index === 0 ? 'rounded-tl-xl' : ''} ${index === head.length - 1 ? 'rounded-tr-xl text-center' : ''} ${headerClassName} `}
+                  key={index}
+                >
+                  {label}
+                </th>
+              );
+            })}
           </tr>
         </thead>
-        <tbody>
+        <motion.tbody
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.3 }}
+          className="divide-y divide-stone-700/50"
+        >
           {children}
-        </tbody>
+        </motion.tbody>
       </table>
     </div>
   );

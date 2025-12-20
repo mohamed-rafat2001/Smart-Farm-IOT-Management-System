@@ -5,6 +5,7 @@ import ImageUploadModal from '../../ui/ImageUploadModal.jsx';
 import CurrentImageModal from '../../ui/CurrentImageModal.jsx';
 import { useEffect, useState, useRef } from 'react';
 import { userImg } from '../../services/user';
+import { motion, AnimatePresence } from 'framer-motion';
 
 function ProfileHeader() {
   const { data } = useAuth();
@@ -104,10 +105,7 @@ function ProfileHeader() {
   };
 
   const handleUploadModalClose = () => {
-    // Only close if upload is not in progress
     if (!isUploading) {
-      // Don't clear the upload state immediately - let the success message stay visible
-      // The image should already be updated in the UI
       closeModal();
     }
   };
@@ -117,131 +115,155 @@ function ProfileHeader() {
   };
 
   return (
-    <div className="flex w-full flex-col gap-x-7 min-[450px]:flex-row">
-      <div className="relative mb-3 h-30 w-30">
-        <img
-          src={userProfileImg ? userProfileImg : defaultProfileImg}
-          className={`h-[100%] w-[100%] cursor-pointer rounded-full border-2 object-cover transition-all duration-200 hover:border-amber-300 ${
-            isUploading ? 'border-blue-400 opacity-75' : 'border-gray-200'
-          }`}
-          alt="Profile"
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="flex w-full flex-col items-center gap-8 rounded-[2.5rem] border border-stone-700/50 bg-[#283039]/30 p-8 shadow-2xl backdrop-blur-sm min-[450px]:flex-row min-[450px]:items-center"
+    >
+      <div className="relative h-32 w-32 shrink-0 group">
+        <motion.div
+          whileHover={{ scale: 1.05 }}
+          className="relative h-full w-full"
+        >
+          <img
+            src={userProfileImg ? userProfileImg : defaultProfileImg}
+            className={`h-full w-full cursor-pointer rounded-3xl border-2 object-cover transition-all duration-300 ${
+              isUploading
+                ? 'border-blue-500 opacity-75'
+                : 'border-stone-700 group-hover:border-blue-500'
+            } shadow-xl`}
+            alt="Profile"
+            onClick={handleImageClick}
+            loading="eager"
+            decoding="async"
+          />
+          
+          {/* Action Overlay on Hover */}
+          <div 
+            onClick={handleImageClick}
+            className="absolute inset-0 flex items-center justify-center rounded-3xl bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 cursor-pointer"
+          >
+            <svg className="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+          </div>
+        </motion.div>
+
+        {/* Action Button for Mobile accessibility */}
+        <button
           onClick={handleImageClick}
-          loading="eager"
-          decoding="async"
-        />
+          className="absolute -right-2 -bottom-2 flex h-10 w-10 items-center justify-center rounded-xl bg-blue-600 text-white shadow-xl hover:bg-blue-500 transition-all hover:scale-110 active:scale-95 sm:hidden"
+        >
+          <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+          </svg>
+        </button>
 
         {/* Loading indicator overlay */}
         {isUploading && (
-          <div className="bg-opacity-50 absolute inset-0 flex items-center justify-center rounded-full bg-black">
-            <div className="h-8 w-8 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"></div>
+          <div className="absolute inset-0 flex items-center justify-center rounded-3xl bg-black/60 backdrop-blur-sm z-20">
+            <div className="h-10 w-10 animate-spin rounded-full border-4 border-blue-500 border-t-transparent shadow-[0_0_15px_rgba(59,130,246,0.5)]"></div>
           </div>
         )}
 
         {/* Success indicator overlay */}
         {uploadStatus?.includes('successful') && !isUploading && (
-          <div className="absolute -top-2 -right-2 rounded-full bg-green-500 p-1">
-            <svg
-              className="h-4 w-4 text-white"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-            >
-              <path
-                fillRule="evenodd"
-                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                clipRule="evenodd"
-              />
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            className="absolute -top-3 -right-3 rounded-full bg-green-500 p-2 shadow-lg z-20 border-2 border-[#1b2127]"
+          >
+            <svg className="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
             </svg>
-          </div>
+          </motion.div>
         )}
 
         {/* Dropdown Menu */}
-        {isDropdownOpen && (
-          <div
-            ref={dropdownRef}
-            className="absolute top-full left-0 z-50 mt-2 w-48 rounded-lg border border-gray-200 bg-white shadow-lg"
-          >
-            <div className="py-1">
+        <AnimatePresence>
+          {isDropdownOpen && (
+            <motion.div
+              initial={{ opacity: 0, y: 10, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 10, scale: 0.95 }}
+              ref={dropdownRef}
+              className="absolute top-full left-0 z-50 mt-4 w-60 rounded-2xl border border-stone-700/50 bg-[#283039] p-2 shadow-2xl backdrop-blur-xl"
+            >
               <button
                 onClick={handleViewCurrentImage}
-                className="flex w-full items-center gap-2 px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
+                className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-sm text-stone-300 transition-all hover:bg-stone-800/50 hover:text-white"
               >
-                <svg
-                  className="h-4 w-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                  />
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                  />
-                </svg>
-                View Current Image
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-500/10 text-blue-400">
+                  <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                  </svg>
+                </div>
+                View Photo
               </button>
               <button
                 onClick={handleAddNewImage}
-                className="flex w-full items-center gap-2 px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
+                className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-sm text-stone-300 transition-all hover:bg-stone-800/50 hover:text-white"
               >
-                <svg
-                  className="h-4 w-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                  />
-                </svg>
-                Add New Image
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-green-500/10 text-green-400">
+                  <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                  </svg>
+                </div>
+                Upload New Photo
               </button>
-            </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+
+      <div className="flex-grow text-center min-[450px]:text-left space-y-4">
+        <div className="space-y-1">
+          <h1 className="text-3xl font-bold tracking-tight text-white">
+            {data?.firstName + ' ' + data?.lastName}
+          </h1>
+          <p className="text-stone-400 font-medium">{data?.email}</p>
+        </div>
+        
+        <div className="flex flex-wrap items-center justify-center min-[450px]:justify-start gap-3">
+          <div className="inline-flex items-center gap-2 rounded-full border border-blue-500/20 bg-blue-600/10 px-4 py-1.5 text-xs font-bold text-blue-400 shadow-sm">
+            <span className="h-1.5 w-1.5 rounded-full bg-blue-500 animate-pulse"></span>
+            MEMBER SINCE {new Date(data?.createdAt).getFullYear() || '2023'}
           </div>
-        )}
-
-        {/* Upload Modal - Stays open until user closes it */}
-        <ImageUploadModal
-          isOpen={isModalOpen}
-          onClose={handleUploadModalClose}
-          onSubmit={submit}
-          register={register}
-          handleSubmit={handleSubmit}
-          errors={errors}
-          selectedFile={selectedFile}
-          uploadStatus={uploadStatus}
-          isUploading={isUploading}
-          isFileValid={isFileValid}
-          getFileInfo={getFileInfo}
-          uploadProgress={uploadProgress}
-          uploadedImageUrl={uploadedImageUrl}
-        />
-
-        {/* Current Image Modal */}
-        <CurrentImageModal
-          isOpen={isCurrentImageModalOpen}
-          onClose={handleCurrentImageModalClose}
-          imageUrl={userProfileImg}
-          userName={`${data?.firstName} ${data?.lastName}`}
-        />
+          {data?.role === 'admin' && (
+            <div className="inline-flex items-center gap-2 rounded-full border border-purple-500/20 bg-purple-600/10 px-4 py-1.5 text-xs font-bold text-purple-400 shadow-sm">
+              <span className="h-1.5 w-1.5 rounded-full bg-purple-500"></span>
+              ADMINISTRATOR
+            </div>
+          )}
+        </div>
       </div>
 
-      <div className="mb-3 min-[450px]:mt-5">
-        <h1 className="text-xl font-bold text-white">
-          {data?.firstName + '  ' + data?.lastName}
-        </h1>
-        <p className="text-xs text-stone-400">{data?.email}</p>
-      </div>
-    </div>
+      {/* Modals */}
+      <ImageUploadModal
+        isOpen={isModalOpen}
+        onClose={handleUploadModalClose}
+        onSubmit={submit}
+        register={register}
+        handleSubmit={handleSubmit}
+        errors={errors}
+        selectedFile={selectedFile}
+        uploadStatus={uploadStatus}
+        isUploading={isUploading}
+        isFileValid={isFileValid}
+        getFileInfo={getFileInfo}
+        uploadProgress={uploadProgress}
+        uploadedImageUrl={uploadedImageUrl}
+      />
+
+      <CurrentImageModal
+        isOpen={isCurrentImageModalOpen}
+        onClose={handleCurrentImageModalClose}
+        imageUrl={userProfileImg}
+        userName={`${data?.firstName} ${data?.lastName}`}
+      />
+    </motion.div>
   );
 }
 

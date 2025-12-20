@@ -1,265 +1,293 @@
+import { motion } from 'framer-motion';
 import HeroSection from '../../ui/HeroSection';
 import contactImage from '../../assets/contact-image.jpg';
 
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.2,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { y: 20, opacity: 0 },
+  visible: {
+    y: 0,
+    opacity: 1,
+    transition: { duration: 0.5 },
+  },
+};
+
+const inputStyles = `w-full bg-[#1b2127]/50 border border-stone-700/50 rounded-xl px-4 py-3 text-white placeholder:text-stone-500 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200 hover:border-stone-600`;
+const labelStyles = `text-sm font-medium text-stone-300 ml-1`;
+
 function ContactWithUs() {
   return (
-    <>
-      <HeroSection
-        image={contactImage}
-        bigText="Contact Us"
-        smallText="We're here to help! Reach out to us with any questions, feedback, or support requests."
-      />
+    <motion.div
+      initial="hidden"
+      animate="visible"
+      variants={containerVariants}
+      className="space-y-20"
+    >
+      <motion.div variants={itemVariants}>
+        <HeroSection
+          image={contactImage}
+          bigText="Contact Us"
+          smallText="We're here to help! Reach out to us with any questions, feedback, or support requests."
+        />
+      </motion.div>
 
       {/* Contact Content Section */}
-      <section className="mt-10 sm:mt-12 lg:mt-16">
-        <div className="mx-auto max-w-6xl space-y-8">
-          {/* Contact Information */}
-          <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+      <section className="px-6 pb-20">
+        <div className="mx-auto max-w-6xl">
+          <div className="grid grid-cols-1 items-start gap-16 lg:grid-cols-2">
             {/* Contact Form */}
-            <div className="space-y-6">
-              <h2 className="text-2xl font-bold text-white sm:text-3xl md:text-4xl">
-                Get in Touch
-              </h2>
-              <p className="text-sm text-stone-300 sm:text-base md:text-lg">
-                Fill out the form below and we'll get back to you as soon as
-                possible.
-              </p>
+            <motion.div
+              variants={itemVariants}
+              className="relative overflow-hidden rounded-[2.5rem] border border-stone-700/50 bg-[#283039]/30 p-8 shadow-2xl sm:p-10"
+            >
+              <div className="absolute top-0 right-0 -mt-32 -mr-32 h-64 w-64 rounded-full bg-blue-600/5 blur-[100px]" />
 
-              <form className="space-y-4">
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                  <div>
-                    <label
-                      htmlFor="firstName"
-                      className="mb-2 block text-sm font-medium text-stone-300"
-                    >
-                      First Name
-                    </label>
-                    <input
-                      type="text"
-                      id="firstName"
-                      className="w-full rounded-lg border border-stone-600 bg-[#283039] px-4 py-3 text-white placeholder-stone-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none"
-                      placeholder="Enter your first name"
-                    />
-                  </div>
-                  <div>
-                    <label
-                      htmlFor="lastName"
-                      className="mb-2 block text-sm font-medium text-stone-300"
-                    >
-                      Last Name
-                    </label>
-                    <input
-                      type="text"
-                      id="lastName"
-                      className="w-full rounded-lg border border-stone-600 bg-[#283039] px-4 py-3 text-white placeholder-stone-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none"
-                      placeholder="Enter your last name"
-                    />
-                  </div>
+              <div className="relative z-10 space-y-8">
+                <div className="space-y-4">
+                  <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
+                    Get in Touch
+                  </h2>
+                  <p className="text-lg leading-relaxed text-stone-400">
+                    Fill out the form below and we'll get back to you as soon as
+                    possible.
+                  </p>
                 </div>
 
-                <div>
-                  <label
-                    htmlFor="email"
-                    className="mb-2 block text-sm font-medium text-stone-300"
-                  >
-                    Email Address
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    className="w-full rounded-lg border border-stone-600 bg-[#283039] px-4 py-3 text-white placeholder-stone-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none"
-                    placeholder="Enter your email"
-                  />
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="subject"
-                    className="mb-2 block text-sm font-medium text-stone-300"
-                  >
-                    Subject
-                  </label>
-                  <select
-                    id="subject"
-                    className="w-full rounded-lg border border-stone-600 bg-[#283039] px-4 py-3 text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none"
-                  >
-                    <option value="">Select a subject</option>
-                    <option value="general">General Inquiry</option>
-                    <option value="support">Technical Support</option>
-                    <option value="sales">Sales Question</option>
-                    <option value="partnership">Partnership</option>
-                    <option value="feedback">Feedback</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="message"
-                    className="mb-2 block text-sm font-medium text-stone-300"
-                  >
-                    Message
-                  </label>
-                  <textarea
-                    id="message"
-                    rows={5}
-                    className="w-full rounded-lg border border-stone-600 bg-[#283039] px-4 py-3 text-white placeholder-stone-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none"
-                    placeholder="Tell us how we can help you..."
-                  ></textarea>
-                </div>
-
-                <button
-                  type="submit"
-                  className="w-full rounded-lg bg-blue-600 px-6 py-3 text-sm font-semibold text-white transition-all duration-300 hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-500/25 active:scale-95 sm:text-base"
+                <form
+                  className="space-y-6"
+                  onSubmit={(e) => e.preventDefault()}
                 >
-                  Send Message
-                </button>
-              </form>
-            </div>
-
-            {/* Contact Information */}
-            <div className="space-y-6">
-              <h2 className="text-2xl font-bold text-white sm:text-3xl md:text-4xl">
-                Contact Information
-              </h2>
-              <p className="text-sm text-stone-300 sm:text-base md:text-lg">
-                Reach out to us through any of these channels. We're here to
-                help!
-              </p>
-
-              <div className="space-y-6">
-                {/* Email */}
-                <div className="flex items-start space-x-4">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-600/20">
-                    <svg
-                      className="h-6 w-6 text-blue-400"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                  <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                    <div className="space-y-2">
+                      <label htmlFor="firstName" className={labelStyles}>
+                        First Name
+                      </label>
+                      <input
+                        type="text"
+                        id="firstName"
+                        className={inputStyles}
+                        placeholder="John"
                       />
-                    </svg>
+                    </div>
+                    <div className="space-y-2">
+                      <label htmlFor="lastName" className={labelStyles}>
+                        Last Name
+                      </label>
+                      <input
+                        type="text"
+                        id="lastName"
+                        className={inputStyles}
+                        placeholder="Doe"
+                      />
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="text-lg font-semibold text-white">Email</h3>
-                    <p className="text-stone-400">support@agritech.com</p>
-                    <p className="text-sm text-stone-500">
-                      We'll respond within 24 hours
-                    </p>
-                  </div>
-                </div>
 
-                {/* Phone */}
-                <div className="flex items-start space-x-4">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-green-600/20">
-                    <svg
-                      className="h-6 w-6 text-green-400"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-                      />
-                    </svg>
+                  <div className="space-y-2">
+                    <label htmlFor="email" className={labelStyles}>
+                      Email Address
+                    </label>
+                    <input
+                      type="email"
+                      id="email"
+                      className={inputStyles}
+                      placeholder="john@example.com"
+                    />
                   </div>
-                  <div>
-                    <h3 className="text-lg font-semibold text-white">Phone</h3>
-                    <p className="text-stone-400">+1 (555) 123-4567</p>
-                    <p className="text-sm text-stone-500">
-                      Mon-Fri 9AM-6PM EST
-                    </p>
-                  </div>
-                </div>
 
-                {/* Address */}
-                <div className="flex items-start space-x-4">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-purple-600/20">
-                    <svg
-                      className="h-6 w-6 text-purple-400"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                      />
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                      />
-                    </svg>
+                  <div className="space-y-2">
+                    <label htmlFor="subject" className={labelStyles}>
+                      Subject
+                    </label>
+                    <div className="relative">
+                      <select
+                        id="subject"
+                        className={`${inputStyles} appearance-none pr-10`}
+                      >
+                        <option value="">Select a subject</option>
+                        <option value="general">General Inquiry</option>
+                        <option value="support">Technical Support</option>
+                        <option value="sales">Sales Question</option>
+                        <option value="partnership">Partnership</option>
+                        <option value="feedback">Feedback</option>
+                      </select>
+                      <div className="pointer-events-none absolute top-1/2 right-4 -translate-y-1/2 text-stone-500">
+                        <svg
+                          className="h-5 w-5"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M19 9l-7 7-7-7"
+                          />
+                        </svg>
+                      </div>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="text-lg font-semibold text-white">Office</h3>
-                    <p className="text-stone-400">123 Tech Street, Suite 100</p>
-                    <p className="text-stone-400">Innovation City, IC 12345</p>
-                    <p className="text-sm text-stone-500">United States</p>
+
+                  <div className="space-y-2">
+                    <label htmlFor="message" className={labelStyles}>
+                      Message
+                    </label>
+                    <textarea
+                      id="message"
+                      rows="4"
+                      className={`${inputStyles} resize-none`}
+                      placeholder="How can we help you?"
+                    ></textarea>
                   </div>
+
+                  <motion.button
+                    whileHover={{ scale: 1.01 }}
+                    whileTap={{ scale: 0.99 }}
+                    type="submit"
+                    className="w-full rounded-xl bg-blue-600 py-4 font-bold text-white shadow-xl shadow-blue-500/20 transition-all hover:bg-blue-500 hover:shadow-blue-500/40"
+                  >
+                    Send Message
+                  </motion.button>
+                </form>
+              </div>
+            </motion.div>
+
+            {/* Contact Details */}
+            <motion.div variants={itemVariants} className="space-y-12 lg:pt-10">
+              <div className="space-y-8">
+                <h2 className="text-3xl font-bold tracking-tight text-white">
+                  Other Ways to Connect
+                </h2>
+
+                <div className="space-y-6">
+                  {[
+                    {
+                      title: 'Email Us',
+                      info: 'support@agritech.com',
+                      icon: (
+                        <svg
+                          className="h-6 w-6"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                          />
+                        </svg>
+                      ),
+                      color: 'blue',
+                    },
+                    {
+                      title: 'Call Us',
+                      info: '+1 (555) 123-4567',
+                      icon: (
+                        <svg
+                          className="h-6 w-6"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+                          />
+                        </svg>
+                      ),
+                      color: 'green',
+                    },
+                    {
+                      title: 'Office',
+                      info: '123 Tech Street, Suite 100, Innovation City',
+                      icon: (
+                        <svg
+                          className="h-6 w-6"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                          />
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                          />
+                        </svg>
+                      ),
+                      color: 'orange',
+                    },
+                  ].map((item, i) => (
+                    <div key={i} className="group flex items-start gap-6">
+                      <div
+                        className={`flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-2xl bg-${item.color}-500/10 text-${item.color}-500 transition-all duration-300 group-hover:bg-${item.color}-500 group-hover:scale-110 group-hover:text-white group-hover:shadow-lg group-hover:shadow-${item.color}-500/20`}
+                      >
+                        {item.icon}
+                      </div>
+                      <div className="pt-1">
+                        <h4 className="text-lg font-bold text-white transition-colors group-hover:text-blue-400">
+                          {item.title}
+                        </h4>
+                        <p className="text-stone-400">{item.info}</p>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
 
-              {/* Social Media */}
-              <div className="pt-4">
-                <h3 className="mb-4 text-lg font-semibold text-white">
-                  Follow Us
+              <div className="group relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-blue-600 to-blue-700 p-8 text-white shadow-2xl shadow-blue-500/20">
+                <div className="absolute top-0 right-0 -mt-16 -mr-16 h-32 w-32 rounded-full bg-white/10 blur-2xl transition-transform duration-500 group-hover:scale-150" />
+                <h3 className="relative z-10 mb-4 text-2xl font-bold">
+                  Need Immediate Help?
                 </h3>
-                <div className="flex space-x-4">
-                  <a
-                    href="#"
-                    className="flex h-10 w-10 items-center justify-center rounded-lg bg-stone-700 text-stone-300 transition-all duration-300 hover:bg-blue-600 hover:text-white"
+                <p className="relative z-10 mb-6 leading-relaxed text-blue-100">
+                  Check out our documentation or FAQ section for quick answers
+                  to common questions.
+                </p>
+                <motion.button
+                  whileHover={{ x: 5 }}
+                  className="relative z-10 flex items-center gap-2 rounded-xl border border-white/20 bg-white/20 px-6 py-3 font-semibold backdrop-blur-md transition-all hover:bg-white/30"
+                >
+                  Visit Help Center
+                  <svg
+                    className="h-5 w-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
                   >
-                    <svg
-                      className="h-5 w-5"
-                      fill="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z" />
-                    </svg>
-                  </a>
-                  <a
-                    href="#"
-                    className="flex h-10 w-10 items-center justify-center rounded-lg bg-stone-700 text-stone-300 transition-all duration-300 hover:bg-blue-600 hover:text-white"
-                  >
-                    <svg
-                      className="h-5 w-5"
-                      fill="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path d="M22.46 6c-.77.35-1.6.58-2.46.69.88-.53 1.56-1.37 1.88-2.38-.83.5-1.75.85-2.72 1.05C18.37 4.5 17.26 4 16 4c-2.35 0-4.27 1.92-4.27 4.29 0 .34.04.67.11.98C8.28 9.09 5.11 7.38 3 4.79c-.37.63-.58 1.37-.58 2.15 0 1.49.75 2.81 1.91 3.56-.71 0-1.37-.2-1.95-.5v.03c0 2.08 1.48 3.82 3.44 4.21a4.22 4.22 0 0 1-1.93.07 4.28 4.28 0 0 0 4 2.98 8.521 8.521 0 0 1-5.33 1.84c-.34 0-.68-.02-1.02-.06C3.44 20.29 5.7 21 8.12 21 16 21 20.33 14.46 20.33 8.79c0-.19 0-.37-.01-.56.84-.6 1.56-1.36 2.14-2.23z" />
-                    </svg>
-                  </a>
-                  <a
-                    href="#"
-                    className="flex h-10 w-10 items-center justify-center rounded-lg bg-stone-700 text-stone-300 transition-all duration-300 hover:bg-blue-600 hover:text-white"
-                  >
-                    <svg
-                      className="h-5 w-5"
-                      fill="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
-                    </svg>
-                  </a>
-                </div>
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M14 5l7 7m0 0l-7 7m7-7H3"
+                    />
+                  </svg>
+                </motion.button>
               </div>
-            </div>
+            </motion.div>
           </div>
         </div>
       </section>
-    </>
+    </motion.div>
   );
 }
 
