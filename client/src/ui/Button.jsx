@@ -13,58 +13,53 @@ const Button = ({
 }) => {
   // Base button classes
   const baseClasses = `
-    inline-flex items-center justify-center font-medium rounded-lg
-    transition-all duration-300 ease-in-out
-    focus:outline-none focus:ring-2 focus:ring-offset-2
+    inline-flex items-center justify-center font-black tracking-widest uppercase
+    transition-all duration-500 ease-out
+    focus:outline-none focus:ring-4 focus:ring-offset-0
     disabled:opacity-50 disabled:cursor-not-allowed
+    active:scale-95
     ${fullWidth ? 'w-full' : ''}
   `;
 
   // Size variants
   const sizeClasses = {
-    small: 'px-3 py-1.5 text-xs sm:px-4 sm:py-2 sm:text-sm',
-    medium: 'px-4 py-2 text-sm sm:px-6 sm:py-3 sm:text-base',
-    large: 'px-6 py-3 text-base sm:px-8 sm:py-4 sm:text-lg',
-    xlarge: 'px-8 py-4 text-lg sm:px-10 sm:py-5 sm:text-xl',
+    small: 'px-4 py-2 text-[10px] rounded-xl',
+    medium: 'px-8 py-4 text-xs rounded-2xl',
+    large: 'px-10 py-5 text-sm rounded-[1.5rem]',
+    xlarge: 'px-12 py-6 text-base rounded-[2rem]',
   };
 
   // Variant classes
   const variantClasses = {
     primary: `
-      bg-blue-600 text-white hover:bg-blue-700 
-      focus:ring-blue-500 shadow-md hover:shadow-lg
-      active:bg-blue-800
+      bg-blue-600 text-white hover:bg-blue-500 
+      focus:ring-blue-500/20 shadow-xl shadow-blue-900/20
+      hover:shadow-blue-500/30
     `,
     secondary: `
-      bg-gray-600 text-white hover:bg-gray-700 
-      focus:ring-gray-500 shadow-md hover:shadow-lg
-      active:bg-gray-800
+      bg-[#283039]/50 text-stone-300 hover:bg-[#283039] hover:text-white
+      focus:ring-stone-500/20 shadow-xl border border-stone-800/50
     `,
     success: `
-      bg-green-600 text-white hover:bg-green-700 
-      focus:ring-green-500 shadow-md hover:shadow-lg
-      active:bg-green-800
+      bg-green-600/10 text-green-500 hover:bg-green-600 hover:text-white
+      focus:ring-green-500/20 shadow-xl shadow-green-900/10
     `,
     danger: `
-      bg-red-600 text-white hover:bg-red-700 
-      focus:ring-red-500 shadow-md hover:shadow-lg
-      active:bg-red-800
+      bg-red-600/10 text-red-500 hover:bg-red-600 hover:text-white
+      focus:ring-red-500/20 shadow-xl shadow-red-900/10
     `,
     warning: `
-      bg-yellow-600 text-white hover:bg-yellow-700 
-      focus:ring-yellow-500 shadow-md hover:shadow-lg
-      active:bg-yellow-800
+      bg-orange-600/10 text-orange-500 hover:bg-orange-600 hover:text-white
+      focus:ring-orange-500/20 shadow-xl shadow-orange-900/10
     `,
     outline: `
-      border-2 border-gray-300 bg-transparent text-gray-700 
-      hover:bg-gray-50 hover:border-gray-400
-      focus:ring-gray-400 focus:bg-gray-50
-      active:bg-gray-100
+      border-2 border-stone-800 bg-transparent text-stone-400 
+      hover:border-stone-700 hover:text-white hover:bg-stone-800/30
+      focus:ring-stone-500/10
     `,
     ghost: `
-      bg-transparent text-gray-700 hover:bg-gray-100 
-      focus:ring-gray-400 focus:bg-gray-100
-      active:bg-gray-200
+      bg-transparent text-stone-400 hover:bg-stone-800/40 hover:text-white
+      focus:ring-stone-500/10
     `,
   };
 
