@@ -32,11 +32,11 @@ export const app = express();
 // 1. Enable CORS - Robust Configuration for Vercel
 app.use(
 	cors({
-		origin: (origin, callback) => {
-			// Reflect the request origin to allow credentials
-			// This is safer than '*' and required for withCredentials: true
-			callback(null, true);
-		},
+		origin: [
+			"https://smart-farm-client-v1.vercel.app",
+			"http://localhost:5173",
+			"http://localhost:5174",
+		],
 		credentials: true,
 		methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
 		allowedHeaders: [
