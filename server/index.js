@@ -1,33 +1,44 @@
+import dotenv from "dotenv";
 import { app } from "./src/app.js";
+import dbConnect from "./src/db/dataBase.js";
 
-process.on("uncaughtException", (err) => {
-	console.error("❌ Uncaught Exception:", err.message);
-	// In production/Vercel, we might not want to exit the process
-    if (!process.env.VERCEL) process.exit(1);
-});
+dotenv.config();
 
+// Connect to database and start server
+(async () => {
+	try {
+		console.log("🚀 Starting server initialization...");
+		console.log("📁 Current directory:", process.cwd());
+		console.log("🔧 Node version:", process.version);
+		console.log("🌐 Environment:", process.env.NODE_ENV);
+
+		const port = process.env.PORT || 3000;
+		await dbConnect();
+		console.log("✅ Database connection successful");
+
+		app.listen(port, () => {
+			console.log(`✅ Server is running on port ${port}`);
+		});
+	} catch (error) {
+		console.error("❌ CRITICAL ERROR: Failed to start server:", error);
+		console.error("Stack trace:", error.stack);
+		setTimeout(() => process.exit(1), 1000);
+	}
+})();
+
+// Handle unhandled rejections
 process.on("unhandledRejection", (err) => {
-	console.error("❌ Unhandled Rejection:", err.message);
-	if (!process.env.VERCEL) process.exit(1);
+	console.error("� UNHANDLED REJECTION! Shutting down...");
+	console.error(err.name, err.message, err.stack);
+	setTimeout(() => process.exit(1), 1000);
 });
 
-// For local development, start the server
-if (!process.env.VERCEL) {
-    const port = process.env.PORT || 3000;
-    const server = app.listen(port, () => {
-        console.log(`✅ Smart Farm Server listening on port ${port}`);
-        console.log(`🌐 Environment: ${process.env.NODE_ENV || 'development'}`);
-        console.log(`📊 Health check: http://localhost:${port}/api/v1/health`);
-    });
-
-    process.on("SIGTERM", () => {
-        console.log("🛑 SIGTERM received, shutting down gracefully...");
-        server.close(() => {
-            console.log("✅ Server closed successfully");
-            process.exit(0);
-        });
-    });
-}
+// Handle uncaught exceptions
+process.on("uncaughtException", (err) => {
+	console.error("💥 UNCAUGHT EXCEPTION! Shutting down...");
+	console.error(err.name, err.message, err.stack);
+	setTimeout(() => process.exit(1), 1000);
+});
 
 // Export app for Vercel
 export default app;

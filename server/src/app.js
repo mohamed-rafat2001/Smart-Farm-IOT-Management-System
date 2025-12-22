@@ -30,40 +30,6 @@ dotenv.config();
 export const app = express();
 
 // 1. Robust CORS handling for Vercel
-app.use((req, res, next) => {
-	const origin = req.headers.origin;
-	const allowedOrigins = [
-		"https://smart-farm-client-v1.vercel.app",
-		"http://localhost:5173",
-		"http://localhost:5174",
-	];
-
-	if (allowedOrigins.includes(origin)) {
-		res.setHeader("Access-Control-Allow-Origin", origin);
-	} else if (!origin && process.env.NODE_ENV !== "production") {
-		// Allow non-origin requests in development (like Postman)
-		res.setHeader("Access-Control-Allow-Origin", "*");
-	}
-
-	res.setHeader("Access-Control-Allow-Credentials", "true");
-	res.setHeader(
-		"Access-Control-Allow-Methods",
-		"GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS"
-	);
-	res.setHeader(
-		"Access-Control-Allow-Headers",
-		"X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization, Origin"
-	);
-
-	// Handle preflight
-	if (req.method === "OPTIONS") {
-		return res.status(200).end();
-	}
-
-	next();
-});
-
-// Use standard CORS middleware as a secondary layer
 app.use(
 	cors({
 		origin: [
@@ -72,6 +38,20 @@ app.use(
 			"http://localhost:5174",
 		],
 		credentials: true,
+		methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "HEAD"],
+		allowedHeaders: [
+			"X-CSRF-Token",
+			"X-Requested-With",
+			"Accept",
+			"Accept-Version",
+			"Content-Length",
+			"Content-MD5",
+			"Content-Type",
+			"Date",
+			"X-Api-Version",
+			"Authorization",
+			"Origin",
+		],
 		optionsSuccessStatus: 200,
 	})
 );
