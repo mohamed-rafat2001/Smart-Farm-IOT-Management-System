@@ -34,6 +34,8 @@ export const deleteByOwner = (Model) =>
 // get doc by params
 export const getByParams = (Model) =>
 	catchAsync(async (req, res, next) => {
+		// get id from req.params
+		const { id } = req.params;
 		// find doc with ownership check if user is not admin
 		const query = { _id: id };
 		if (req.user?.role !== 'admin') {

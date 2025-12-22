@@ -170,21 +170,10 @@ export const initializeApp = async () => {
 		try {
 			// Wrap all route handlers with asyncHandler to ensure errors are caught
 			// Register routes with static imports for production
-			app.use("/api/v1/auth", (req, res, next) => {
-				next();
-			}, authRouter);
-			
-			app.use("/api/v1/user", (req, res, next) => {
-				next();
-			}, userRoute);
-			
-			app.use("/api/v1/admin", (req, res, next) => {
-				next();
-			}, adminRouter);
-			
-			app.use("/api/v1/farm", (req, res, next) => {
-				next();
-			}, farmRouter);
+			app.use("/api/v1/auth", authRouter);
+			app.use("/api/v1/user", userRoute);
+			app.use("/api/v1/admin", adminRouter);
+			app.use("/api/v1/farm", farmRouter);
 
 		} catch (error) {
 			// Failed to load routers
