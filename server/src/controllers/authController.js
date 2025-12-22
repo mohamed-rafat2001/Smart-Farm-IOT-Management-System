@@ -24,6 +24,7 @@ export const signUp = catchAsync(async (req, res, next) => {
 			password,
 			confirmPassword,
 			phoneNumber,
+			role:"user"
 		});
 	} catch (dbError) {
 		logger.log("❌ Database error:", dbError.message);

@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // API URL configuration
-const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000/api/v1';
+const apiUrl = import.meta.env.VITE_API_URL || '/api/v1';
 
 const handleApiError = (error) => {
   // Handle timeout errors specifically
