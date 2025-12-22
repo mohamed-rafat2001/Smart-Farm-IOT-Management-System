@@ -4,8 +4,7 @@ import dotenv from "dotenv";
 import rateLimit from "express-rate-limit";
 import helmet from "helmet";
 import mongoSanitize from "express-mongo-sanitize";
-import xss from "xss-clean";
-import hpp from "hpp";
+
 import cookieParser from "cookie-parser";
 
 // Import custom middleware
@@ -25,6 +24,15 @@ dotenv.config();
 
 export const app = express();
 
+// Top-level health check (bypass all middleware for debugging)
+app.get("/api/v1/health", (req, res) => {
+	res.status(200).json({
+		status: "success",
+		message: "Smart Farm API is running (Top-level)",
+		timestamp: new Date().toISOString(),
+	});
+});
+
 // Trust Vercel Proxy
 app.enable('trust proxy');
 
@@ -40,14 +48,14 @@ app.use(cors({
 // Pre-flight handling for all routes
 app.options('*', cors());
 
-// Basic middleware that should always work
+// Basic middleware
 app.use(express.json({ limit: "10kb" }));
 app.use(cookieParser());
 
 
 
-// Add timeout middleware early in the chain
-app.use(timeoutMiddleware(120000)); // 120 second timeout (increased for slow connections)
+// Add timeout middleware
+app.use(timeoutMiddleware(120000));
 
 // Security middleware with cross-origin support
 try {
@@ -88,27 +96,9 @@ try {
 	// Mongo sanitize failed
 }
 
-try {
-	app.use(xss());
-} catch (error) {
-	// XSS protection failed
-}
 
-try {
-	app.use(hpp());
-} catch (error) {
-	// HPP protection failed
-}
 
-// Health check endpoint for Vercel
-app.get("/api/v1/health", (req, res) => {
-	res.status(200).json({
-		status: "success",
-		message: "Smart Farm API is running",
-		timestamp: new Date().toISOString(),
-		environment: process.env.MODE || "development",
-	});
-});
+
 
 // Register routes
 app.use("/api/v1/auth", authRouter);
@@ -137,8 +127,12 @@ app.get("/api/v1/db-status", async (req, res) => {
 	}
 });
 
-// Database connection (Non-blocking but started)
-dbConnection();
+// Database connection (Guarded)
+if (process.env.DB_URL) {
+    dbConnection();
+} else {
+    console.warn("⚠️ DB_URL not found, database connection skipped");
+}
 
 // Handle unhandled routes
 app.all("*", (req, res, next) => {
