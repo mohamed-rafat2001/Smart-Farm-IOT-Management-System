@@ -5,7 +5,7 @@ const farmSchema = new mongoose.Schema(
 			type: String,
 			trim: true,
 			required: [true, "Url is required"],
-			unique: true,
+			unique: false,
 		},
 		name: {
 			type: String,

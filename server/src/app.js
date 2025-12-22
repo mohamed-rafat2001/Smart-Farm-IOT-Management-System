@@ -11,8 +11,6 @@ import cookieParser from "cookie-parser";
 // Import custom middleware
 import {
 	timeoutMiddleware,
-	errorBoundaryMiddleware,
-	asyncHandler,
 } from "./middleware/timeoutMiddleware.js";
 
 // Import routers
