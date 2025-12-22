@@ -8,7 +8,7 @@ function ProfilePage() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="max-w-7xl mx-auto space-y-8"
+      className="mx-auto max-w-7xl space-y-8"
     >
       <ProfileHeader />
       <ProfileContent />

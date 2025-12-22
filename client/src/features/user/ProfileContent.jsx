@@ -10,7 +10,7 @@ function ProfileContent() {
       <div className="mb-10 flex flex-wrap gap-4 border-b border-stone-700/50 pb-px">
         <button
           type="button"
-          className={`relative px-8 py-4 text-sm font-bold uppercase tracking-wider transition-all duration-300 ${
+          className={`relative px-8 py-4 text-sm font-bold tracking-wider uppercase transition-all duration-300 ${
             Default
               ? 'text-blue-500'
               : 'rounded-t-2xl text-stone-400 hover:bg-stone-800/30 hover:text-stone-200'
@@ -27,7 +27,7 @@ function ProfileContent() {
         </button>
         <button
           type="button"
-          className={`relative px-8 py-4 text-sm font-bold uppercase tracking-wider transition-all duration-300 ${
+          className={`relative px-8 py-4 text-sm font-bold tracking-wider uppercase transition-all duration-300 ${
             !Default
               ? 'text-blue-500'
               : 'rounded-t-2xl text-stone-400 hover:bg-stone-800/30 hover:text-stone-200'
@@ -50,7 +50,7 @@ function ProfileContent() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.4, ease: "circOut" }}
+          transition={{ duration: 0.4, ease: 'circOut' }}
           className="rounded-[3rem] border border-stone-700/50 bg-[#283039]/30 p-8 shadow-2xl backdrop-blur-md lg:p-12"
         >
           {Default ? <PersonalDetails /> : <UpdatePassword />}

@@ -9,7 +9,11 @@ import mongoSanitize from "express-mongo-sanitize";
 import cookieParser from "cookie-parser";
 
 // Import custom middleware
-import { timeoutMiddleware, errorBoundaryMiddleware, asyncHandler } from "./middleware/timeoutMiddleware.js";
+import {
+	timeoutMiddleware,
+	errorBoundaryMiddleware,
+	asyncHandler,
+} from "./middleware/timeoutMiddleware.js";
 
 // Import routers
 import userRoute from "./routers/userRoute.js";
@@ -26,35 +30,37 @@ dotenv.config();
 export const app = express();
 
 // 1. Enable CORS - Robust Configuration for Vercel
-app.use(cors({
-  origin: (origin, callback) => {
-    // Reflect the request origin to allow credentials
-    // This is safer than '*' and required for withCredentials: true
-    callback(null, true);
-  },
-  credentials: true,
-  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-  allowedHeaders: [
-    "X-CSRF-Token",
-    "X-Requested-With",
-    "Accept",
-    "Accept-Version",
-    "Content-Length",
-    "Content-MD5",
-    "Content-Type",
-    "Date",
-    "X-Api-Version",
-    "Authorization",
-    "Origin"
-  ],
-  optionsSuccessStatus: 200
-}));
+app.use(
+	cors({
+		origin: (origin, callback) => {
+			// Reflect the request origin to allow credentials
+			// This is safer than '*' and required for withCredentials: true
+			callback(null, true);
+		},
+		credentials: true,
+		methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+		allowedHeaders: [
+			"X-CSRF-Token",
+			"X-Requested-With",
+			"Accept",
+			"Accept-Version",
+			"Content-Length",
+			"Content-MD5",
+			"Content-Type",
+			"Date",
+			"X-Api-Version",
+			"Authorization",
+			"Origin",
+		],
+		optionsSuccessStatus: 200,
+	})
+);
 
 // Handle preflight for all routes
-app.options('*', cors());
+app.options("*", cors());
 
 // 2. Trust Vercel Proxy
-app.enable('trust proxy');
+app.enable("trust proxy");
 
 // 3. Health check
 app.get("/api/v1/health", (req, res) => {
@@ -74,10 +80,12 @@ app.use(timeoutMiddleware(120000));
 
 // Security middleware with cross-origin support
 try {
-	app.use(helmet({
-        crossOriginResourcePolicy: { policy: "cross-origin" },
-        contentSecurityPolicy: false // Disable CSP to avoid interference with CORS for now
-    }));
+	app.use(
+		helmet({
+			crossOriginResourcePolicy: { policy: "cross-origin" },
+			contentSecurityPolicy: false, // Disable CSP to avoid interference with CORS for now
+		})
+	);
 } catch (error) {
 	// Helmet failed
 }
@@ -112,10 +120,6 @@ try {
 	// Mongo sanitize failed
 }
 
-
-
-
-
 // Register routes
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/user", userRoute);
@@ -131,7 +135,7 @@ app.get("/api/v1/db-status", (req, res) => {
 		2: "connecting",
 		3: "disconnecting",
 	};
-	
+
 	res.status(200).json({
 		status: "success",
 		message: "Database connection status",
@@ -142,18 +146,30 @@ app.get("/api/v1/db-status", (req, res) => {
 });
 
 // Database connection (Guarded)
+// In Vercel serverless environment, we should connect inside the request handler or ensure it reuses connection
+// But putting it here initializes it on cold start
 if (process.env.DB_URL) {
-    dbConnection();
+	dbConnection();
 } else {
-    console.warn("⚠️ DB_URL not found, database connection skipped");
+	console.warn("⚠️ DB_URL not found, database connection skipped");
 }
 
 // Handle unhandled routes
 app.all("*", (req, res, next) => {
-    next(new appError(`can't find ${req.originalUrl} on this server.`, 404));
+	next(new appError(`can't find ${req.originalUrl} on this server.`, 404));
 });
 
 // Global error handler
+app.use((err, req, res, next) => {
+	// Ensure all errors are logged in production/Vercel for debugging
+	console.error("🔥 Global Error Handler:", {
+		message: err.message,
+		stack: err.stack,
+		path: req.originalUrl,
+		method: req.method,
+	});
+	next(err);
+});
 app.use(globalErrorHandler);
 
 // Initialize application (maintained for legacy compatibility if needed)

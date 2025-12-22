@@ -6,6 +6,11 @@ const dbUrl = (process.env.DB_URL || "").replace(
 	process.env.DB_PASSWORD || ""
 );
 export default function dbConnect() {
+	if (mongoose.connection.readyState >= 1) {
+		console.log("✅ Using existing database connection");
+		return;
+	}
+
 	mongoose
 		.connect(dbUrl, {
 			serverSelectionTimeoutMS: 30000, // 30 seconds to find a server

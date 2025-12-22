@@ -41,7 +41,9 @@ function PricingCard({
           {description}
         </p>
         <div className="flex items-baseline justify-center gap-2">
-          <span className="text-6xl font-extrabold text-white tracking-tight">{price}</span>
+          <span className="text-6xl font-extrabold tracking-tight text-white">
+            {price}
+          </span>
           <span className="text-lg font-medium text-stone-500">/mo</span>
         </div>
       </div>
@@ -93,7 +95,7 @@ function PricingCard({
           className={`!rounded-[1.5rem] !py-5 !text-lg !font-bold transition-all duration-300 ${
             highlighted
               ? 'shadow-xl shadow-blue-500/20 hover:shadow-2xl hover:shadow-blue-500/40'
-              : '!border-stone-700 !text-stone-300 hover:!border-stone-500 hover:!text-white hover:bg-stone-800/50'
+              : '!border-stone-700 !text-stone-300 hover:!border-stone-500 hover:bg-stone-800/50 hover:!text-white'
           }`}
           onClick={handleButton}
         >

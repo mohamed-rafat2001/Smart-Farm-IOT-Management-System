@@ -27,7 +27,7 @@ function About() {
       initial="hidden"
       animate="visible"
       variants={containerVariants}
-      className="space-y-16 md:space-y-24 w-full overflow-x-hidden"
+      className="w-full space-y-16 overflow-x-hidden md:space-y-24"
     >
       <motion.div variants={itemVariants}>
         <HeroSection
@@ -176,7 +176,9 @@ function About() {
                   <h4 className="mb-4 text-2xl font-bold text-white">
                     {value.title}
                   </h4>
-                  <p className="text-lg leading-relaxed text-stone-400">{value.desc}</p>
+                  <p className="text-lg leading-relaxed text-stone-400">
+                    {value.desc}
+                  </p>
                 </motion.div>
               ))}
             </div>

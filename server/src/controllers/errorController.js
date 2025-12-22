@@ -38,12 +38,19 @@ const handelValidationErrorDB = (err) => {
 export default function globalErrorHandler(err, req, res, next) {
 	err.statusCode = err.statusCode || 500;
 	err.status = err.status || "error";
-	if (process.env.MODE === "DEV") {
+    
+    // Always log the error in the console so it appears in Vercel logs
+    console.error("💥 Error:", err);
+
+	if (process.env.MODE === "DEV" || process.env.NODE_ENV === "development") {
 		sendErrorDev(err, res);
 	} else {
-		let error = err;
-		if (error.name === "CastError") error = handelCastErrorDB(error.errorResponse);
-		if (error.code === 11000) error = handelDuplicatErrordDB(error.errorResponse);
+		let error = { ...err };
+        error.message = err.message; // Ensure message is copied
+        error.name = err.name; // Ensure name is copied
+        
+		if (error.name === "CastError") error = handelCastErrorDB(error);
+		if (error.code === 11000) error = handelDuplicatErrordDB(error);
 		if (error.name === "ValidationError") error = handelValidationErrorDB(error);
 
 		sendErrorProd(error, res);

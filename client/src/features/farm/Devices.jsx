@@ -57,8 +57,8 @@ function Devices() {
       className="relative space-y-12 pb-10"
     >
       {/* Decorative Gradients */}
-      <div className="absolute -right-24 -top-24 -z-10 h-96 w-96 rounded-full bg-blue-600/5 blur-[120px]" />
-      <div className="absolute -left-24 bottom-24 -z-10 h-96 w-96 rounded-full bg-purple-600/5 blur-[120px]" />
+      <div className="absolute -top-24 -right-24 -z-10 h-96 w-96 rounded-full bg-blue-600/5 blur-[120px]" />
+      <div className="absolute bottom-24 -left-24 -z-10 h-96 w-96 rounded-full bg-purple-600/5 blur-[120px]" />
 
       <motion.div
         variants={itemVariants}
@@ -69,7 +69,8 @@ function Devices() {
             Connected Devices<span className="text-blue-500">.</span>
           </h1>
           <p className="max-w-2xl text-lg leading-relaxed text-stone-400">
-            Manage and monitor your farm's IoT infrastructure. Real-time status updates and manual control overrides.
+            Manage and monitor your farm's IoT infrastructure. Real-time status
+            updates and manual control overrides.
           </p>
         </div>
         {selectedFarm && (
@@ -79,7 +80,7 @@ function Devices() {
             className="flex items-center gap-3 rounded-2xl border border-blue-500/20 bg-blue-600/10 px-6 py-3 backdrop-blur-md"
           >
             <div className="h-2.5 w-2.5 animate-pulse rounded-full bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.5)]" />
-            <span className="text-sm font-black uppercase tracking-widest text-blue-400">
+            <span className="text-sm font-black tracking-widest text-blue-400 uppercase">
               {selectedFarm.name}
             </span>
           </motion.div>
@@ -132,8 +133,8 @@ function Devices() {
                                 scale: expandedRows.has(index) ? 1.2 : 1,
                               }}
                               className={`flex h-10 w-10 items-center justify-center rounded-xl transition-all duration-300 ${
-                                expandedRows.has(index) 
-                                  ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20' 
+                                expandedRows.has(index)
+                                  ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20'
                                   : 'bg-stone-800/50 text-stone-500 group-hover:bg-stone-700 group-hover:text-stone-300'
                               }`}
                             >
@@ -154,14 +155,20 @@ function Devices() {
                             <div className="flex flex-col">
                               <span
                                 className={`text-lg font-black transition-colors duration-300 ${
-                                  expandedRows.has(index) ? 'text-white' : 'text-stone-300 group-hover:text-white'
+                                  expandedRows.has(index)
+                                    ? 'text-white'
+                                    : 'text-stone-300 group-hover:text-white'
                                 }`}
                               >
                                 {el.name}
                               </span>
                               <div className="flex items-center gap-2">
-                                <div className={`h-1.5 w-1.5 rounded-full ${el?.Status === 'online' || !el?.Status ? 'bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]' : 'bg-stone-600'}`} />
-                                <span className={`text-[10px] font-black uppercase tracking-[0.2em] transition-colors ${el?.Status === 'online' || !el?.Status ? 'text-green-500' : 'text-stone-500'}`}>
+                                <div
+                                  className={`h-1.5 w-1.5 rounded-full ${el?.Status === 'online' || !el?.Status ? 'bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]' : 'bg-stone-600'}`}
+                                />
+                                <span
+                                  className={`text-[10px] font-black tracking-[0.2em] uppercase transition-colors ${el?.Status === 'online' || !el?.Status ? 'text-green-500' : 'text-stone-500'}`}
+                                >
                                   {el?.Status || 'active'}
                                 </span>
                               </div>
@@ -186,8 +193,8 @@ function Devices() {
                           >
                             <span
                               className={`h-2.5 w-2.5 rounded-full transition-colors duration-300 ${
-                                el?.Auto_change 
-                                  ? 'bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.5)] group-hover:bg-white' 
+                                el?.Auto_change
+                                  ? 'bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.5)] group-hover:bg-white'
                                   : 'bg-orange-500 shadow-[0_0_8px_rgba(249,115,22,0.5)] group-hover:bg-white'
                               }`}
                             />
@@ -207,7 +214,7 @@ function Devices() {
                               <motion.div
                                 initial={{ y: -20, opacity: 0 }}
                                 animate={{ y: 0, opacity: 1 }}
-                                transition={{ duration: 0.4, ease: "easeOut" }}
+                                transition={{ duration: 0.4, ease: 'easeOut' }}
                                 className="p-8 sm:p-12"
                               >
                                 <DevicesDropdown
@@ -231,8 +238,8 @@ function Devices() {
                 animate={{ opacity: 1, y: 0 }}
                 className="relative flex flex-col items-center justify-center overflow-hidden rounded-[3rem] border border-dashed border-stone-800/50 bg-[#283039]/20 py-24 text-center backdrop-blur-sm"
               >
-                <div className="absolute -right-24 -top-24 h-64 w-64 rounded-full bg-stone-800/10 blur-[80px]" />
-                
+                <div className="absolute -top-24 -right-24 h-64 w-64 rounded-full bg-stone-800/10 blur-[80px]" />
+
                 <div className="relative z-10 space-y-6">
                   <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-[2rem] bg-stone-800/50 text-stone-600">
                     <svg
@@ -250,9 +257,12 @@ function Devices() {
                     </svg>
                   </div>
                   <div className="space-y-2">
-                    <h3 className="text-xl font-black text-stone-300">No Devices Found</h3>
+                    <h3 className="text-xl font-black text-stone-300">
+                      No Devices Found
+                    </h3>
                     <p className="mx-auto max-w-xs font-bold text-stone-500">
-                      Please select a farm to view connected devices and their current status.
+                      Please select a farm to view connected devices and their
+                      current status.
                     </p>
                   </div>
                 </div>
