@@ -1,8 +1,6 @@
-import dotenv from "dotenv";
+import "./loadEnv.js";
 import { app } from "./src/app.js";
 import dbConnect from "./src/db/dataBase.js";
-
-dotenv.config();
 
 // Connect to database and start server
 (async () => {

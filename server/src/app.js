@@ -1,7 +1,7 @@
+import "../loadEnv.js";
 import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
-import dotenv from "dotenv";
 import rateLimit from "express-rate-limit";
 import helmet from "helmet";
 import mongoSanitize from "express-mongo-sanitize";
@@ -23,9 +23,6 @@ import farmRouter from "./routers/farmRouter.js";
 import dbConnection from "./db/dataBase.js";
 import appError from "./utils/appError.js";
 import globalErrorHandler from "./controllers/errorController.js";
-
-// Load environment variables first
-dotenv.config();
 
 export const app = express();
 
@@ -141,15 +138,6 @@ app.get("/api/v1/db-status", (req, res) => {
 		timestamp: new Date().toISOString(),
 	});
 });
-
-// Database connection (Guarded)
-// In Vercel serverless environment, we should connect inside the request handler or ensure it reuses connection
-// But putting it here initializes it on cold start
-if (process.env.DB_URL) {
-	dbConnection();
-} else {
-	console.warn("⚠️ DB_URL not found, database connection skipped");
-}
 
 // Handle unhandled routes
 app.all("*", (req, res, next) => {

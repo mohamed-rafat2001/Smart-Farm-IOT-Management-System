@@ -40,7 +40,25 @@ export default function globalErrorHandler(err, req, res, next) {
 	err.status = err.status || "error";
     
     // Always log the error in the console so it appears in Vercel logs
-    console.error("💥 Error:", err);
+    console.error("💥 Global Error:", {
+        message: err.message,
+        stack: err.stack,
+        path: req.originalUrl,
+        method: req.method,
+        statusCode: err.statusCode
+    });
+
+    // Ensure CORS headers are present even on errors
+    const origin = req.headers.origin;
+    const allowedOrigins = [
+        "https://smart-farm-client-v1.vercel.app",
+        "http://localhost:5173",
+        "http://localhost:5174",
+    ];
+    if (origin && allowedOrigins.includes(origin)) {
+        res.setHeader("Access-Control-Allow-Origin", origin);
+        res.setHeader("Access-Control-Allow-Credentials", "true");
+    }
 
 	if (process.env.MODE === "DEV" || process.env.NODE_ENV === "development") {
 		sendErrorDev(err, res);

@@ -7,17 +7,16 @@ const isDev = process.env.NODE_ENV !== 'production';
 
 const logger = {
   log: (...args) => {
-    if (isDev) console.log(...args);
+    // In production/Vercel, we want these logs to appear for debugging crashes
+    console.log(...args);
   },
   info: (...args) => {
-    if (isDev) console.info(...args);
+    console.info(...args);
   },
   warn: (...args) => {
-    // Warnings are always logged
     console.warn(...args);
   },
   error: (...args) => {
-    // Errors are always logged
     console.error(...args);
   },
   debug: (...args) => {
