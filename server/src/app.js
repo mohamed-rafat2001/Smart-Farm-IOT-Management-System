@@ -16,6 +16,9 @@ import userRoute from "./routers/userRoute.js";
 import authRouter from "./routers/authRouter.js";
 import adminRouter from "./routers/adminRouter.js";
 import farmRouter from "./routers/farmRouter.js";
+import dbConnection from "./db/dataBase.js";
+import appError from "./utils/appError.js";
+import globalErrorHandler from "./controllers/errorController.js";
 
 // Load environment variables first
 dotenv.config();
@@ -151,78 +154,29 @@ app.get("/api/v1/db-status", async (req, res) => {
 	}
 });
 
-// Initialize application with error handling
+// Initialize application
 export const initializeApp = async () => {
 	try {
-		// Database connection with error handling
-		let connected = false;
-		try {
-			const dbConnect = await import("./db/dataBase.js");
-			connected = await dbConnect.default();
-		} catch (error) {
-			// Database connection failed
-		}
+		// Database connection
+		await dbConnection();
 
-		if (connected) {
-			// Database connection established successfully
-		}
-		
-		try {
-			// Wrap all route handlers with asyncHandler to ensure errors are caught
-			// Register routes with static imports for production
-			app.use("/api/v1/auth", authRouter);
-			app.use("/api/v1/user", userRoute);
-			app.use("/api/v1/admin", adminRouter);
-			app.use("/api/v1/farm", farmRouter);
+		// Register routes
+		app.use("/api/v1/auth", authRouter);
+		app.use("/api/v1/user", userRoute);
+		app.use("/api/v1/admin", adminRouter);
+		app.use("/api/v1/farm", farmRouter);
 
-		} catch (error) {
-			// Failed to load routers
+		// Handle unhandled routes
+		app.all("*", (req, res, next) => {
+			next(new appError(`can't find ${req.originalUrl} on this server.`, 404));
+		});
 
-			// Add a fallback route for when routers fail
-			app.all("/api/*", (req, res) => {
-				res.status(500).json({
-					status: "error",
-					message: "Router initialization failed",
-					error: error.message,
-					timestamp: new Date().toISOString(),
-				});
-			});
-		}
+		// Global error handler
+		app.use(globalErrorHandler);
 
-		// Error handlers with dynamic imports for better error handling
-		try {
-			const appError = await import("./utils/appError.js");
-			const globalErrorHandler = await import("./controllers/errorController.js");
-
-			//handel unhandel route
-			app.all("*", (req, res, next) => {
-				next(
-					new appError.default(`can't find ${req.originalUrl} on this server.`, 404)
-				);
-			});
-
-			//global error handler
-			app.use(globalErrorHandler.default);
-		} catch (error) {
-			// Failed to load error handlers
-
-			// Fallback error handler for unhandled routes
-			app.all("*", (req, res) => {
-				res.status(404).json({
-					status: "error",
-					message: `Route ${req.originalUrl} not found`,
-					timestamp: new Date().toISOString(),
-					environment: process.env.NODE_ENV || 'development',
-					server: 'vercel'
-				});
-			});
-
-			// Use the custom error boundary middleware as the final error handler
-			app.use(errorBoundaryMiddleware);
-		}
-		
 		return true;
 	} catch (error) {
+		console.error("❌ Initialization failed:", error);
 		return false;
 	}
 };
