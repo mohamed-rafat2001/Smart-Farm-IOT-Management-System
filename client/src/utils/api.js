@@ -50,7 +50,7 @@ const handleApiError = (error) => {
 };
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3000/api/v1',
+  baseURL: '/api/v1',
   withCredentials: true,
   timeout: 60000, // Increased from 30000ms to 60000ms
   headers: {
@@ -103,15 +103,7 @@ api.interceptors.response.use(
     // Handle 401 unauthorized
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
-
-      try {
-        // Try to refresh token or redirect to login
-        window.location.href = '/login';
-        return Promise.reject(error);
-      } catch {
-        // Removed unused variable 'refreshError'
-        return Promise.reject(error);
-      }
+      return Promise.reject(error);
     }
 
     return Promise.reject(error);

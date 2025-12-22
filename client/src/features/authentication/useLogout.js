@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { logOut } from '../../services/authentication';
+import toast from 'react-hot-toast';
 
 function useLogOut() {
   const queryClient = useQueryClient();
@@ -9,6 +10,7 @@ function useLogOut() {
     mutationFn: logOut,
 
     onSuccess: () => {
+      toast.success('Logged out successfully');
       queryClient.removeQueries({ queryKey: ['User'] });
       queryClient.removeQueries({ queryKey: ['userFarms'] });
       queryClient.clear();

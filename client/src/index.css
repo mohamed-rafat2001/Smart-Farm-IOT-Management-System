@@ -1,19 +1,43 @@
 @import 'tailwindcss';
-html {
+html, body {
   scroll-behavior: smooth;
+  overflow-x: hidden;
+  max-width: 100vw;
 }
+
+/* Remove wildcard transition to improve performance */
 * {
-  /* margin: 0;
-  padding: 0; */
   box-sizing: border-box;
   font-family: 'Poppins', sans-serif;
-  transition-property: all;
-  duration: 300ms;
-  transition-timing-function: ease-in-out;
-  /* @apply ease transition-all duration-300; */
+  /* transition-property: all; -> Causes layout thrashing */
+  /* duration: 300ms; */
+  /* transition-timing-function: ease-in-out; */
 }
 
 @layer components {
+  .custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(59, 130, 246, 0.2) transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(59, 130, 246, 0.2);
+    border-radius: 20px;
+    border: 2px solid transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(59, 130, 246, 0.4);
+  }
+
   .nav-link {
     transition-property: color;
     transition-duration: 300ms;

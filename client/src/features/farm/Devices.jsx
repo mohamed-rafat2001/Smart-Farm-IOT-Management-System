@@ -151,7 +151,7 @@ function Devices() {
                                 />
                               </svg>
                             </motion.div>
-                            <div className="space-y-1">
+                            <div className="flex flex-col">
                               <span
                                 className={`text-lg font-black transition-colors duration-300 ${
                                   expandedRows.has(index) ? 'text-white' : 'text-stone-300 group-hover:text-white'
@@ -160,8 +160,8 @@ function Devices() {
                                 {el.name}
                               </span>
                               <div className="flex items-center gap-2">
-                                <div className={`h-1.5 w-1.5 rounded-full ${el?.Status === 'online' ? 'bg-green-500' : 'bg-stone-600'}`} />
-                                <span className="text-xs font-bold uppercase tracking-widest text-stone-500">
+                                <div className={`h-1.5 w-1.5 rounded-full ${el?.Status === 'online' || !el?.Status ? 'bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]' : 'bg-stone-600'}`} />
+                                <span className={`text-[10px] font-black uppercase tracking-[0.2em] transition-colors ${el?.Status === 'online' || !el?.Status ? 'text-green-500' : 'text-stone-500'}`}>
                                   {el?.Status || 'active'}
                                 </span>
                               </div>

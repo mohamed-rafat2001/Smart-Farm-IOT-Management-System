@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import HeroSection from '../../ui/HeroSection';
 import heroImage from '../../assets/3d-illustration-smart-farming-concept_932730-391.avif';
-import realTimeImage from '../../assets/real-Time.png';
+import devicesTableImage from '../../assets/devices-table.png';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -31,7 +31,7 @@ function Home() {
       initial="hidden"
       animate="visible"
       variants={containerVariants}
-      className="space-y-24 pb-20"
+      className="space-y-16 pb-12 md:space-y-24 md:pb-20 w-full overflow-x-hidden"
     >
       <motion.div variants={itemVariants}>
         <HeroSection
@@ -44,7 +44,7 @@ function Home() {
       {/* Features Section */}
       <section className="px-4">
         <motion.div variants={itemVariants} className="mb-16 text-center">
-          <h2 className="text-4xl font-bold tracking-tight text-white sm:text-5xl">
+          <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl md:text-5xl">
             Why Choose AgriTech?
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-lg text-stone-400">
@@ -53,7 +53,7 @@ function Home() {
           </p>
         </motion.div>
 
-        <div className="mx-auto grid max-w-6xl grid-cols-1 gap-8 md:grid-cols-3">
+        <div className="mx-auto grid max-w-6xl grid-cols-1 gap-6 md:grid-cols-3 md:gap-8">
           {[
             {
               title: 'Real-time Monitoring',
@@ -142,7 +142,7 @@ function Home() {
       </section>
 
       {/* Real-time Section */}
-      <section className="relative mx-auto max-w-6xl overflow-hidden rounded-[3rem] border border-stone-700/50 bg-[#283039]/20 px-8 py-24 backdrop-blur-sm">
+      <section className="relative mx-auto max-w-6xl overflow-hidden rounded-[2rem] border border-stone-700/50 bg-[#283039]/20 px-6 py-12 backdrop-blur-sm sm:rounded-[3rem] sm:px-8 sm:py-24">
         <div className="absolute top-0 right-0 -mt-32 -mr-32 h-96 w-96 rounded-full bg-blue-600/10 blur-[120px]" />
         <div className="absolute bottom-0 left-0 -mb-32 -ml-32 h-96 w-96 rounded-full bg-green-600/10 blur-[120px]" />
 
@@ -151,15 +151,15 @@ function Home() {
             <div className="group relative">
               <div className="absolute -inset-4 rounded-[2.5rem] bg-gradient-to-r from-blue-600/20 to-green-600/20 opacity-0 blur-2xl transition duration-1000 group-hover:opacity-100"></div>
               <img
-                src={realTimeImage}
-                alt="Real-time dashboard"
+                src={devicesTableImage}
+                alt="Device Management Table"
                 className="relative w-full rounded-[2rem] border border-stone-700/50 object-cover shadow-2xl transition-transform duration-500 group-hover:scale-[1.02]"
               />
             </div>
           </motion.div>
 
           <motion.div variants={itemVariants} className="space-y-8 lg:w-1/2">
-            <h2 className="text-4xl leading-tight font-bold text-white sm:text-5xl">
+            <h2 className="text-3xl leading-tight font-bold text-white sm:text-4xl md:text-5xl">
               Precision Agriculture at Your Fingertips
             </h2>
             <p className="text-xl leading-relaxed text-stone-400">

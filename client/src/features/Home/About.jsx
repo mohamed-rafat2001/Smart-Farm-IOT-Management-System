@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import HeroSection from '../../ui/HeroSection';
-import aboutImage from '../../assets/about-image.jpg';
+import aboutImage from '../../assets/about-image.png';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -27,7 +27,7 @@ function About() {
       initial="hidden"
       animate="visible"
       variants={containerVariants}
-      className="space-y-24"
+      className="space-y-16 md:space-y-24 w-full overflow-x-hidden"
     >
       <motion.div variants={itemVariants}>
         <HeroSection
@@ -39,7 +39,7 @@ function About() {
 
       {/* About Content Section */}
       <section className="px-6 pb-20">
-        <div className="mx-auto max-w-5xl space-y-32">
+        <div className="mx-auto max-w-5xl space-y-20 md:space-y-32">
           {/* Mission Statement */}
           <motion.div
             variants={itemVariants}

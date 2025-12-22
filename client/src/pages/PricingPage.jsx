@@ -30,7 +30,7 @@ function PricingPage() {
       initial="hidden"
       animate="visible"
       variants={containerVariants}
-      className="min-h-screen pb-20"
+      className="min-h-screen pb-20 w-full overflow-x-hidden"
     >
       {/* Pricing Header Section */}
       <section className="px-6 pt-20 pb-16">

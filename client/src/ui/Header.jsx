@@ -2,12 +2,21 @@ import { Link, NavLink } from 'react-router-dom';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Logo from '../assets/logo.jpg';
+import useAuth from '../Hooks/useAuth';
+import useLogOut from '../features/authentication/useLogout';
 
 function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { data: user, isAuthenticated } = useAuth();
+  const { isLogOut, logOutUser } = useLogOut();
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  const handleLogOut = () => {
+    logOutUser();
+    setIsMobileMenuOpen(false);
   };
 
   const menuLinks = [
@@ -80,33 +89,79 @@ function Header() {
           ))}
         </nav>
 
-        {/* Desktop Auth Buttons */}
-        <div className="hidden items-center space-x-6 md:flex">
-          <Link
-            to="/login"
-            className="text-sm font-bold text-stone-400 transition-all duration-300 hover:text-white"
-          >
-            Sign In
-          </Link>
-          <Link
-            to="/signUp"
-            className="group relative flex items-center gap-2 overflow-hidden rounded-2xl bg-blue-600 px-8 py-3 text-sm font-black text-white shadow-xl shadow-blue-600/20 transition-all hover:scale-[1.05] hover:bg-blue-500 active:scale-95"
-          >
-            <span>Get Started</span>
-            <svg
-              className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M14 5l7 7m0 0l-7 7m7-7H3"
-              />
-            </svg>
-          </Link>
+        {/* Desktop Auth Section */}
+        <div className="hidden items-center md:flex">
+          {isAuthenticated ? (
+            <div className="flex items-center gap-2 rounded-[2.5rem] bg-stone-900/40 p-1.5 border border-stone-800/50 shadow-2xl backdrop-blur-md transition-all hover:bg-stone-900/60">
+              <Link to="/app/profile">
+                <motion.div 
+                  whileHover={{ scale: 1.02 }}
+                  className="flex cursor-pointer items-center gap-3 rounded-2xl px-3 py-1.5 transition-all hover:bg-white/5"
+                >
+                  {user?.profileImg?.secure_url ? (
+                    <img 
+                      src={user.profileImg.secure_url} 
+                      alt="Profile" 
+                      className="h-10 w-10 rounded-xl object-cover shadow-lg ring-2 ring-blue-500/20"
+                    />
+                  ) : (
+                    <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 shadow-lg shadow-blue-500/20 flex items-center justify-center text-white font-black text-sm">
+                      {user?.firstName?.[0] || 'U'}
+                    </div>
+                  )}
+                  <div className="flex flex-col pr-2">
+                    <span className="text-xs font-black text-white leading-tight">
+                      {user?.firstName || 'User'}
+                    </span>
+                    <span className="text-[10px] font-bold text-blue-500/80 uppercase tracking-widest">
+                      Dashboard
+                    </span>
+                  </div>
+                </motion.div>
+              </Link>
+              
+              <div className="h-8 w-px bg-stone-800/50 mx-1" />
+
+              <button
+                onClick={handleLogOut}
+                disabled={isLogOut}
+                title="Logout"
+                className="group flex h-10 w-10 items-center justify-center rounded-xl bg-red-500/5 text-stone-500 transition-all hover:bg-red-500/10 hover:text-red-400 active:scale-90"
+              >
+                <svg className="h-5 w-5 transition-transform group-hover:rotate-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                </svg>
+              </button>
+            </div>
+          ) : (
+            <div className="flex items-center space-x-6">
+              <Link
+                to="/login"
+                className="text-sm font-bold text-stone-400 transition-all duration-300 hover:text-white"
+              >
+                Sign In
+              </Link>
+              <Link
+                to="/signup"
+                className="group relative flex items-center gap-2 overflow-hidden rounded-2xl bg-blue-600 px-8 py-3 text-sm font-black text-white shadow-xl shadow-blue-600/20 transition-all hover:scale-[1.05] hover:bg-blue-500 active:scale-95"
+              >
+                <span>Get Started</span>
+                <svg
+                  className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M14 5l7 7m0 0l-7 7m7-7H3"
+                  />
+                </svg>
+              </Link>
+            </div>
+          )}
         </div>
 
         {/* Mobile Menu Button */}
@@ -166,22 +221,62 @@ function Header() {
                   {link.label}
                 </NavLink>
               ))}
-              <div className="grid grid-cols-2 gap-4 pt-4">
-                <Link
-                  to="/login"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="flex items-center justify-center rounded-2xl bg-stone-800/50 py-4 text-sm font-bold text-stone-300 transition-all hover:bg-stone-700 hover:text-white"
-                >
-                  Login
-                </Link>
-                <Link
-                  to="/signUp"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="flex items-center justify-center rounded-2xl bg-blue-600 py-4 text-sm font-bold text-white shadow-lg shadow-blue-600/20 transition-all hover:bg-blue-500"
-                >
-                  Sign Up
-                </Link>
-              </div>
+              {isAuthenticated ? (
+                <div className="flex flex-col gap-3 pt-4">
+                  <Link 
+                    to="/app/profile"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="flex items-center gap-4 rounded-3xl bg-stone-900/40 p-4 border border-stone-800/50 shadow-xl backdrop-blur-md transition-all hover:bg-stone-900/60"
+                  >
+                    {user?.profileImg?.secure_url ? (
+                      <img 
+                        src={user.profileImg.secure_url} 
+                        alt="Profile" 
+                        className="h-12 w-12 rounded-2xl object-cover shadow-lg ring-2 ring-blue-500/20"
+                      />
+                    ) : (
+                      <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 shadow-lg shadow-blue-500/20 flex items-center justify-center text-white font-black text-lg">
+                        {user?.firstName?.[0] || 'U'}
+                      </div>
+                    )}
+                    <div className="flex flex-col">
+                      <span className="text-base font-black text-white leading-tight">
+                        {user?.firstName || 'User'} {user?.lastName || ''}
+                      </span>
+                      <span className="text-xs font-bold text-blue-500/80 uppercase tracking-widest">
+                        View Dashboard
+                      </span>
+                    </div>
+                  </Link>
+                  <button
+                    onClick={handleLogOut}
+                    disabled={isLogOut}
+                    className="flex items-center justify-center gap-3 rounded-[1.25rem] bg-red-500/5 border border-red-500/10 py-4 text-sm font-black text-red-500 transition-all hover:bg-red-500/10 active:scale-95"
+                  >
+                    <span>{isLogOut ? 'Logging out...' : 'Logout'}</span>
+                    <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    </svg>
+                  </button>
+                </div>
+              ) : (
+                <div className="grid grid-cols-2 gap-4 pt-4">
+                  <Link
+                    to="/login"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="flex items-center justify-center rounded-2xl bg-stone-800/50 py-4 text-sm font-bold text-stone-300 transition-all hover:bg-stone-700 hover:text-white"
+                  >
+                    Login
+                  </Link>
+                  <Link
+                    to="/signup"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="flex items-center justify-center rounded-2xl bg-blue-600 py-4 text-sm font-bold text-white shadow-lg shadow-blue-600/20 transition-all hover:bg-blue-500"
+                  >
+                    Sign Up
+                  </Link>
+                </div>
+              )}
             </div>
           </motion.div>
         )}

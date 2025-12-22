@@ -125,7 +125,13 @@ function SignUp() {
             id="email"
             type="email"
             placeholder="Email Address"
-            {...register('email', { required: 'Email is required' })}
+            {...register('email', { 
+              required: 'Email is required',
+              pattern: {
+                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                message: 'Invalid email address',
+              },
+            })}
           />
         </div>
         {errors?.email && (
@@ -207,7 +213,17 @@ function SignUp() {
               required: 'Password is required',
               minLength: {
                 value: 8,
-                message: 'Min 8 characters',
+                message: 'Password must be at least 8 characters',
+              },
+              validate: {
+                hasUpperCase: (value) =>
+                  /[A-Z]/.test(value) || 'Must include an uppercase letter',
+                hasLowerCase: (value) =>
+                  /[a-z]/.test(value) || 'Must include a lowercase letter',
+                hasNumber: (value) =>
+                  /[0-9]/.test(value) || 'Must include a number',
+                hasSymbol: (value) =>
+                  /[!@#$%^&*(),.?":{}|<>]/.test(value) || 'Must include a special character',
               },
             })}
           />
@@ -247,20 +263,20 @@ function SignUp() {
             id="confirmPassword"
             type="password"
             placeholder="Confirm Password"
-            {...register('passwordConfirm', {
+            {...register('confirmPassword', {
               required: 'Confirm your password',
               validate: (value) =>
                 value === getValues().password || 'Passwords mismatch',
             })}
           />
         </div>
-        {errors?.passwordConfirm && (
+        {errors?.confirmPassword && (
           <motion.p
             initial={{ opacity: 0, x: -10 }}
             animate={{ opacity: 1, x: 0 }}
             className="px-4 text-[10px] font-black tracking-widest text-red-500 uppercase"
           >
-            {errors.passwordConfirm.message}
+            {errors.confirmPassword.message}
           </motion.p>
         )}
       </motion.div>

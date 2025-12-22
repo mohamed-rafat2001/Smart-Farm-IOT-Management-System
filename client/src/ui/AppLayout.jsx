@@ -1,18 +1,47 @@
-import { Outlet, useLocation } from 'react-router-dom';
+import { Outlet, useLocation, Link } from 'react-router-dom';
 import Sidebar from './Sidebar.jsx';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import useAuth from '../Hooks/useAuth';
+import NotificationsDropdown from './NotificationsDropdown.jsx';
+import { useNotifications } from '../features/notifications/useNotifications.js';
+import GlobalDeviceMonitor from '../features/farm/GlobalDeviceMonitor.jsx';
 
 function AppLayout() {
   const pageName = useLocation().pathname.split('/')[2];
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+  const notificationRef = useRef(null);
+  const { data: user } = useAuth();
+  const { notifications } = useNotifications();
+
+  const unreadCount = notifications.filter(n => !n.isRead).length;
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
+  const toggleNotifications = () => {
+    setIsNotificationsOpen(!isNotificationsOpen);
+  };
+
+  // Close notifications on outside click
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (notificationRef.current && !notificationRef.current.contains(event.target)) {
+        setIsNotificationsOpen(false);
+      }
+    };
+
+    if (isNotificationsOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [isNotificationsOpen]);
+
   return (
-    <div className="flex min-h-screen overflow-x-hidden bg-[#1b2127]">
+    <div className="flex h-screen w-full overflow-hidden bg-[#1b2127]">
+      <GlobalDeviceMonitor />
       {/* Mobile Overlay */}
       <AnimatePresence>
         {isSidebarOpen && (
@@ -28,7 +57,7 @@ function AppLayout() {
 
       {/* Sidebar - Responsive */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-72 transform bg-[#1b2127] shadow-2xl transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] lg:static lg:w-72 lg:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-50 w-72 transform bg-[#1b2127] shadow-2xl transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] lg:translate-x-0 ${
           isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
@@ -36,9 +65,9 @@ function AppLayout() {
       </aside>
 
       {/* Main Content Area */}
-      <div className="flex min-w-0 flex-1 flex-col">
+      <div className="flex min-w-0 h-screen flex-1 flex-col overflow-hidden lg:pl-72">
         {/* Top Navbar for Mobile/Tablet */}
-        <header className="sticky top-0 z-30 flex h-24 items-center justify-between border-b border-stone-800/50 bg-[#1b2127]/80 px-6 backdrop-blur-xl lg:px-12">
+        <header className="shrink-0 z-30 flex h-24 items-center justify-between border-b border-stone-800/50 bg-[#1b2127]/80 px-6 backdrop-blur-xl lg:px-12">
           <div className="flex items-center gap-6">
             <motion.button
               whileTap={{ scale: 0.9 }}
@@ -75,10 +104,16 @@ function AppLayout() {
           <div className="flex items-center gap-6">
             <div className="hidden h-10 w-[1px] bg-stone-800/50 sm:block" />
             <div className="flex items-center gap-4">
+            <div className="relative" ref={notificationRef}>
               <motion.button
                 whileHover={{ scale: 1.1, y: -2 }}
                 whileTap={{ scale: 0.95 }}
-                className="relative flex h-12 w-12 items-center justify-center rounded-2xl bg-stone-800/50 text-stone-400 transition-all duration-300 hover:bg-stone-700 hover:text-blue-400"
+                onClick={toggleNotifications}
+                className={`relative flex h-12 w-12 items-center justify-center rounded-2xl transition-all duration-300 ${
+                  isNotificationsOpen 
+                    ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/20' 
+                    : 'bg-stone-800/50 text-stone-400 hover:bg-stone-700 hover:text-blue-400'
+                }`}
               >
                 <svg
                   className="h-6 w-6"
@@ -93,22 +128,49 @@ function AppLayout() {
                     d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
                   />
                 </svg>
-                <span className="absolute top-3 right-3 flex h-2.5 w-2.5">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-blue-400 opacity-75"></span>
-                  <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-blue-500"></span>
-                </span>
+                {unreadCount > 0 && (
+                  <span className="absolute -top-1.5 -right-1.5 flex transition-all duration-300">
+                    <span className={`absolute inline-flex h-full w-full animate-ping rounded-full bg-blue-400 opacity-75 ${isNotificationsOpen ? 'hidden' : ''}`}></span>
+                    <span className={`relative flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-black shadow-lg ${isNotificationsOpen ? 'bg-white text-blue-600' : 'bg-blue-500 text-white'}`}>
+                      {unreadCount > 9 ? '9+' : unreadCount}
+                    </span>
+                  </span>
+                )}
               </motion.button>
 
-              <motion.div 
-                whileHover={{ scale: 1.05 }}
-                className="hidden cursor-pointer items-center gap-3 rounded-2xl bg-stone-800/30 p-1.5 pr-4 transition-all hover:bg-stone-800/50 sm:flex"
-              >
-                <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 shadow-lg shadow-blue-500/20" />
-                <div className="flex flex-col">
-                  <span className="text-xs font-bold text-white leading-none">User Name</span>
-                  <span className="text-[10px] font-medium text-stone-500">Administrator</span>
-                </div>
-              </motion.div>
+              <AnimatePresence>
+                {isNotificationsOpen && (
+                  <NotificationsDropdown onClose={() => setIsNotificationsOpen(false)} />
+                )}
+              </AnimatePresence>
+            </div>
+
+              <Link to="/app/profile">
+                <motion.div 
+                  whileHover={{ scale: 1.05 }}
+                  className="hidden cursor-pointer items-center gap-3 rounded-2xl bg-stone-800/30 p-1.5 pr-4 transition-all hover:bg-stone-800/50 sm:flex"
+                >
+                  {user?.profileImg?.secure_url ? (
+                    <img 
+                      src={user.profileImg.secure_url} 
+                      alt="Profile" 
+                      className="h-9 w-9 rounded-xl object-cover shadow-lg"
+                    />
+                  ) : (
+                    <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 shadow-lg shadow-blue-500/20 flex items-center justify-center text-white font-bold text-sm">
+                      {user?.firstName?.[0] || 'U'}
+                    </div>
+                  )}
+                  <div className="flex flex-col">
+                    <span className="text-xs font-bold text-white leading-none">
+                      {user?.firstName || 'Guest'}
+                    </span>
+                    <span className="text-[10px] font-medium text-stone-500 capitalize">
+                      {user?.role || 'User'}
+                    </span>
+                  </div>
+                </motion.div>
+              </Link>
             </div>
           </div>
         </header>

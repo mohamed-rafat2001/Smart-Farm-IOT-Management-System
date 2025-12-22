@@ -44,13 +44,13 @@ function DevicesDropdown({ el, firebaseUrl }) {
     >
       <div className="p-8">
         <div className="mb-6 grid grid-cols-3 gap-6 border-b border-stone-800/50 pb-4">
-          <h4 className="text-xs font-black tracking-[0.2em] text-stone-500 uppercase">
+          <h4 className="text-xs font-black tracking-[0.2em] text-blue-500 uppercase">
             Property
           </h4>
-          <h4 className="text-xs font-black tracking-[0.2em] text-stone-500 uppercase">
+          <h4 className="text-xs font-black tracking-[0.2em] text-blue-500 uppercase">
             Current Value
           </h4>
-          <h4 className="text-center text-xs font-black tracking-[0.2em] text-stone-500 uppercase">
+          <h4 className="text-center text-xs font-black tracking-[0.2em] text-blue-500 uppercase">
             Action
           </h4>
         </div>

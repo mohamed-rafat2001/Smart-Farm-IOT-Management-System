@@ -1,7 +1,8 @@
+import { createPortal } from 'react-dom';
 import { motion as Motion, AnimatePresence } from 'framer-motion';
 
 const Modal = ({ isOpen, onClose, children }) => {
-  return (
+  return createPortal(
     <AnimatePresence>
       {isOpen && (
         <Motion.div
@@ -20,8 +21,8 @@ const Modal = ({ isOpen, onClose, children }) => {
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
-            zIndex: 1000,
-            padding: '1.5rem',
+            zIndex: 9999,
+            padding: '1rem',
           }}
           onClick={onClose}
         >
@@ -37,16 +38,18 @@ const Modal = ({ isOpen, onClose, children }) => {
             }}
             style={{
               background: '#283039',
-              padding: '2.5rem',
-              borderRadius: '2.5rem',
+              padding: '1.5rem',
+              borderRadius: '2rem',
               width: '100%',
-              maxWidth: '32rem',
+              maxWidth: '36rem',
               maxHeight: '90vh',
               border: '1px solid rgba(120, 113, 108, 0.3)',
               boxShadow:
                 '0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05)',
-              overflow: 'auto',
+              overflow: 'hidden',
               position: 'relative',
+              display: 'flex',
+              flexDirection: 'column',
             }}
             onClick={(e) => e.stopPropagation()}
           >
@@ -54,7 +57,8 @@ const Modal = ({ isOpen, onClose, children }) => {
           </Motion.div>
         </Motion.div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 };
 

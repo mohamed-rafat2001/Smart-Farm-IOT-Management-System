@@ -2,7 +2,7 @@ import { Outlet, useLocation } from 'react-router-dom';
 import googleIcon from '../assets/google-logo-search-new-svgrepo-com.svg';
 function RegisterPage() {
   const location = useLocation();
-  const userType = location.pathname.split('/')[2];
+  const userType = location.pathname.split('/')[1];
 
   return (
     <div className="mt-5 flex h-screen items-center justify-center">

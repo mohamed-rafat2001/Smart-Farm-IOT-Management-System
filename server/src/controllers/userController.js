@@ -13,6 +13,7 @@ import cloudinary from "../utils/cloudinary.js";
 export const getMe = catchAsync(async (req, res, next) => {
 	const user = await UserModel.findById(req.user._id);
 	if (!user) return next(new appError("user not found", 404));
+    
 	response(res, 200, user);
 });
 
@@ -53,25 +54,37 @@ export const uploadUserPhoto = catchAsync(async (req, res, next) => {
 				{ folder: `AgriTech/users/id_${req.user._id}/profileImg` }
 			);
 
+
 			// delete old img from cloudinary
 			if (req.user.profileImg && req.user.profileImg.public_id) {
 				try {
 					await cloudinary.uploader.destroy(req.user.profileImg.public_id);
 				} catch (deleteError) {
-					// Continue with the process even if old image deletion fails
 					console.log("Failed to delete old image:", deleteError);
 				}
 			}
 
-			// Update user profile
-			req.user.profileImg = { public_id, secure_url };
-			await req.user.save({ validateBeforeSave: false });
+			// Use updateOne for a direct database update and capture the result
+            await UserModel.updateOne(
+                { _id: req.user._id },
+                { 
+                    $set: { 
+                        profileImg: { 
+                            public_id: public_id, 
+                            secure_url: secure_url 
+                        } 
+                    } 
+                }
+            );
+
+            // Fetch the user object fresh from the database
+            const updatedUser = await UserModel.findById(req.user._id);
 
 			// Ensure response is sent properly
 			const responseData = {
 				status: "success",
-				profileImg: req.user.profileImg,
-				user: req.user,
+				profileImg: updatedUser.profileImg,
+				user: updatedUser,
 			};
 
 			// Send response

@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import HeroSection from '../../ui/HeroSection';
-import contactImage from '../../assets/contact-image.jpg';
+import contactImage from '../../assets/contact-image.png';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -30,7 +30,7 @@ function ContactWithUs() {
       initial="hidden"
       animate="visible"
       variants={containerVariants}
-      className="space-y-24"
+      className="space-y-16 md:space-y-24 w-full overflow-x-hidden"
     >
       <motion.div variants={itemVariants}>
         <HeroSection
@@ -43,17 +43,17 @@ function ContactWithUs() {
       {/* Contact Content Section */}
       <section className="px-6 pb-24">
         <div className="mx-auto max-w-7xl">
-          <div className="grid grid-cols-1 items-start gap-20 lg:grid-cols-2">
+          <div className="grid grid-cols-1 items-start gap-12 lg:grid-cols-2 lg:gap-20">
             {/* Contact Form */}
             <motion.div
               variants={itemVariants}
-              className="relative overflow-hidden rounded-[3rem] border border-stone-700/50 bg-[#283039]/30 p-10 shadow-2xl backdrop-blur-sm sm:p-14"
+              className="relative overflow-hidden rounded-[2rem] border border-stone-700/50 bg-[#283039]/30 p-6 shadow-2xl backdrop-blur-sm sm:rounded-[3rem] sm:p-14"
             >
               <div className="absolute top-0 right-0 -mt-32 -mr-32 h-80 w-80 rounded-full bg-blue-600/10 blur-[100px]" />
 
               <div className="relative z-10 space-y-10">
                 <div className="space-y-5">
-                  <h2 className="text-4xl font-bold tracking-tight text-white sm:text-5xl">
+                  <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl md:text-5xl">
                     Send a Message
                   </h2>
                   <p className="text-xl leading-relaxed text-stone-400">

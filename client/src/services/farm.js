@@ -47,12 +47,14 @@ export const fetchFromFirebase = async (firebaseUrl) => {
     }
   }
 
-  // Ensure URL ends with .json for Firebase REST API
-  const finalUrl = dbUrl.includes('.json')
-    ? dbUrl
-    : `${dbUrl.replace(/\/$/, '')}/.json`;
+  // Ensure URL ends with .json for Firebase REST API, handling query params correctly
+  let [base, query] = dbUrl.split('?');
+  if (!base.endsWith('.json')) {
+    base = base.replace(/\/$/, '') + '/.json';
+  }
+  const finalUrl = query ? `${base}?${query}` : base;
 
-  const response = await fetch(finalUrl);
+  const response = await fetch(finalUrl, { cache: 'no-store' });
   if (!response.ok) {
     throw new Error('Failed to fetch Firebase data');
   }

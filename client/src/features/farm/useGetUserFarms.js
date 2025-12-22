@@ -24,6 +24,8 @@ function useGetUserFarms() {
         data: { docs: [] },
       });
     },
+    refetchInterval: 10000, // Check for farm status/list changes every 10s
+    structuralSharing: false, // Ensure reference change to trigger effects
   });
 
   return { userFarm: userFarm?.data, isLoading, error };

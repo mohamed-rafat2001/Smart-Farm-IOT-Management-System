@@ -6,12 +6,15 @@ import CurrentImageModal from '../../ui/CurrentImageModal.jsx';
 import { useEffect, useState, useRef } from 'react';
 import { userImg } from '../../services/user';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useQueryClient } from '@tanstack/react-query';
 
 function ProfileHeader() {
   const { data } = useAuth();
+  const queryClient = useQueryClient();
   const [userProfileImg, setUserProfileImg] = useState(
     data?.profileImg?.secure_url
   );
+  
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isCurrentImageModalOpen, setIsCurrentImageModalOpen] = useState(false);
   const dropdownRef = useRef(null);
@@ -35,15 +38,23 @@ function ProfileHeader() {
     uploadFunction: userImg,
     maxFileSize: 5 * 1024 * 1024, // 5MB
     allowedTypes: ['image/*'],
-    autoCloseModal: false, // Keep modal open to show progress
+    autoCloseModal: true, // Auto close modal after successful upload
     showProgress: true,
-    resetOnSuccess: false, // Don't reset form automatically
+    resetOnSuccess: true, // Reset form automatically
     onSuccess: (result) => {
       // Update the local state immediately for UI update
       if (result?.profileImg?.secure_url) {
         setUserProfileImg(result.profileImg.secure_url);
+        
+        // Directly update the React Query cache for the 'User' key
+        queryClient.setQueryData(['User'], (oldData) => {
+          if (!oldData) return result.user;
+          return {
+            ...oldData,
+            profileImg: result.profileImg
+          };
+        });
       }
-      // Don't auto-close modal - let user close it manually
     },
     onError: (error) => {
       // Show user-friendly error message
@@ -118,7 +129,7 @@ function ProfileHeader() {
     <motion.div 
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="relative overflow-hidden flex w-full flex-col items-center gap-8 rounded-[3rem] border border-stone-700/50 bg-[#283039]/30 p-10 shadow-2xl backdrop-blur-md min-[450px]:flex-row min-[450px]:items-center"
+      className="relative z-20 flex w-full flex-col items-center gap-8 rounded-[3rem] border border-stone-700/50 bg-[#283039]/30 p-10 shadow-2xl backdrop-blur-md min-[450px]:flex-row min-[450px]:items-center"
     >
       {/* Decorative Gradient Background */}
       <div className="absolute -right-24 -top-24 h-64 w-64 rounded-full bg-blue-600/5 blur-[100px]" />
@@ -191,36 +202,69 @@ function ProfileHeader() {
         <AnimatePresence>
           {isDropdownOpen && (
             <motion.div
-              initial={{ opacity: 0, y: 15, scale: 0.95 }}
+              initial={{ opacity: 0, y: 10, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 15, scale: 0.95 }}
+              exit={{ opacity: 0, y: 10, scale: 0.95 }}
+              transition={{ duration: 0.2 }}
               ref={dropdownRef}
-              className="absolute top-full left-0 z-50 mt-6 w-64 overflow-hidden rounded-[2rem] border border-stone-700/50 bg-[#283039]/95 p-2 shadow-2xl backdrop-blur-xl"
+              className="absolute top-full mt-4 left-1/2 -translate-x-1/2 z-[9999] w-72 overflow-hidden rounded-3xl border border-stone-700/50 bg-[#1b2127] shadow-2xl ring-1 ring-white/10"
             >
-              <button
-                onClick={handleViewCurrentImage}
-                className="group flex w-full items-center gap-4 rounded-2xl px-4 py-4 text-left text-sm font-medium text-stone-300 transition-all hover:bg-white/5 hover:text-white"
-              >
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-500/10 text-blue-400 group-hover:bg-blue-500 group-hover:text-white transition-colors">
-                  <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+              <div className="flex flex-col gap-1">
+                <button
+                  onClick={handleViewCurrentImage}
+                  className="group/view relative flex w-full items-center gap-4 overflow-hidden rounded-2xl p-3 text-left transition-all hover:bg-white/5"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-transparent opacity-0 transition-opacity group-hover/view:opacity-100 pointer-events-none" />
+                  
+                  <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-stone-800 text-stone-400 shadow-inner transition-colors group-hover/view:bg-blue-600 group-hover/view:text-white">
+                    <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                  </div>
+                  
+                  <div className="relative flex flex-col">
+                    <span className="text-sm font-bold text-stone-200 group-hover/view:text-white">
+                      View Photo
+                    </span>
+                    <span className="text-[10px] font-medium text-stone-500 group-hover/view:text-stone-400">
+                      See current profile picture
+                    </span>
+                  </div>
+                  
+                  <svg className="ml-auto h-4 w-4 text-stone-600 opacity-0 transition-all group-hover/view:translate-x-1 group-hover/view:text-blue-500 group-hover/view:opacity-100" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                   </svg>
-                </div>
-                View Profile Photo
-              </button>
-              <div className="mx-4 h-px bg-stone-700/50 my-1" />
-              <button
-                onClick={handleAddNewImage}
-                className="group flex w-full items-center gap-4 rounded-2xl px-4 py-4 text-left text-sm font-medium text-stone-300 transition-all hover:bg-white/5 hover:text-white"
-              >
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-green-500/10 text-green-400 group-hover:bg-green-500 group-hover:text-white transition-colors">
-                  <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                </button>
+
+                <div className="mx-2 h-px bg-stone-800" />
+
+                <button
+                  onClick={handleAddNewImage}
+                  className="group/upload relative flex w-full items-center gap-4 overflow-hidden rounded-2xl p-3 text-left transition-all hover:bg-white/5"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-green-600/10 to-transparent opacity-0 transition-opacity group-hover/upload:opacity-100 pointer-events-none" />
+                  
+                  <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-stone-800 text-stone-400 shadow-inner transition-colors group-hover/upload:bg-green-600 group-hover/upload:text-white">
+                    <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                    </svg>
+                  </div>
+                  
+                  <div className="relative flex flex-col">
+                    <span className="text-sm font-bold text-stone-200 group-hover/upload:text-white">
+                      Upload New
+                    </span>
+                    <span className="text-[10px] font-medium text-stone-500 group-hover/upload:text-stone-400">
+                      Change your profile picture
+                    </span>
+                  </div>
+
+                  <svg className="ml-auto h-4 w-4 text-stone-600 opacity-0 transition-all group-hover/upload:translate-x-1 group-hover/upload:text-green-500 group-hover/upload:opacity-100" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                   </svg>
-                </div>
-                Upload New Photo
-              </button>
+                </button>
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
@@ -233,7 +277,9 @@ function ProfileHeader() {
             animate={{ opacity: 1, x: 0 }}
             className="text-4xl font-extrabold tracking-tight text-white lg:text-5xl"
           >
-            {data?.firstName + ' ' + data?.lastName}
+            {data?.firstName && data?.lastName && data.firstName.trim().toLowerCase() !== data.lastName.trim().toLowerCase()
+              ? `${data.firstName} ${data.lastName}`
+              : data?.firstName || 'User Profile'}
           </motion.h1>
           <motion.p 
             initial={{ opacity: 0, x: -20 }}

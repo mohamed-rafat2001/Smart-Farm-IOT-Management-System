@@ -5,22 +5,42 @@ import sendCookie from "../utils/sendCookie.js";
 import sendEmail from "../utils/sendEmail.js";
 import { passwordResetCodeTemplate } from "../utils/emailTempletes.js";
 import catchAsync from "../middelwares/catchAsync.js";
+import logger from "../utils/logger.js";
+
 //create new User
 export const signUp = catchAsync(async (req, res, next) => {
+	logger.log("📝 Signup attempt started:", { email: req.body.email });
 	const { firstName, lastName, email, phoneNumber, password, confirmPassword } =
 		req.body;
-	const user = await UserModel.create({
-		firstName,
-		lastName,
-		email,
-		password,
-		confirmPassword,
-		phoneNumber,
-	});
-	if (!user) return next(appError("user not signUp", 400));
+	
+	logger.log("📝 Creating user in database...");
+	
+	let user;
+	try {
+		user = await UserModel.create({
+			firstName,
+			lastName,
+			email,
+			password,
+			confirmPassword,
+			phoneNumber,
+		});
+	} catch (dbError) {
+		logger.log("❌ Database error:", dbError.message);
+		logger.log("❌ Full error:", dbError);
+		return next(new appError(dbError.message || "Database error during signup", 400));
+	}
+	
+	if (!user) {
+		logger.log("❌ User creation failed");
+		return next(new appError("user not signUp", 400));
+	}
+	
+	logger.log("✅ User created successfully:", user._id);
 	const token = user.createJwt();
 	user.password = undefined;
 	sendCookie(res, token);
+	logger.log("✅ Signup complete, sending response");
 	response(res, 201, { user, token });
 });
 

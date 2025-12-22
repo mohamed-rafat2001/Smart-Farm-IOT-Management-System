@@ -99,9 +99,9 @@ const useImageUpload = (options = {}) => {
       setIsUploading(true);
       setUploadProgress(0);
 
-      if (autoCloseModal) {
-        setModalOpen(false);
-      }
+      setUploadStatus('Uploading...');
+      setIsUploading(true);
+      setUploadProgress(0);
 
       try {
         const result = await uploadFunction(formData, {
@@ -132,8 +132,13 @@ const useImageUpload = (options = {}) => {
           onSuccess(result);
         }
 
-        // Don't auto clear success message - keep it visible
-        // setTimeout(() => setUploadStatus(''), 3000);
+        // Auto close modal if enabled, AFTER success result
+        if (autoCloseModal) {
+          setTimeout(() => {
+            setModalOpen(false);
+            setUploadStatus('');
+          }, 1500); // Small delay to show success state
+        }
       } catch (error) {
         console.error('Upload failed:', error);
         setUploadStatus(`Upload failed: ${error.message || 'Unknown error'}`);

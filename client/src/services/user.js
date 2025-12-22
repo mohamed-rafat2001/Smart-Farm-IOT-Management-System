@@ -13,11 +13,18 @@ export const userByIdParam = async (id) => {
 
   return response.data;
 };
-// get user profile
+// get user profile - with short timeout for initial auth check
 export const getMe = async () => {
-  const response = await api.get('/user');
-
-  return response.data.data;
+  try {
+    const response = await api.get('/user', { timeout: 10000 }); // 10 second timeout
+    return response.data.data;
+  } catch (error) {
+    // If timeout or network error, throw immediately so app can proceed
+    if (error.code === 'ECONNABORTED' || error.response?.status === 408) {
+      throw new Error('Auth check timed out');
+    }
+    throw error;
+  }
 };
 
 // delete user by him self

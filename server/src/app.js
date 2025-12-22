@@ -65,16 +65,8 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
-// Add Cache-Control headers to all responses
-app.use((req, res, next) => {
-  // Set Cache-Control header for API responses that allows client-side caching
-  // but ensures validation with the server
-  res.setHeader('Cache-Control', 'private, max-age=3600, stale-while-revalidate=86400');
-  next();
-});
-
 // Add timeout middleware early in the chain
-app.use(timeoutMiddleware(60000)); // 60 second timeout
+app.use(timeoutMiddleware(120000)); // 120 second timeout (increased for slow connections)
 
 // Security middleware with error handling
 try {
@@ -95,18 +87,9 @@ try {
 	console.warn("⚠️ Rate limiting failed:", error.message);
 }
 
-// Add request timeout middleware
-app.use((req, res, next) => {
-	// Set a 120 second timeout for all requests (increased for image uploads)
-	req.setTimeout(120000, () => {
-		res.status(408).json({
-			status: "error",
-			message: "Request timeout - server took too long to respond",
-		});
-	});
+// Timeout is already handled by timeoutMiddleware above
+// Removed redundant req.setTimeout to prevent premature 408 errors during CPU-intensive operations like password hashing
 
-	next();
-});
 
 // Add request logging middleware
 app.use((req, res, next) => {
@@ -192,9 +175,6 @@ export const initializeApp = async () => {
 			// Register routes with static imports for production
 			console.log("🔄 Registering auth routes...");
 			app.use("/api/v1/auth", (req, res, next) => {
-				// Set Cache-Control header explicitly for this route
-				res.setHeader('Cache-Control', 'private, max-age=3600, stale-while-revalidate=86400');
-				
 				// Add response interceptor to catch errors
 				const originalSend = res.send;
 				res.send = function(data) {
@@ -209,9 +189,6 @@ export const initializeApp = async () => {
 			
 			console.log("🔄 Registering user routes...");
 			app.use("/api/v1/user", (req, res, next) => {
-				// Set Cache-Control header explicitly for this route
-				res.setHeader('Cache-Control', 'private, max-age=3600, stale-while-revalidate=86400');
-				
 				// Add response interceptor to catch errors
 				const originalSend = res.send;
 				res.send = function(data) {
