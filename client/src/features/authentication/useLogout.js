@@ -11,11 +11,21 @@ function useLogOut() {
 
     onSuccess: () => {
       toast.success('Logged out successfully');
+    },
+
+    onSettled: () => {
+      // Always cleanup and navigate even if the request fails
       queryClient.removeQueries({ queryKey: ['User'] });
       queryClient.removeQueries({ queryKey: ['userFarms'] });
       queryClient.clear();
       navigate('/');
     },
+
+    onError: (err) => {
+      // Still show success to user but log the error for devs
+      toast.success('Logged out');
+      navigate('/');
+    }
   });
 
   return { isLogOut, logOutUser };
