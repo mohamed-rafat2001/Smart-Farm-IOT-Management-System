@@ -15,7 +15,7 @@ const corsMiddleware = cors({
   ],
   exposedHeaders: ["Content-Disposition"],
   preflightContinue: false,
-  optionsSuccessStatus: 204,
+  optionsSuccessStatus: 200,
   maxAge: 86400, // 24 hours
 });
 

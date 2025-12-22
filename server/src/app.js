@@ -25,29 +25,26 @@ dotenv.config();
 
 export const app = express();
 
+// Trust Vercel Proxy
+app.enable('trust proxy');
+
+// Enable CORS with dynamic origin reflection
+app.use(cors({
+  origin: true,
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With", "Accept", "Origin"],
+  optionsSuccessStatus: 200
+}));
+
+// Pre-flight handling for all routes
+app.options('*', cors());
+
 // Basic middleware that should always work
 app.use(express.json({ limit: "10kb" }));
 app.use(cookieParser());
 
-// CORS configuration with reflected origin (permissive for Vercel dynamic subdomains)
-const corsOptions = {
-	origin: true, 
-	credentials: true,
-	methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-	allowedHeaders: [
-		"Content-Type",
-		"Authorization",
-		"Content-Length",
-		"X-Requested-With",
-		"Accept",
-		"Origin",
-	],
-	exposedHeaders: ["Content-Disposition"],
-	preflightContinue: false,
-	optionsSuccessStatus: 204,
-	maxAge: 86400, // 24 hours
-};
-app.use(cors(corsOptions));
+
 
 // Add timeout middleware early in the chain
 app.use(timeoutMiddleware(120000)); // 120 second timeout (increased for slow connections)
@@ -72,10 +69,6 @@ try {
 } catch (error) {
 	// Rate limiting failed
 }
-
-// Timeout is already handled by timeoutMiddleware above
-// Removed redundant req.setTimeout to prevent premature 408 errors during CPU-intensive operations like password hashing
-
 
 // Add request logging middleware
 app.use((req, res, next) => {
