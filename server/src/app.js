@@ -29,30 +29,9 @@ export const app = express();
 app.use(express.json({ limit: "10kb" }));
 app.use(cookieParser());
 
-// CORS configuration with fallback
+// CORS configuration with reflected origin (permissive for Vercel dynamic subdomains)
 const corsOptions = {
-	origin: function(origin, callback) {
-		const allowedOrigins = [
-			"http://localhost:5173",
-			"http://localhost:5174",
-			"http://127.0.0.1:5173",
-			"http://127.0.0.1:5174",
-			"https://smart-farm-client.vercel.app",
-			"https://smart-farm-client-git-main.vercel.app",
-			"https://smart-farm-client-git-develop.vercel.app",
-			"https://smart-farm-client-v1.vercel.app",
-			"https://smart-farm-server-v1.vercel.app",
-			process.env.CLIENT_URL,
-		].filter(Boolean);
-		
-		// Allow requests with no origin, common dev origins, Vercel subdomains, or anything in non-production
-		const isVercel = origin && origin.endsWith('.vercel.app');
-		if (!origin || allowedOrigins.indexOf(origin) !== -1 || process.env.NODE_ENV !== 'production' || isVercel) {
-			callback(null, true);
-		} else {
-			callback(new Error(`Origin ${origin} not allowed by CORS`));
-		}
-	},
+	origin: true, 
 	credentials: true,
 	methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
 	allowedHeaders: [
@@ -73,9 +52,11 @@ app.use(cors(corsOptions));
 // Add timeout middleware early in the chain
 app.use(timeoutMiddleware(120000)); // 120 second timeout (increased for slow connections)
 
-// Security middleware with error handling
+// Security middleware with cross-origin support
 try {
-	app.use(helmet());
+	app.use(helmet({
+        crossOriginResourcePolicy: { policy: "cross-origin" }
+    }));
 } catch (error) {
 	// Helmet failed
 }

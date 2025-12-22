@@ -7,7 +7,6 @@ import {
 } from "../controllers/userController.js";
 import { protect } from "../middelwares/authMiddelware.js";
 import express from "express";
-import corsMiddleware from "../utils/corsMiddleware.js";
 
 const Router = express.Router();
 
@@ -16,7 +15,7 @@ Router.use(protect);
 
 Router.route("/").get(getMe).patch(updateMe).delete(deleteMe);
 
-// Apply CORS middleware specifically to the userImg route
-Router.route("/userImg").options(corsMiddleware).patch(corsMiddleware, uploadSinglePhoto, uploadUserPhoto);
+// Apply logic to the userImg route
+Router.route("/userImg").patch(uploadSinglePhoto, uploadUserPhoto);
 
 export default Router;
