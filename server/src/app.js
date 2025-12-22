@@ -25,28 +25,33 @@ dotenv.config();
 
 export const app = express();
 
-// 1. Enable CORS - Absolute Manual Implementation
-app.use((req, res, next) => {
-  const origin = req.headers.origin;
-  
-  // Always reflect the origin if it exists, otherwise allow all
-  if (origin) {
-    res.setHeader('Access-Control-Allow-Origin', origin);
-  } else {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-  }
-  
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization, Origin');
-  res.setHeader('Vary', 'Origin');
+// 1. Enable CORS - Robust Configuration for Vercel
+app.use(cors({
+  origin: (origin, callback) => {
+    // Reflect the request origin to allow credentials
+    // This is safer than '*' and required for withCredentials: true
+    callback(null, true);
+  },
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: [
+    "X-CSRF-Token",
+    "X-Requested-With",
+    "Accept",
+    "Accept-Version",
+    "Content-Length",
+    "Content-MD5",
+    "Content-Type",
+    "Date",
+    "X-Api-Version",
+    "Authorization",
+    "Origin"
+  ],
+  optionsSuccessStatus: 200
+}));
 
-  // Handle preflight immediately
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
-  next();
-});
+// Handle preflight for all routes
+app.options('*', cors());
 
 // 2. Trust Vercel Proxy
 app.enable('trust proxy');
