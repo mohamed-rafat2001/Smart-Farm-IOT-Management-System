@@ -6,6 +6,7 @@ import {
 	getByParams,
 	updateByOwner,
 } from "./handlerFactory.js";
+import logger from "../utils/logger.js";
 
 // @desc   create farm
 // @route  POST /api/v1/farm

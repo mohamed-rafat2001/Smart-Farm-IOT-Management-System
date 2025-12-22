@@ -28,7 +28,7 @@ export function useSignUp() {
       queryClient.setQueryData(['userFarms'], { data: { docs: [] } });
       
       // Redirect to the page they were trying to access, or profile as default
-      const from = location.state?.from || '/app/profile';
+      const from = location.state?.from || '/app/farms';
       navigate(from, { replace: true });
     },
     onError: (error) => {

@@ -75,7 +75,7 @@ export const Router = createBrowserRouter([
         children: [
           {
             index: true,
-            element: <Navigate replace to="/app/Dashboard" />,
+            element: <Navigate replace to="/app/farms" />,
           },
           {
             path: '/app/Dashboard',

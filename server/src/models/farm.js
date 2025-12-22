@@ -15,6 +15,7 @@ const farmSchema = new mongoose.Schema(
 		owner: {
 			type: mongoose.Schema.ObjectId,
 			ref: "UserModel",
+			required: [true, "Farm must belong to an owner"],
 		},
 		location: {
 			type: String,

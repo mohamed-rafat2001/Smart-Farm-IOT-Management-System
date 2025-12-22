@@ -3,6 +3,7 @@ import catchAsync from "../middelwares/catchAsync.js";
 import response from "../utils/handelRespone.js";
 import validationBody from "../utils/validationBody.js";
 import APIFeatures from "../utils/apiFeatures.js";
+import logger from "../utils/logger.js";
 
 // delete doc
 const handelBodyError = (object, next) => {
@@ -33,12 +34,22 @@ export const deleteByOwner = (Model) =>
 // get doc by params
 export const getByParams = (Model) =>
 	catchAsync(async (req, res, next) => {
-		// get id from req.params
-		const { id } = req.params;
-		// find doc
-		const doc = await Model.findById(id);
+		// find doc with ownership check if user is not admin
+		const query = { _id: id };
+		if (req.user?.role !== 'admin') {
+			query.owner = req.user?._id;
+		}
+
+		logger.log(`🔍 Fetching single doc: ${id} for user: ${req.user?._id}`);
+		const doc = await Model.findOne(query);
+		
 		// check if doc is found
-		if (!doc || !id) return next(new appError("doc not found", 404));
+		if (!doc || !id) {
+			logger.log(`❌ Doc not found or access denied: ${id} for user: ${req.user?._id}`);
+			return next(new appError("doc not found or you don't have permission", 404));
+		}
+		
+		logger.log(`✅ Doc fetched successfully: ${id}`);
 		// send response
 		response(res, 200, doc);
 	});
@@ -46,10 +57,15 @@ export const getByParams = (Model) =>
 // get docs by owner
 export const getByOwner = (Model) =>
 	catchAsync(async (req, res, next) => {
+		if (!req.user?._id) return next(new appError("User not authenticated for ownership filter", 401));
+
+		logger.log(`🔍 Fetching docs for owner: ${req.user._id}`);
 		// get docs
 		const docs = await Model.find({ owner: req.user._id });
 
 		if (!docs) return next(new appError("no docs found", 404));
+		
+		logger.log(`✅ Found ${docs.length} docs for owner: ${req.user._id}`);
 
 		response(res, 200, { docs, results: docs.length });
 	});
@@ -57,6 +73,9 @@ export const getByOwner = (Model) =>
 // create doc By Owner
 export const CreateByOwner = (Model, fields) =>
 	catchAsync(async (req, res, next) => {
+		if (!req.user?._id) return next(new appError("User not authenticated for creation", 401));
+
+		logger.log(`📝 Creating doc for owner: ${req.user._id}`);
 		// get feilds from req.body
 		const objectFromBody = validationBody(req.body, fields);
 		// check if all fields are provided
@@ -68,6 +87,8 @@ export const CreateByOwner = (Model, fields) =>
 		});
 		// check if doc is created
 		if (!doc) return next(new appError("doc not created", 400));
+		
+		logger.log(`✅ Doc created successfully: ${doc._id} for owner: ${req.user._id}`);
 		// send response
 		response(res, 201, doc);
 	});
