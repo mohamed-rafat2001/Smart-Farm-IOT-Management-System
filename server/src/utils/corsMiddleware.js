@@ -18,7 +18,6 @@ const corsMiddleware = cors({
     if (!origin || allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
-      console.log("Blocked origin:", origin);
       callback(new Error(`Origin ${origin} not allowed by CORS`));
     }
   },

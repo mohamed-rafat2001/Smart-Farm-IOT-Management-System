@@ -14,7 +14,6 @@ function useDevices(firebaseUrl, enableNotifications = false) {
   } = useQuery({
     queryKey: ['devices', firebaseUrl],
     queryFn: async () => {
-      // console.log(`[Polling] Fetching from: ${firebaseUrl}`);
       return fetchFromFirebase(firebaseUrl);
     },
     enabled: !!firebaseUrl,

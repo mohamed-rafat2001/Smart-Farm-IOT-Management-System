@@ -60,7 +60,7 @@ export const uploadUserPhoto = catchAsync(async (req, res, next) => {
 				try {
 					await cloudinary.uploader.destroy(req.user.profileImg.public_id);
 				} catch (deleteError) {
-					console.log("Failed to delete old image:", deleteError);
+					// Error is silently ignored to prevent blocking the main update flow
 				}
 			}
 

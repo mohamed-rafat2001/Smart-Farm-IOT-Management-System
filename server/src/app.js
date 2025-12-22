@@ -44,7 +44,6 @@ const corsOptions = {
 		if (!origin || allowedOrigins.indexOf(origin) !== -1) {
 			callback(null, true);
 		} else {
-			console.log("Blocked origin:", origin);
 			callback(null, false);
 		}
 	},
@@ -72,7 +71,7 @@ app.use(timeoutMiddleware(120000)); // 120 second timeout (increased for slow co
 try {
 	app.use(helmet());
 } catch (error) {
-	console.warn("⚠️ Helmet middleware failed:", error.message);
+	// Helmet failed
 }
 
 // Rate limiting with error handling
@@ -84,7 +83,7 @@ try {
 	});
 	app.use("/api", limiter);
 } catch (error) {
-	console.warn("⚠️ Rate limiting failed:", error.message);
+	// Rate limiting failed
 }
 
 // Timeout is already handled by timeoutMiddleware above
@@ -106,19 +105,19 @@ app.use((req, res, next) => {
 try {
 	app.use(mongoSanitize());
 } catch (error) {
-	console.warn("⚠️ Mongo sanitize failed:", error.message);
+	// Mongo sanitize failed
 }
 
 try {
 	app.use(xss());
 } catch (error) {
-	console.warn("⚠️ XSS protection failed:", error.message);
+	// XSS protection failed
 }
 
 try {
 	app.use(hpp());
 } catch (error) {
-	console.warn("⚠️ HPP protection failed:", error.message);
+	// HPP protection failed
 }
 
 // Health check endpoint for Vercel
@@ -161,77 +160,34 @@ export const initializeApp = async () => {
 			const dbConnect = await import("./db/dataBase.js");
 			connected = await dbConnect.default();
 		} catch (error) {
-			console.error("❌ Database connection failed:", error.message);
+			// Database connection failed
 		}
 
-		if (!connected) {
-			console.error("❌ Database connection failed, but continuing with limited functionality");
-		} else {
-			console.log("✅ Database connection established successfully");
+		if (connected) {
+			// Database connection established successfully
 		}
 		
 		try {
 			// Wrap all route handlers with asyncHandler to ensure errors are caught
 			// Register routes with static imports for production
-			console.log("🔄 Registering auth routes...");
 			app.use("/api/v1/auth", (req, res, next) => {
-				// Add response interceptor to catch errors
-				const originalSend = res.send;
-				res.send = function(data) {
-					res.send = originalSend;
-					if (res.statusCode >= 400 && !res.headersSent) {
-						console.error(`Error in auth route: ${req.method} ${req.originalUrl}`, data);
-					}
-					return originalSend.call(this, data);
-				};
 				next();
 			}, authRouter);
 			
-			console.log("🔄 Registering user routes...");
 			app.use("/api/v1/user", (req, res, next) => {
-				// Add response interceptor to catch errors
-				const originalSend = res.send;
-				res.send = function(data) {
-					res.send = originalSend;
-					if (res.statusCode >= 400 && !res.headersSent) {
-						console.error(`Error in user route: ${req.method} ${req.originalUrl}`, data);
-					}
-					return originalSend.call(this, data);
-				};
 				next();
 			}, userRoute);
 			
-			console.log("🔄 Registering admin routes...");
 			app.use("/api/v1/admin", (req, res, next) => {
-				// Add response interceptor to catch errors
-				const originalSend = res.send;
-				res.send = function(data) {
-					res.send = originalSend;
-					if (res.statusCode >= 400 && !res.headersSent) {
-						console.error(`Error in admin route: ${req.method} ${req.originalUrl}`, data);
-					}
-					return originalSend.call(this, data);
-				};
 				next();
 			}, adminRouter);
 			
-			console.log("🔄 Registering farm routes...");
 			app.use("/api/v1/farm", (req, res, next) => {
-				// Add response interceptor to catch errors
-				const originalSend = res.send;
-				res.send = function(data) {
-					res.send = originalSend;
-					if (res.statusCode >= 400 && !res.headersSent) {
-						console.error(`Error in farm route: ${req.method} ${req.originalUrl}`, data);
-					}
-					return originalSend.call(this, data);
-				};
 				next();
 			}, farmRouter);
 
-			console.log("✅ All routers loaded successfully");
 		} catch (error) {
-			console.error("❌ Failed to load routers:", error.message);
+			// Failed to load routers
 
 			// Add a fallback route for when routers fail
 			app.all("/api/*", (req, res) => {
@@ -258,10 +214,8 @@ export const initializeApp = async () => {
 
 			//global error handler
 			app.use(globalErrorHandler.default);
-
-			console.log("✅ Error handlers loaded successfully");
 		} catch (error) {
-			console.error("❌ Failed to load error handlers:", error.message);
+			// Failed to load error handlers
 
 			// Fallback error handler for unhandled routes
 			app.all("*", (req, res) => {
@@ -280,7 +234,6 @@ export const initializeApp = async () => {
 		
 		return true;
 	} catch (error) {
-		console.error("❌ Failed to initialize application:", error.message);
 		return false;
 	}
 };

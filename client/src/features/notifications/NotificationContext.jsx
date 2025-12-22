@@ -17,7 +17,6 @@ export function NotificationProvider({ children }) {
     
     // Trigger Toast
     const toastIcon = notif.type === 'critical' ? '🚨' : notif.type === 'warning' ? '⚠️' : '✅';
-    console.log(`[NotificationProvider] Adding notification:`, newNotif);
     
     toast(`${notif.title ? notif.title + ': ' : ''}${notif.message}`, {
       icon: toastIcon,
@@ -40,7 +39,6 @@ export function NotificationProvider({ children }) {
   }, []);
 
   const markAllAsRead = useCallback(() => {
-    console.log(`[NotificationProvider] Marking all notifications as read.`);
     setNotifications(prev => prev.map(n => ({ ...n, isRead: true })));
   }, []);
 

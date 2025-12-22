@@ -12,9 +12,9 @@ export default function dbConnect() {
 			socketTimeoutMS: 120000, // 2 minutes of socket inactivity before timeout
 		})
 		.then(() => {
-			console.log("db is connected");
+			// Database connected
 		})
 		.catch((e) => {
-			console.log(e.message);
+			// Connection error
 		});
 }

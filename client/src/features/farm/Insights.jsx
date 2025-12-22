@@ -8,9 +8,6 @@ const Insights = () => {
   const [selectedFarm, setSelectedFarm] = useState(null);
   const { Devices, isGetDevices } = useDevices(selectedFarm?.firebaseUrl);
 
-  console.log("Insights Debug - Selected Farm:", selectedFarm);
-  console.log("Insights Debug - Raw Devices Data:", Devices);
-
   // Process real device data to create stats
   const stats = useMemo(() => {
     if (!Devices) return [];
