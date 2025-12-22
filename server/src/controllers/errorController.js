@@ -40,14 +40,11 @@ export default function globalErrorHandler(err, req, res, next) {
 	err.status = err.status || "error";
 	if (process.env.MODE === "DEV") {
 		sendErrorDev(err, res);
-	} else if (process.env.MODE === "production") {
+	} else {
 		let error = err;
-		if (error.name === "CastError")
-			error = handelCastErrorDB(error.errorResponse);
-		if (error.code === 11000)
-			error = handelDuplicatErrordDB(error.errorResponse);
-		if (error.name === "ValidationError")
-			error = handelValidationErrorDB(error);
+		if (error.name === "CastError") error = handelCastErrorDB(error.errorResponse);
+		if (error.code === 11000) error = handelDuplicatErrordDB(error.errorResponse);
+		if (error.name === "ValidationError") error = handelValidationErrorDB(error);
 
 		sendErrorProd(error, res);
 	}

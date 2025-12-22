@@ -35,6 +35,8 @@ const corsOptions = {
 		const allowedOrigins = [
 			"http://localhost:5173",
 			"http://localhost:5174",
+			"http://127.0.0.1:5173",
+			"http://127.0.0.1:5174",
 			"https://smart-farm-client.vercel.app",
 			"https://smart-farm-client-git-main.vercel.app",
 			"https://smart-farm-client-git-develop.vercel.app",
@@ -43,11 +45,12 @@ const corsOptions = {
 			process.env.CLIENT_URL,
 		].filter(Boolean);
 		
-		// Allow requests with no origin (like mobile apps, curl requests)
-		if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+		// Allow requests with no origin, common dev origins, Vercel subdomains, or anything in non-production
+		const isVercel = origin && origin.endsWith('.vercel.app');
+		if (!origin || allowedOrigins.indexOf(origin) !== -1 || process.env.NODE_ENV !== 'production' || isVercel) {
 			callback(null, true);
 		} else {
-			callback(null, false);
+			callback(new Error(`Origin ${origin} not allowed by CORS`));
 		}
 	},
 	credentials: true,
@@ -133,6 +136,12 @@ app.get("/api/v1/health", (req, res) => {
 	});
 });
 
+// Register routes
+app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/user", userRoute);
+app.use("/api/v1/admin", adminRouter);
+app.use("/api/v1/farm", farmRouter);
+
 // Database connection status endpoint
 app.get("/api/v1/db-status", async (req, res) => {
 	try {
@@ -154,29 +163,18 @@ app.get("/api/v1/db-status", async (req, res) => {
 	}
 });
 
-// Initialize application
+// Database connection (Non-blocking but started)
+dbConnection();
+
+// Handle unhandled routes
+app.all("*", (req, res, next) => {
+    next(new appError(`can't find ${req.originalUrl} on this server.`, 404));
+});
+
+// Global error handler
+app.use(globalErrorHandler);
+
+// Initialize application (maintained for legacy compatibility if needed)
 export const initializeApp = async () => {
-	try {
-		// Database connection
-		await dbConnection();
-
-		// Register routes
-		app.use("/api/v1/auth", authRouter);
-		app.use("/api/v1/user", userRoute);
-		app.use("/api/v1/admin", adminRouter);
-		app.use("/api/v1/farm", farmRouter);
-
-		// Handle unhandled routes
-		app.all("*", (req, res, next) => {
-			next(new appError(`can't find ${req.originalUrl} on this server.`, 404));
-		});
-
-		// Global error handler
-		app.use(globalErrorHandler);
-
-		return true;
-	} catch (error) {
-		console.error("❌ Initialization failed:", error);
-		return false;
-	}
+	return true;
 };

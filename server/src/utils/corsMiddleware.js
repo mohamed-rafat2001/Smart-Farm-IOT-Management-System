@@ -14,8 +14,9 @@ const corsMiddleware = cors({
       process.env.CLIENT_URL,
     ].filter(Boolean);
     
-    // Allow requests with no origin (like mobile apps, curl requests)
-    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+    // Allow requests with no origin, common dev origins, Vercel subdomains, or anything in non-production
+    const isVercel = origin && origin.endsWith('.vercel.app');
+    if (!origin || allowedOrigins.indexOf(origin) !== -1 || process.env.NODE_ENV !== 'production' || isVercel) {
       callback(null, true);
     } else {
       callback(new Error(`Origin ${origin} not allowed by CORS`));
