@@ -21,7 +21,7 @@ function useLogOut() {
       navigate('/');
     },
 
-    onError: (err) => {
+    onError: () => {
       // Still show success to user but log the error for devs
       toast.success('Logged out');
       navigate('/');
