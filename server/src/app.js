@@ -1,5 +1,6 @@
 import express from "express";
 import cors from "cors";
+import mongoose from "mongoose";
 import dotenv from "dotenv";
 import rateLimit from "express-rate-limit";
 import helmet from "helmet";
@@ -37,11 +38,46 @@ app.get("/api/v1/health", (req, res) => {
 app.enable('trust proxy');
 
 // Enable CORS with dynamic origin reflection
+const allowedOrigins = [
+  "https://smart-farm-client-v1.vercel.app",
+  "http://localhost:3000",
+  "http://localhost:5173",
+  "http://localhost:5174",
+  // Allow any Vercel preview/deployment domain
+  /\.vercel\.app$/
+];
+
 app.use(cors({
-  origin: true,
+  origin: (origin, callback) => {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    const isAllowed = allowedOrigins.some(allowed => {
+      if (allowed instanceof RegExp) return allowed.test(origin);
+      return allowed === origin;
+    });
+
+    if (isAllowed) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With", "Accept", "Origin"],
+  allowedHeaders: [
+    "X-CSRF-Token",
+    "X-Requested-With",
+    "Accept",
+    "Accept-Version",
+    "Content-Length",
+    "Content-MD5",
+    "Content-Type",
+    "Date",
+    "X-Api-Version",
+    "Authorization",
+    "Origin"
+  ],
   optionsSuccessStatus: 200
 }));
 
@@ -107,24 +143,22 @@ app.use("/api/v1/admin", adminRouter);
 app.use("/api/v1/farm", farmRouter);
 
 // Database connection status endpoint
-app.get("/api/v1/db-status", async (req, res) => {
-	try {
-		const dbConnect = await import("./db/dataBase.js");
-		const connected = await dbConnect.default();
-		res.status(200).json({
-			status: "success",
-			message: "Database connection status",
-			connected: connected,
-			timestamp: new Date().toISOString(),
-		});
-	} catch (error) {
-		res.status(500).json({
-			status: "error",
-			message: "Database connection failed",
-			error: error.message,
-			timestamp: new Date().toISOString(),
-		});
-	}
+app.get("/api/v1/db-status", (req, res) => {
+	const status = mongoose.connection.readyState;
+	const states = {
+		0: "disconnected",
+		1: "connected",
+		2: "connecting",
+		3: "disconnecting",
+	};
+	
+	res.status(200).json({
+		status: "success",
+		message: "Database connection status",
+		connected: status === 1,
+		state: states[status],
+		timestamp: new Date().toISOString(),
+	});
 });
 
 // Database connection (Guarded)
