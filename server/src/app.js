@@ -25,56 +25,33 @@ dotenv.config();
 
 export const app = express();
 
-// 1. Trust Vercel Proxy
-app.enable('trust proxy');
-
-// 2. Enable CORS - Bulletproof Configuration
-const allowedOrigins = [
-  "https://smart-farm-client-v1.vercel.app",
-  "http://localhost:3000",
-  "http://localhost:5173",
-  "http://localhost:5174",
-  "http://localhost:5175",
-];
-
+// 1. Enable CORS - Absolute Manual Implementation
 app.use((req, res, next) => {
   const origin = req.headers.origin;
   
-  // 1. Handle Access-Control-Allow-Origin & Credentials
+  // Always reflect the origin if it exists, otherwise allow all
   if (origin) {
-    const isVercel = origin.endsWith('.vercel.app');
-    const isAllowed = allowedOrigins.includes(origin) || isVercel;
-    
-    if (isAllowed) {
-      res.setHeader('Access-Control-Allow-Origin', origin);
-      res.setHeader('Access-Control-Allow-Credentials', 'true');
-    }
+    res.setHeader('Access-Control-Allow-Origin', origin);
   } else {
-    // If no origin, still allow (for non-browser requests)
     res.setHeader('Access-Control-Allow-Origin', '*');
   }
-
-  // 2. Handle Other CORS Headers
-  res.setHeader('Vary', 'Origin');
-  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS');
+  
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization, Origin');
+  res.setHeader('Vary', 'Origin');
 
-  // 3. Handle Preflight
+  // Handle preflight immediately
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
   }
   next();
 });
 
-// Remove redundant cors() call to avoid duplicate headers
-// app.use(cors({ origin: true, credentials: true })); 
+// 2. Trust Vercel Proxy
+app.enable('trust proxy');
 
-// Handle preflight for all routes as a backup
-app.options('*', (req, res) => {
-  res.status(200).end();
-});
-
-// 3. Health check (Now after CORS)
+// 3. Health check
 app.get("/api/v1/health", (req, res) => {
 	res.status(200).json({
 		status: "success",
@@ -94,7 +71,7 @@ app.use(timeoutMiddleware(120000));
 try {
 	app.use(helmet({
         crossOriginResourcePolicy: { policy: "cross-origin" },
-        contentSecurityPolicy: false // Disable CSP for API if needed, or configure it better
+        contentSecurityPolicy: false // Disable CSP to avoid interference with CORS for now
     }));
 } catch (error) {
 	// Helmet failed
