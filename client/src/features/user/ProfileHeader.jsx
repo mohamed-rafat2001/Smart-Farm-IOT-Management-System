@@ -299,12 +299,21 @@ function ProfileHeader() {
         >
           <div className="inline-flex items-center gap-3 rounded-2xl border border-blue-500/20 bg-blue-600/10 px-6 py-2.5 text-xs font-bold uppercase tracking-widest text-blue-400 shadow-sm backdrop-blur-sm">
             <span className="h-2 w-2 rounded-full bg-blue-500 animate-pulse"></span>
-            Member since {new Date(data?.createdAt).getFullYear() || '2023'}
+            Member since {data?.createdAt ? new Date(data.createdAt).getFullYear() : '2024'}
           </div>
-          {data?.role === 'admin' && (
-            <div className="inline-flex items-center gap-3 rounded-2xl border border-purple-500/20 bg-purple-600/10 px-6 py-2.5 text-xs font-bold uppercase tracking-widest text-purple-400 shadow-sm backdrop-blur-sm">
-              <span className="h-2 w-2 rounded-full bg-purple-500"></span>
-              Administrator
+          
+          {(data?.role === 'admin' || data?.role === 'tecSupport' || data?.role === 'user') && (
+            <div className={`inline-flex items-center gap-3 rounded-2xl border px-6 py-2.5 text-xs font-bold uppercase tracking-widest shadow-sm backdrop-blur-sm ${
+              data.role === 'admin' 
+                ? 'border-purple-500/20 bg-purple-600/10 text-purple-400' 
+                : data.role === 'tecSupport'
+                ? 'border-orange-500/20 bg-orange-600/10 text-orange-400'
+                : 'border-emerald-500/20 bg-emerald-600/10 text-emerald-400'
+            }`}>
+              <span className={`h-2 w-2 rounded-full ${
+                data.role === 'admin' ? 'bg-purple-500' : data.role === 'tecSupport' ? 'bg-orange-500' : 'bg-emerald-500'
+              }`}></span>
+              {data.role === 'admin' ? 'Administrator' : data.role === 'tecSupport' ? 'Support Technician' : 'Standard User'}
             </div>
           )}
         </motion.div>
