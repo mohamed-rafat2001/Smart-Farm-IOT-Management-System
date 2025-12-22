@@ -25,70 +25,67 @@ dotenv.config();
 
 export const app = express();
 
-// Top-level health check (bypass all middleware for debugging)
-app.get("/api/v1/health", (req, res) => {
-	res.status(200).json({
-		status: "success",
-		message: "Smart Farm API is running (Top-level)",
-		timestamp: new Date().toISOString(),
-	});
-});
-
-// Trust Vercel Proxy
+// 1. Trust Vercel Proxy
 app.enable('trust proxy');
 
-// Enable CORS with dynamic origin reflection
+// 2. Enable CORS - Bulletproof Configuration
 const allowedOrigins = [
   "https://smart-farm-client-v1.vercel.app",
   "http://localhost:3000",
   "http://localhost:5173",
   "http://localhost:5174",
-  // Allow any Vercel preview/deployment domain
-  /\.vercel\.app$/
+  "http://localhost:5175",
 ];
 
-app.use(cors({
-  origin: (origin, callback) => {
-    // Allow requests with no origin (like mobile apps or curl requests)
-    if (!origin) return callback(null, true);
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  
+  // 1. Handle Access-Control-Allow-Origin & Credentials
+  if (origin) {
+    const isVercel = origin.endsWith('.vercel.app');
+    const isAllowed = allowedOrigins.includes(origin) || isVercel;
     
-    const isAllowed = allowedOrigins.some(allowed => {
-      if (allowed instanceof RegExp) return allowed.test(origin);
-      return allowed === origin;
-    });
-
     if (isAllowed) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
+      res.setHeader('Access-Control-Allow-Origin', origin);
+      res.setHeader('Access-Control-Allow-Credentials', 'true');
     }
-  },
-  credentials: true,
-  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-  allowedHeaders: [
-    "X-CSRF-Token",
-    "X-Requested-With",
-    "Accept",
-    "Accept-Version",
-    "Content-Length",
-    "Content-MD5",
-    "Content-Type",
-    "Date",
-    "X-Api-Version",
-    "Authorization",
-    "Origin"
-  ],
-  optionsSuccessStatus: 200
-}));
+  } else {
+    // If no origin, still allow (for non-browser requests)
+    res.setHeader('Access-Control-Allow-Origin', '*');
+  }
 
-// Pre-flight handling for all routes
-app.options('*', cors());
+  // 2. Handle Other CORS Headers
+  res.setHeader('Vary', 'Origin');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization, Origin');
+
+  // 3. Handle Preflight
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+  next();
+});
+
+// Remove redundant cors() call to avoid duplicate headers
+// app.use(cors({ origin: true, credentials: true })); 
+
+// Handle preflight for all routes as a backup
+app.options('*', (req, res) => {
+  res.status(200).end();
+});
+
+// 3. Health check (Now after CORS)
+app.get("/api/v1/health", (req, res) => {
+	res.status(200).json({
+		status: "success",
+		message: "Smart Farm API is running",
+		timestamp: new Date().toISOString(),
+	});
+});
 
 // Basic middleware
 app.use(express.json({ limit: "10kb" }));
 app.use(cookieParser());
-
-
 
 // Add timeout middleware
 app.use(timeoutMiddleware(120000));
@@ -96,7 +93,8 @@ app.use(timeoutMiddleware(120000));
 // Security middleware with cross-origin support
 try {
 	app.use(helmet({
-        crossOriginResourcePolicy: { policy: "cross-origin" }
+        crossOriginResourcePolicy: { policy: "cross-origin" },
+        contentSecurityPolicy: false // Disable CSP for API if needed, or configure it better
     }));
 } catch (error) {
 	// Helmet failed
