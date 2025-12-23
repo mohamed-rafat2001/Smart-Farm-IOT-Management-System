@@ -22,7 +22,7 @@ function ProtectedLayout({ requiredRole }) {
 
   // Authenticated but wrong role? Redirect to dashboard
   if (requiredRole && user?.role !== requiredRole) {
-    return <Navigate to="/app/Dashboard" replace />;
+    return <Navigate to="/app/farms" replace />;
   }
 
   return <Outlet />;

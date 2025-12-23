@@ -12,7 +12,7 @@ function GuestLayout() {
 
   // If user is already authenticated, redirect them to the app
   if (isAuthenticated) {
-    return <Navigate to="/app/Dashboard" replace />;
+    return <Navigate to="/app/farms" replace />;
   }
 
   return <Outlet />;

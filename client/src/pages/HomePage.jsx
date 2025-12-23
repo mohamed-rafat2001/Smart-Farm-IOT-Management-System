@@ -1,9 +1,16 @@
 import { motion as Motion } from 'framer-motion';
 import Footer from '../ui/Footer';
 import Header from '../ui/Header';
-import { Outlet } from 'react-router-dom';
+import { Outlet, Navigate } from 'react-router-dom';
+import useAuth from '../Hooks/useAuth';
 
 function HomePage() {
+  const { isAuthenticated, isLoading } = useAuth();
+
+  if (!isLoading && isAuthenticated) {
+    return <Navigate to="/app/farms" replace />;
+  }
+
   return (
     <div className="flex min-h-screen flex-col bg-[#1b2127]">
       <Header />
