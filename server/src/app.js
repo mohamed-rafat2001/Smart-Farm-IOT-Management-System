@@ -9,9 +9,7 @@ import mongoSanitize from "express-mongo-sanitize";
 import cookieParser from "cookie-parser";
 
 // Import custom middleware
-import {
-	timeoutMiddleware,
-} from "./middleware/timeoutMiddleware.js";
+import { timeoutMiddleware } from "./middleware/timeoutMiddleware.js";
 
 // Import routers
 import userRoute from "./routers/userRoute.js";
@@ -66,6 +64,18 @@ app.get("/api/v1/health", (req, res) => {
 // Basic middleware
 app.use(express.json({ limit: "10kb" }));
 app.use(cookieParser());
+
+// Add middleware to prevent caching for API routes
+app.use((req, res, next) => {
+	res.set(
+		"Cache-Control",
+		"no-store, no-cache, must-revalidate, proxy-revalidate"
+	);
+	res.set("Pragma", "no-cache");
+	res.set("Expires", "0");
+	res.set("Surrogate-Control", "no-store");
+	next();
+});
 
 // Add timeout middleware
 app.use(timeoutMiddleware(120000));

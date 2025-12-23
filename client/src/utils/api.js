@@ -54,20 +54,8 @@ api.interceptors.request.use(
       delete config.headers['Content-Type'];
     }
 
-    // Using withCredentials: true to automatically send cookies with requests
-    // Also add Authorization header with token from cookies for APIs that expect it
-    const cookies = document.cookie.split(';');
-    const tokenCookie = cookies.find((cookie) =>
-      cookie.trim().startsWith('token=')
-    );
-
-    if (tokenCookie) {
-      const token = tokenCookie.split('=')[1];
-      if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
-      }
-    }
-
+    // Using withCredentials: true to automatically send httpOnly cookies with requests
+    // No need to manually set Authorization header as the browser handles cookies
     return config;
   },
   (error) => {

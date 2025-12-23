@@ -23,7 +23,7 @@ export const login = async (data) => {
 };
 // log out user
 export const logOut = async () => {
-  const response = await api.get('/auth/logOut');
+  const response = await api.post('/auth/logOut');
 
   return response.data;
 };

@@ -17,15 +17,26 @@ function useLogOut() {
       // Always cleanup and navigate even if the request fails
       queryClient.removeQueries({ queryKey: ['User'] });
       queryClient.removeQueries({ queryKey: ['userFarms'] });
+      queryClient.invalidateQueries();
       queryClient.clear();
-      navigate('/');
+
+      // Clear any potential non-httpOnly cookies just in case
+      document.cookie =
+        'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+
+      navigate('/', { replace: true });
     },
 
     onError: () => {
       // Still show success to user but log the error for devs
       toast.success('Logged out');
-      navigate('/');
-    }
+
+      // Force cleanup even on error
+      queryClient.clear();
+      document.cookie =
+        'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+      navigate('/', { replace: true });
+    },
   });
 
   return { isLogOut, logOutUser };

@@ -1,24 +1,28 @@
 function sendCookie(res, token) {
 	const cookieOptions = {
-		expires: token 
-            ? new Date(Date.now() + (process.env.COOKIEEXPIRE || 90) * 24 * 60 * 60 * 1000)
-            : new Date(0),
 		httpOnly: true,
-		sameSite: 'none', // Required for cross-site cookies, or Lax for same-site
+		sameSite: 'none',
 		path: '/',
-		secure: true, // Always true for production/Vercel
+		secure: true,
 	};
 
-	if (!token) {
-        // Clear cookie using EXACTLY the same options
-        res.clearCookie("token", {
-            httpOnly: true,
-            sameSite: 'none',
-            path: '/',
-            secure: true,
-        });
-    } else {
-        res.cookie("token", token, cookieOptions);
-    }
+	if (!token || token === "loggedout" || token === "") {
+		// Clear cookie with multiple methods for maximum compatibility
+		res.cookie("token", "", {
+			...cookieOptions,
+			expires: new Date(0),
+			maxAge: 0,
+		});
+		
+		// Also use clearCookie as a backup
+		res.clearCookie("token", cookieOptions);
+	} else {
+		res.cookie("token", token, {
+			...cookieOptions,
+			expires: new Date(
+				Date.now() + (process.env.COOKIEEXPIRE || 90) * 24 * 60 * 60 * 1000
+			),
+		});
+	}
 }
 export default sendCookie;

@@ -15,7 +15,7 @@ Route.post("/signUp", signUp);
 // Also add the lowercase version to handle both cases
 Route.post("/signup", signUp);
 Route.post("/login", login);
-Route.get("/logOut", logOut);
+Route.post("/logOut", logOut);
 Route.post("/forgotPassword", forgotPassord);
 Route.patch("/resetPassword", resetPassword);
 Route.patch("/updatePassword", protect, updatePassword);

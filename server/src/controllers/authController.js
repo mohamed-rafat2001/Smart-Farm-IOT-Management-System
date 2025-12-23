@@ -65,9 +65,9 @@ export const login = catchAsync(async (req, res, next) => {
 // logout user
 export const logOut = catchAsync(async (req, res, next) => {
 	logger.log("🚪 Logout initiated");
-	sendCookie(res, "");
+	sendCookie(res, "loggedout");
 	logger.log("✅ Logout cookie cleared, sending response");
-	response(res, 200, {});
+	response(res, 200, { message: "success" });
 });
 // forgot password using email
 export const forgotPassord = catchAsync(async (req, res, next) => {
