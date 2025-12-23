@@ -56,6 +56,8 @@ function HeroSection({ image, bigText, smallText }) {
               onLoad={() => setImageLoaded(true)}
               onError={() => setImageError(true)}
               loading="eager"
+              crossOrigin="anonymous"
+              referrerPolicy="no-referrer"
             />
             {/* Overlay Gradient */}
             <div className="absolute inset-0 bg-gradient-to-t from-[#1b2127] via-transparent to-transparent opacity-80" />

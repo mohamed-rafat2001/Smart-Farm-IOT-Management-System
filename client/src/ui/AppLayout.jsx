@@ -164,6 +164,8 @@ function AppLayout() {
                       src={user.profileImg.secure_url}
                       alt="Profile"
                       className="h-9 w-9 rounded-xl object-cover shadow-lg"
+                      crossOrigin="anonymous"
+                      referrerPolicy="no-referrer"
                     />
                   ) : (
                     <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 text-sm font-bold text-white shadow-lg shadow-blue-500/20">

@@ -92,35 +92,37 @@ function Header() {
         {/* Desktop Auth Section */}
         <div className="hidden items-center md:flex">
           {isAuthenticated ? (
-            <div className="flex items-center gap-2 rounded-[2.5rem] bg-stone-900/40 p-1.5 border border-stone-800/50 shadow-2xl backdrop-blur-md transition-all hover:bg-stone-900/60">
+            <div className="flex items-center gap-2 rounded-[2.5rem] border border-stone-800/50 bg-stone-900/40 p-1.5 shadow-2xl backdrop-blur-md transition-all hover:bg-stone-900/60">
               <Link to="/app/profile">
-                <motion.div 
+                <motion.div
                   whileHover={{ scale: 1.02 }}
                   className="flex cursor-pointer items-center gap-3 rounded-2xl px-3 py-1.5 transition-all hover:bg-white/5"
                 >
                   {user?.profileImg?.secure_url ? (
-                    <img 
-                      src={user.profileImg.secure_url} 
-                      alt="Profile" 
+                    <img
+                      src={user.profileImg.secure_url}
+                      alt="Profile"
                       className="h-10 w-10 rounded-xl object-cover shadow-lg ring-2 ring-blue-500/20"
+                      crossOrigin="anonymous"
+                      referrerPolicy="no-referrer"
                     />
                   ) : (
-                    <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 shadow-lg shadow-blue-500/20 flex items-center justify-center text-white font-black text-sm">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 text-sm font-black text-white shadow-lg shadow-blue-500/20">
                       {user?.firstName?.[0] || 'U'}
                     </div>
                   )}
                   <div className="flex flex-col pr-2">
-                    <span className="text-xs font-black text-white leading-tight">
+                    <span className="text-xs leading-tight font-black text-white">
                       {user?.firstName || 'User'}
                     </span>
-                    <span className="text-[10px] font-bold text-blue-500/80 uppercase tracking-widest">
+                    <span className="text-[10px] font-bold tracking-widest text-blue-500/80 uppercase">
                       Dashboard
                     </span>
                   </div>
                 </motion.div>
               </Link>
-              
-              <div className="h-8 w-px bg-stone-800/50 mx-1" />
+
+              <div className="mx-1 h-8 w-px bg-stone-800/50" />
 
               <button
                 onClick={handleLogOut}
@@ -128,8 +130,18 @@ function Header() {
                 title="Logout"
                 className="group flex h-10 w-10 items-center justify-center rounded-xl bg-red-500/5 text-stone-500 transition-all hover:bg-red-500/10 hover:text-red-400 active:scale-90"
               >
-                <svg className="h-5 w-5 transition-transform group-hover:rotate-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                <svg
+                  className="h-5 w-5 transition-transform group-hover:rotate-12"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2.5}
+                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                  />
                 </svg>
               </button>
             </div>
@@ -223,27 +235,27 @@ function Header() {
               ))}
               {isAuthenticated ? (
                 <div className="flex flex-col gap-3 pt-4">
-                  <Link 
+                  <Link
                     to="/app/profile"
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className="flex items-center gap-4 rounded-3xl bg-stone-900/40 p-4 border border-stone-800/50 shadow-xl backdrop-blur-md transition-all hover:bg-stone-900/60"
+                    className="flex items-center gap-4 rounded-3xl border border-stone-800/50 bg-stone-900/40 p-4 shadow-xl backdrop-blur-md transition-all hover:bg-stone-900/60"
                   >
                     {user?.profileImg?.secure_url ? (
-                      <img 
-                        src={user.profileImg.secure_url} 
-                        alt="Profile" 
+                      <img
+                        src={user.profileImg.secure_url}
+                        alt="Profile"
                         className="h-12 w-12 rounded-2xl object-cover shadow-lg ring-2 ring-blue-500/20"
                       />
                     ) : (
-                      <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 shadow-lg shadow-blue-500/20 flex items-center justify-center text-white font-black text-lg">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 text-lg font-black text-white shadow-lg shadow-blue-500/20">
                         {user?.firstName?.[0] || 'U'}
                       </div>
                     )}
                     <div className="flex flex-col">
-                      <span className="text-base font-black text-white leading-tight">
+                      <span className="text-base leading-tight font-black text-white">
                         {user?.firstName || 'User'} {user?.lastName || ''}
                       </span>
-                      <span className="text-xs font-bold text-blue-500/80 uppercase tracking-widest">
+                      <span className="text-xs font-bold tracking-widest text-blue-500/80 uppercase">
                         View Dashboard
                       </span>
                     </div>
@@ -251,11 +263,21 @@ function Header() {
                   <button
                     onClick={handleLogOut}
                     disabled={isLogOut}
-                    className="flex items-center justify-center gap-3 rounded-[1.25rem] bg-red-500/5 border border-red-500/10 py-4 text-sm font-black text-red-500 transition-all hover:bg-red-500/10 active:scale-95"
+                    className="flex items-center justify-center gap-3 rounded-[1.25rem] border border-red-500/10 bg-red-500/5 py-4 text-sm font-black text-red-500 transition-all hover:bg-red-500/10 active:scale-95"
                   >
                     <span>{isLogOut ? 'Logging out...' : 'Logout'}</span>
-                    <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    <svg
+                      className="h-5 w-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2.5}
+                        d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                      />
                     </svg>
                   </button>
                 </div>

@@ -6,14 +6,14 @@ const CurrentImageModal = ({ isOpen, onClose, imageUrl, userName }) => {
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
-      <div className="flex flex-col h-full max-h-[80vh]">
+      <div className="flex h-full max-h-[80vh] flex-col">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-stone-800/50 pb-4 mb-6">
+        <div className="mb-6 flex items-center justify-between border-b border-stone-800/50 pb-4">
           <div className="space-y-1">
             <h2 className="text-xl font-black tracking-tight text-white">
               Profile Image<span className="text-blue-500">.</span>
             </h2>
-            <p className="text-[10px] font-medium text-stone-500 uppercase tracking-wider">
+            <p className="text-[10px] font-medium tracking-wider text-stone-500 uppercase">
               Viewing {userName}'s profile picture
             </p>
           </div>
@@ -51,6 +51,8 @@ const CurrentImageModal = ({ isOpen, onClose, imageUrl, userName }) => {
             className="max-h-[50vh] w-full object-contain shadow-2xl transition-transform duration-700 group-hover:scale-105"
             loading="eager"
             decoding="async"
+            crossOrigin="anonymous"
+            referrerPolicy="no-referrer"
           />
         </motion.div>
 
@@ -59,7 +61,7 @@ const CurrentImageModal = ({ isOpen, onClose, imageUrl, userName }) => {
           <button
             type="button"
             onClick={onClose}
-            className="w-full sm:w-auto rounded-xl bg-stone-800 px-8 py-4 text-xs font-black tracking-widest text-stone-100 uppercase transition-all hover:bg-stone-700 active:scale-95 shadow-lg border border-stone-700/50"
+            className="w-full rounded-xl border border-stone-700/50 bg-stone-800 px-8 py-4 text-xs font-black tracking-widest text-stone-100 uppercase shadow-lg transition-all hover:bg-stone-700 active:scale-95 sm:w-auto"
           >
             Close Preview
           </button>

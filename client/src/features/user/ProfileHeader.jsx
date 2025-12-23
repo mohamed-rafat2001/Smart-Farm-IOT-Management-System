@@ -152,6 +152,8 @@ function ProfileHeader() {
             onClick={handleImageClick}
             loading="eager"
             decoding="async"
+            crossOrigin="anonymous"
+            referrerPolicy="no-referrer"
           />
 
           {/* Action Overlay on Hover */}
