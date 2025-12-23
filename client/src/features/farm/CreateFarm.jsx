@@ -3,16 +3,18 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Button from '../../ui/Button';
 import useCreateFarm from './useCreateFarm';
 
-function CreateFarm() {
+function CreateFarm({ setAddFarm }) {
   const { create, isCreated } = useCreateFarm();
   const { register, handleSubmit, formState, reset } = useForm();
   const { errors } = formState;
 
   function Submit(data) {
-    create({
-      ...data,
+    create(data, {
+      onSuccess: () => {
+        setAddFarm(false);
+        reset();
+      },
     });
-    reset();
   }
 
   const containerVariants = {

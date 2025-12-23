@@ -154,6 +154,8 @@ function Home() {
                 src={devicesTableImage}
                 alt="Device Management Table"
                 className="relative w-full rounded-[2rem] border border-stone-700/50 object-cover shadow-2xl transition-transform duration-500 group-hover:scale-[1.02]"
+                crossOrigin="anonymous"
+                referrerPolicy="no-referrer"
               />
             </div>
           </motion.div>

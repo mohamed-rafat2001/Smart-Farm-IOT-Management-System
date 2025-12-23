@@ -44,6 +44,8 @@ function Header() {
               loading="eager"
               fetchpriority="high"
               decoding="async"
+              crossOrigin="anonymous"
+              referrerPolicy="no-referrer"
             />
             <div className="absolute -right-1 -bottom-1 h-3.5 w-3.5 rounded-full border-2 border-[#1b2127] bg-green-500" />
           </div>
@@ -245,6 +247,8 @@ function Header() {
                         src={user.profileImg.secure_url}
                         alt="Profile"
                         className="h-12 w-12 rounded-2xl object-cover shadow-lg ring-2 ring-blue-500/20"
+                        crossOrigin="anonymous"
+                        referrerPolicy="no-referrer"
                       />
                     ) : (
                       <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 text-lg font-black text-white shadow-lg shadow-blue-500/20">

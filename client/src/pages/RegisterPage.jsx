@@ -19,6 +19,8 @@ function RegisterPage() {
               className="w-8"
               loading="eager"
               decoding="async"
+              crossOrigin="anonymous"
+              referrerPolicy="no-referrer"
             />
 
             <h1>Sign in via Google </h1>

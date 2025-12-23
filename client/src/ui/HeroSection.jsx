@@ -15,6 +15,8 @@ function HeroSection({ image, bigText, smallText }) {
   useEffect(() => {
     if (image) {
       const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.referrerPolicy = 'no-referrer';
       img.onload = () => setImageLoaded(true);
       img.onerror = () => setImageError(true);
       img.src = image;

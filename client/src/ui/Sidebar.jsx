@@ -88,6 +88,8 @@ function Sidebar({ onClose }) {
             src={Logo}
             alt="Logo"
             className="h-12 w-12 rounded-2xl object-cover ring-2 ring-blue-500/20 shadow-2xl shadow-blue-500/10"
+            crossOrigin="anonymous"
+            referrerPolicy="no-referrer"
           />
           <div className="absolute -bottom-1 -right-1 h-4 w-4 rounded-full border-2 border-[#1b2127] bg-green-500" />
         </div>
