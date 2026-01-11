@@ -1,4 +1,4 @@
-import Devices from '../features/farm/Devices';
+import { Devices } from '../features/farm';
 
 function DevicesPage() {
   return <Devices />;

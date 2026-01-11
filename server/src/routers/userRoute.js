@@ -5,7 +5,7 @@ import {
 	uploadSinglePhoto,
 	uploadUserPhoto,
 } from "../controllers/userController.js";
-import { protect } from "../middelwares/authMiddelware.js";
+import { protect } from "../middleware/authMiddelware.js";
 import express from "express";
 
 const Router = express.Router();
@@ -19,3 +19,4 @@ Router.route("/").get(getMe).patch(updateMe).delete(deleteMe);
 Router.route("/userImg").patch(uploadSinglePhoto, uploadUserPhoto);
 
 export default Router;
+

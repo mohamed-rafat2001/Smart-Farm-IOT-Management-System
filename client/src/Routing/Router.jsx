@@ -1,26 +1,26 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 import HomePage from '../pages/HomePage.jsx';
-import AppLayout from '../ui/AppLayout.jsx';
+import AppLayout from '../shared/components/AppLayout.jsx';
 import ProfilePage from '../pages/ProfilePage.jsx';
 import FarmsPage from '../pages/FarmsPage.jsx';
 import FarmDashPage from '../pages/FarmDashPage.jsx';
 import AdminDashPage from '../pages/AdminDashPage.jsx';
 import SettingsPage from '../pages/SettingsPage.jsx';
 
-import ProtectedLayout from '../ui/protectedLayout.jsx';
-import GuestLayout from '../ui/GuestLayout.jsx';
+import ProtectedLayout from '../shared/components/protectedLayout.jsx';
+import GuestLayout from '../shared/components/GuestLayout.jsx';
 import NotFoundPage from '../pages/NotFoundPage.jsx';
 
 import AboutPage from '../pages/AboutPage.jsx';
 import PricingPage from '../pages/PricingPage.jsx';
 import ContactPage from '../pages/ContactPage.jsx';
 import RegisterPage from '../pages/RegisterPage.jsx';
-import Login from '../features/authentication/Login.jsx';
-import SignUp from '../features/authentication/SignUp.jsx';
+import { Login, SignUp } from '../features/authentication';
 import WelcomePage from '../pages/WelcomePage.jsx';
 import SingleFarmPage from '../pages/SingleFarmPage.jsx';
 import DevicesPage from '../pages/DevicesPage.jsx';
 import InsightsPage from '../pages/InsightsPage.jsx';
+
 export const Router = createBrowserRouter([
   {
     element: <HomePage />,

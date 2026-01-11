@@ -1,4 +1,4 @@
-import About from '../features/Home/About';
+import { About } from '../features/Home';
 
 function AboutPage() {
   return <About />;

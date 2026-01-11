@@ -1,5 +1,5 @@
 import express from "express";
-import { protect, restrictTo } from "../middelwares/authMiddelware.js";
+import { protect, restrictTo } from "../middleware/authMiddelware.js";
 import {
 	createUser,
 	deleteFarm,
@@ -27,3 +27,4 @@ Router.route("/users/:id")
 Router.route("/farms").get(getAllFarms);
 Router.route("/farms/:id").delete(deleteFarm);
 export default Router;
+

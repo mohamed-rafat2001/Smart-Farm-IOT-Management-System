@@ -1,6 +1,5 @@
 import { motion } from 'framer-motion';
-import ProfileHeader from '../features/user/ProfileHeader';
-import ProfileContent from '../features/user/ProfileContent';
+import { ProfileHeader, ProfileContent } from '../features/user';
 
 function ProfilePage() {
   return (

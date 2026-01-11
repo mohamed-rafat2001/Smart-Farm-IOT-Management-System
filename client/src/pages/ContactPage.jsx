@@ -1,4 +1,4 @@
-import ContactWithUs from '../features/Home/ContactWithUs';
+import { ContactWithUs } from '../features/Home';
 
 function ContactPage() {
   return <ContactWithUs />;

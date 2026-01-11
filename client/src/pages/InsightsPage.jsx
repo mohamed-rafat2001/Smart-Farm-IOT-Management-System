@@ -1,4 +1,4 @@
-import Insights from '../features/farm/Insights';
+import { Insights } from '../features/farm';
 
 function InsightsPage() {
   return <Insights />;

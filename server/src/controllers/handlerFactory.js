@@ -1,5 +1,5 @@
 import appError from "../utils/appError.js";
-import catchAsync from "../middelwares/catchAsync.js";
+import catchAsync from "../middleware/catchAsync.js";
 import response from "../utils/handelRespone.js";
 import validationBody from "../utils/validationBody.js";
 import APIFeatures from "../utils/apiFeatures.js";
@@ -31,6 +31,18 @@ export const deleteByOwner = (Model) =>
 		response(res, 200, doc);
 	});
 
+// delete one doc by id
+export const deleteOne = (Model) =>
+	catchAsync(async (req, res, next) => {
+		const doc = await Model.findByIdAndDelete(req.params.id);
+
+		if (!doc) {
+			return next(new appError("No document found with that ID", 404));
+		}
+
+		response(res, 204, null);
+	});
+
 // get doc by params
 export const getByParams = (Model) =>
 	catchAsync(async (req, res, next) => {
@@ -38,19 +50,23 @@ export const getByParams = (Model) =>
 		const { id } = req.params;
 		// find doc with ownership check if user is not admin
 		const query = { _id: id };
-		if (req.user?.role !== 'admin') {
+		if (req.user?.role !== "admin") {
 			query.owner = req.user?._id;
 		}
 
 		logger.log(`🔍 Fetching single doc: ${id} for user: ${req.user?._id}`);
 		const doc = await Model.findOne(query);
-		
+
 		// check if doc is found
 		if (!doc || !id) {
-			logger.log(`❌ Doc not found or access denied: ${id} for user: ${req.user?._id}`);
-			return next(new appError("doc not found or you don't have permission", 404));
+			logger.log(
+				`❌ Doc not found or access denied: ${id} for user: ${req.user?._id}`
+			);
+			return next(
+				new appError("doc not found or you don't have permission", 404)
+			);
 		}
-		
+
 		logger.log(`✅ Doc fetched successfully: ${id}`);
 		// send response
 		response(res, 200, doc);
@@ -59,14 +75,17 @@ export const getByParams = (Model) =>
 // get docs by owner
 export const getByOwner = (Model) =>
 	catchAsync(async (req, res, next) => {
-		if (!req.user?._id) return next(new appError("User not authenticated for ownership filter", 401));
+		if (!req.user?._id)
+			return next(
+				new appError("User not authenticated for ownership filter", 401)
+			);
 
 		logger.log(`🔍 Fetching docs for owner: ${req.user._id}`);
 		// get docs
 		const docs = await Model.find({ owner: req.user._id });
 
 		if (!docs) return next(new appError("no docs found", 404));
-		
+
 		logger.log(`✅ Found ${docs.length} docs for owner: ${req.user._id}`);
 
 		response(res, 200, { docs, results: docs.length });
@@ -75,7 +94,8 @@ export const getByOwner = (Model) =>
 // create doc By Owner
 export const CreateByOwner = (Model, fields) =>
 	catchAsync(async (req, res, next) => {
-		if (!req.user?._id) return next(new appError("User not authenticated for creation", 401));
+		if (!req.user?._id)
+			return next(new appError("User not authenticated for creation", 401));
 
 		logger.log(`📝 Creating doc for owner: ${req.user._id}`);
 		// get feilds from req.body
@@ -89,8 +109,10 @@ export const CreateByOwner = (Model, fields) =>
 		});
 		// check if doc is created
 		if (!doc) return next(new appError("doc not created", 400));
-		
-		logger.log(`✅ Doc created successfully: ${doc._id} for owner: ${req.user._id}`);
+
+		logger.log(
+			`✅ Doc created successfully: ${doc._id} for owner: ${req.user._id}`
+		);
 		// send response
 		response(res, 201, doc);
 	});

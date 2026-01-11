@@ -1,4 +1,7 @@
+import { AdminDashboard } from '../features/admin';
+
 function AdminDashPage() {
-	return <div></div>;
+  return <AdminDashboard />;
 }
+
 export default AdminDashPage;

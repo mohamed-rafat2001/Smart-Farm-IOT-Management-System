@@ -1,4 +1,4 @@
-import FarmDashboard from '../features/farm/FarmDashboard';
+import { FarmDashboard } from '../features/farm';
 
 function FarmDashPage() {
   return <FarmDashboard />;

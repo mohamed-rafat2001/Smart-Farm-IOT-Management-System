@@ -16,6 +16,7 @@ import userRoute from "./routers/userRoute.js";
 import authRouter from "./routers/authRouter.js";
 import adminRouter from "./routers/adminRouter.js";
 import farmRouter from "./routers/farmRouter.js";
+import notificationRouter from "./routers/notificationRouter.js";
 import dbConnection from "./db/dataBase.js";
 import appError from "./utils/appError.js";
 import globalErrorHandler from "./controllers/errorController.js";
@@ -127,6 +128,7 @@ app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/user", userRoute);
 app.use("/api/v1/admin", adminRouter);
 app.use("/api/v1/farm", farmRouter);
+app.use("/api/v1/notification", notificationRouter);
 
 // Database connection status endpoint
 app.get("/api/v1/db-status", (req, res) => {

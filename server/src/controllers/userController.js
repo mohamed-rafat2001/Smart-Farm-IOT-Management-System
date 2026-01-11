@@ -1,4 +1,4 @@
-import catchAsync from "../middelwares/catchAsync.js";
+import catchAsync from "../middleware/catchAsync.js";
 import UserModel from "../models/user.js";
 import response from "../utils/handelRespone.js";
 import appError from "../utils/appError.js";
@@ -139,3 +139,4 @@ export const deleteUser = catchAsync(async (req, res, next) => {
 	if (!user) return next(new appError("user not found", 404));
 	response(res, 204, null);
 });
+

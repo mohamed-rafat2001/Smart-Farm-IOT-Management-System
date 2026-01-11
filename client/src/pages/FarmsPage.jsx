@@ -1,6 +1,7 @@
-import UserFarms from '../features/farm/UserFarms';
+import { UserFarms } from '../features/farm';
 
 function FarmsPage() {
   return <UserFarms />;
 }
+
 export default FarmsPage;

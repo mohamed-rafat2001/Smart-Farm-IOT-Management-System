@@ -6,7 +6,7 @@ import {
 	updatePassword,
 	logOut,
 } from "../controllers/authController.js";
-import { protect } from "../middelwares/authMiddelware.js";
+import { protect } from "../middleware/authMiddelware.js";
 
 import express from "express";
 const Route = express.Router();
@@ -21,3 +21,4 @@ Route.patch("/resetPassword", resetPassword);
 Route.patch("/updatePassword", protect, updatePassword);
 
 export default Route;
+

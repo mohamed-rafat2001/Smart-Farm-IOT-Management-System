@@ -1,5 +1,5 @@
 import express from "express";
-import { protect } from "../middelwares/authMiddelware.js";
+import { protect } from "../middleware/authMiddelware.js";
 import {
 	createFarm,
 	deletefarmByUser,
@@ -20,3 +20,4 @@ Router.route("/:id")
 
 	.patch(updateFarmByUser);
 export default Router;
+

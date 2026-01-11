@@ -4,7 +4,7 @@ import response from "../utils/handelRespone.js";
 import sendCookie from "../utils/sendCookie.js";
 import sendEmail from "../utils/sendEmail.js";
 import { passwordResetCodeTemplate } from "../utils/emailTempletes.js";
-import catchAsync from "../middelwares/catchAsync.js";
+import catchAsync from "../middleware/catchAsync.js";
 import logger from "../utils/logger.js";
 
 //create new User
@@ -151,3 +151,4 @@ export const updatePassword = catchAsync(async (req, res, next) => {
 	sendCookie(res, token);
 	response(res, 201, { user, token });
 });
+

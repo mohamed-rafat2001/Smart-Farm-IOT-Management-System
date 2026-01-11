@@ -1,11 +1,12 @@
-import { motion as Motion } from 'framer-motion';
-import Footer from '../ui/Footer';
-import Header from '../ui/Header';
-import { Outlet, Navigate } from 'react-router-dom';
-import useAuth from '../Hooks/useAuth';
+import { motion as Motion, AnimatePresence } from 'framer-motion';
+import Footer from '../shared/components/Footer';
+import Header from '../shared/components/Header';
+import { Outlet, Navigate, useLocation } from 'react-router-dom';
+import useAuth from '../shared/hooks/useAuth';
 
 function HomePage() {
   const { isAuthenticated, isLoading } = useAuth();
+  const location = useLocation();
 
   if (!isLoading && isAuthenticated) {
     return <Navigate to="/app/farms" replace />;
@@ -16,14 +17,19 @@ function HomePage() {
       <Header />
       <main className="flex-grow">
         {/* Content Container - Responsive */}
-        <Motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5 }}
-          className="@container mx-auto w-full px-4 py-6 sm:px-6 sm:py-8 md:px-8 md:py-10 lg:px-10 lg:py-12 xl:px-12 xl:py-16"
-        >
-          <Outlet />
-        </Motion.div>
+        <div className="@container mx-auto w-full px-4 py-6 sm:px-6 sm:py-8 md:px-8 md:py-10 lg:px-10 lg:py-12 xl:px-12 xl:py-16">
+          <AnimatePresence mode="wait">
+            <Motion.div
+              key={location.pathname}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.3 }}
+            >
+              <Outlet />
+            </Motion.div>
+          </AnimatePresence>
+        </div>
       </main>
       <Footer />
     </div>

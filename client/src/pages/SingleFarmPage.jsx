@@ -1,4 +1,4 @@
-import SingleFarm from '../features/farm/SingleFarm';
+import { SingleFarm } from '../features/farm';
 
 function SingleFarmPage() {
   return (
